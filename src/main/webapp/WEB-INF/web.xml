@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns="http://java.sun.com/xml/ns/javaee" 
+		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
+		version="3.0">
+	<display-name>hash</display-name>
+	<welcome-file-list>
+	    <welcome-file>index.html</welcome-file>
+	    <welcome-file>index.htm</welcome-file>
+	    <welcome-file>index.jsp</welcome-file>
+	    <welcome-file>default.html</welcome-file>
+	    <welcome-file>default.htm</welcome-file>
+	    <welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+
+
+
+	<!-- 부모격 context == Service, Repository 및 기타 등등을 먼저등록하는 기능을 구현 
+	 해당 부분의 소스는 대부분 java,xml등이 있으며 해당 데이터 소스들을 먼저 읽어온다.
+	 ::> 해당 부분의 소스수정시 서버 재기동 필수
+	-->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+		classpath:hash/com/config/spring/context-common.xml
+		classpath:hash/com/config/spring/context-datasource.xml
+		classpath:hash/com/config/spring/context-mapper.xml
+		classpath:hash/com/config/spring/context-transaction.xml
+		</param-value>
+	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<!-- 자식격 context: 부모격 context를 상속하는 개념 == Controller 및 기타 등등을 등록하는 기능을 구현 
+	해당 부분의 소스는 대부분 jsp,image 등이 있으며 해당 데이터 소스들은 부모격 context 다음에 읽어온다.
+	-->
+	<servlet>
+		<servlet-name>dispatcherServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>
+			/WEB-INF/config/springmvc/dispatcher-servlet.xml
+			</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+		<async-supported>true</async-supported>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>dispatcherServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	
+	
+	
+
+	<!-- 캐릭터 인코딩 설정 - 스프링 프레임워크 filter -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>utf-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>  
+  
+  
+  	<!-- https setting -->
+  	<!--  -->
+	<security-constraint>
+		<web-resource-collection>
+	    	<web-resource-name>my-secure-app</web-resource-name>
+	    	<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+	
+</web-app>
