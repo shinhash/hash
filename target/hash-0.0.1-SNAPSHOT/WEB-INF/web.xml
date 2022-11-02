@@ -22,8 +22,10 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-		classpath:hash/com/config/spring/context-common.xml 
+		classpath:hash/com/config/spring/context-common.xml
 		classpath:hash/com/config/spring/context-datasource.xml
+		classpath:hash/com/config/spring/context-mapper.xml
+		classpath:hash/com/config/spring/context-transaction.xml
 		</param-value>
 	</context-param>
 	<listener>

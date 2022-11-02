@@ -16,16 +16,5 @@
         <property name="username" value="${jdbc.username}"/>
         <property name="password" value="${jdbc.password}"/>
     </bean>
-    
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="configLocation" value="classpath:kr/or/ddit/config/db/mybatis-config.xml" />
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-	
-	<!-- sqlSession 역할을 수행하는 bean -->
-	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
-		<constructor-arg ref="sqlSessionFactory"/>
-	</bean>
-    
 	
 </beans>
