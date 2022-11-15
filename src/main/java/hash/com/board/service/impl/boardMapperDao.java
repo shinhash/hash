@@ -1,5 +1,8 @@
 package hash.com.board.service.impl;
 
-public class boardMapperDao {
+import org.springframework.stereotype.Repository;
 
+@Repository("boardMapperDao")
+public class boardMapperDao {
+	
 }
