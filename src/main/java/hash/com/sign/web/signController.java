@@ -18,6 +18,7 @@ import hash.com.sign.service.signService;
 
 
 @Controller
+@SuppressWarnings({"unchecked","rawtypes"})
 public class signController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(signController.class);
@@ -29,6 +30,7 @@ public class signController {
 	public String signPage(HttpSession session, Model model) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		List<Map> signInfoList = (List<Map>) signService.selectSignInfo(map);
 		if(signInfoList != null && signInfoList.size() > 0) {
 			for(Map<String, Object> tempMap : signInfoList) {
