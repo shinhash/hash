@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class mainController {
 	
 	
-	@RequestMapping(value="/hash/main")
+	@RequestMapping(value="/main/mainpage")
 	public String mainPage(HttpSession session, Model model) {
-		return "main/main";
+		return "main/mainpage";
 	}
 
 }
