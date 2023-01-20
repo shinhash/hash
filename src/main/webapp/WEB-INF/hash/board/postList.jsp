@@ -241,8 +241,8 @@
 																<td>${postInfo.bbsPostTitle}	</td>
 																<td>${postInfo.bbsPostRegId}	</td>
 																<td>
-																	<fmt:parseDate var="fmtInfo" value="${postInfo.bbsPostModDate}" pattern="yyyyMMdd"/>
-																	<fmt:formatDate value="${fmtInfo }" pattern="yyyy-MM-dd"/>
+																	<fmt:parseDate var="fmtInfo" value="${postInfo.bbsPostModDate}" pattern="yyyyMMddHHmmss"/>
+																	<fmt:formatDate value="${fmtInfo }" pattern="yyyy-MM-dd HH:mm:ss"/>
 																</td>
 															</tr>
 														</c:forEach>
