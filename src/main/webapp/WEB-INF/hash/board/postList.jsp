@@ -240,7 +240,7 @@
 																<td>${postInfo.rn}	</td>
 																<td>${postInfo.bbsPostTitle}	</td>
 																<td>${postInfo.bbsPostRegId}	</td>
-																<td> 
+																<td>
 																	<fmt:parseDate var="fmtInfo" value="${postInfo.bbsPostModDate}" pattern="yyyyMMddHHmmss"/>
 																	<fmt:formatDate value="${fmtInfo }" pattern="yyyy-MM-dd HH:mm:ss"/>
 																</td>
