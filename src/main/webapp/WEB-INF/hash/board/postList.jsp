@@ -236,7 +236,7 @@
 													</c:when>
 													<c:otherwise>
 														<c:forEach var="postInfo" items="${postList}" >
-															<tr>
+															<tr> 
 																<td>${postInfo.rn}	</td>
 																<td>${postInfo.bbsPostTitle}	</td>
 																<td>${postInfo.bbsPostRegId}	</td>
