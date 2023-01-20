@@ -1,5 +1,6 @@
 package hash.com.board.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import hash.com.board.service.boardService;
 
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes","unchecked"})
 @Service("boardService")
 public class boardServiceImpl implements boardService {
 	
@@ -18,14 +19,20 @@ public class boardServiceImpl implements boardService {
 	private boardMapperDao boardMapperDao;
 	
 	@Override
-	public List<Map> selectBoardList(Map<String, Object> map) throws Exception {
-		return boardMapperDao.selectBoardList(map);
+	public List<Map> selectPostList(Map<String, Object> map) throws Exception {
+		return boardMapperDao.selectPostList(map);
 	}
 	
 	
 	@Override
-	public Map selectBoard(Map<String, Object> map) throws Exception {
-		return boardMapperDao.selectBoard(map);
+	public Map selectPost(Map<String, Object> map) throws Exception {
+		
+		Map<String, Object> selectBoardInfo = new HashMap<String, Object>();
+		
+		selectBoardInfo.put("selectBoard", boardMapperDao.selectPost(map));
+		selectBoardInfo.put("selectRepleList", boardMapperDao.selectRepleList(map));
+		
+		return selectBoardInfo;
 	}
 
 	

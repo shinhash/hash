@@ -22,8 +22,8 @@ public class boardMapperDao {
 	 * @return 게시물 목록정보
 	 * @throws Exception
 	 */
-	public List<Map> selectBoardList(Map<String, Object> map) throws Exception {
-		return null;
+	public List<Map> selectPostList(Map<String, Object> map) throws Exception {
+		return sqlSession.selectList("boardMapperDao.selectPostList", map);
 	}
 	
 	
@@ -33,8 +33,19 @@ public class boardMapperDao {
 	 * @return 게시물 정보
 	 * @throws Exception
 	 */
-	public Map selectBoard(Map<String, Object> map) throws Exception {
-		return null;
+	public Map selectPost(Map<String, Object> map) throws Exception {
+		return sqlSession.selectOne("boardMapperDao.selectPost", map);
+	}
+	
+	
+	/**
+	 * 게시물 댓글 목록정보 가져오기
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map> selectRepleList(Map<String, Object> map) throws Exception {
+		return sqlSession.selectList("boardMapperDao.selectRepleList", map);
 	}
 	
 	
@@ -43,8 +54,8 @@ public class boardMapperDao {
 	 * @param map
 	 * @throws Exception
 	 */
-	public void insertBoardInfo(Map<String, Object> map) throws Exception {
-		
+	public void insertPostInfo(Map<String, Object> map) throws Exception {
+		sqlSession.insert("boardMapperDao.insertPostInfo", map);
 	}
 	
 	
@@ -53,8 +64,8 @@ public class boardMapperDao {
 	 * @param map
 	 * @throws Exception
 	 */
-	public void updateBoardInfo(Map<String, Object> map) throws Exception {
-		
+	public void updatePostInfo(Map<String, Object> map) throws Exception {
+		sqlSession.update("boardMapperDao.updatePostInfo", map);
 	}
 
 	
@@ -63,8 +74,8 @@ public class boardMapperDao {
 	 * @param map
 	 * @throws Exception
 	 */
-	public void deleteBoardInfo(Map<String, Object> map) throws Exception {
-		
+	public void deletePostInfo(Map<String, Object> map) throws Exception {
+		sqlSession.delete("boardMapperDao.deletePostInfo", map);
 	}
 	
 }

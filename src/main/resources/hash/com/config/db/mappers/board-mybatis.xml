@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boardMapperDao">
+
+	<select id="selectPostList" parameterType="HashMap" resultType="customCamelMap">
+		<![CDATA[
+		SELECT 	ROWNUM AS RN,
+				BBS_POST_TITLE,
+				BBS_POST_REG_ID,
+				BBS_POST_MOD_DATE
+		  FROM 	BBS_POST
+		 WHERE  BBS_POST_STATUS = 'N'
+		]]>
+		<if test='startDt != null and !startDt.equals("")'>
+			<if test='endDt != null and !endDt.equals("")'>
+				AND BBS_POST_MOD_DATE BETWEEN #{startDt} AND #{endDt}
+			</if>
+		</if>
+	</select>
+
+</mapper>

@@ -12,7 +12,7 @@ public interface boardService {
 	 * @return 게시판 목록정보
 	 * @throws Exception
 	 */
-	List<Map> selectBoardList(Map<String, Object> map) throws Exception;
+	List<Map> selectPostList(Map<String, Object> map) throws Exception;
 	
 	
 	/**
@@ -21,7 +21,7 @@ public interface boardService {
 	 * @return 게시물 정보
 	 * @throws Exception
 	 */
-	Map selectBoard(Map<String, Object> map) throws Exception;
+	Map selectPost(Map<String, Object> map) throws Exception;
 	
 	
 	/**
