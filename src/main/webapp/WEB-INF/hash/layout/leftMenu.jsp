@@ -1,12 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
     
     <!-- partial -->
 	<!-- partial:partials/_sidebar.html -->
 	<nav class="sidebar sidebar-offcanvas" id="sidebar">
 	  <ul class="nav">
 	    <li class="nav-item">
-	      <a class="nav-link" onclick="goPostList();">
+	      <a class="nav-link" href="#" onclick="goPostList();">
 	        <i class="icon-grid menu-icon"></i>
 	        <span class="menu-title">Dashboard</span>
 	      </a>

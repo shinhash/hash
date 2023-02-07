@@ -6,56 +6,16 @@
 
 <head>
 
-
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>IRON DRUM</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>IRON DRUM</title>
   
-  
-  
-  
-  
-  <!-- plugins:css -->
-  <link rel="stylesheet" href="${path}/resources/vendors/feather/feather.css">
-  <link rel="stylesheet" href="${path}/resources/vendors/ti-icons/css/themify-icons.css">
-  <link rel="stylesheet" href="${path}/resources/vendors/css/vendor.bundle.base.css">
-  <!-- endinject -->
-  <!-- Plugin css for this page -->
-  <link rel="stylesheet" href="${path}/resources/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
-  <link rel="stylesheet" href="${path}/resources/vendors/ti-icons/css/themify-icons.css">
-  <link rel="stylesheet" type="text/css" href="${path}/resources/js/select.dataTables.min.css">
-  <!-- End plugin css for this page -->
-  <!-- inject:css -->
-  <link rel="stylesheet" href="${path}/resources/css/vertical-layout-light/style.css">
-  <!-- endinject -->
-  <link rel="shortcut icon" href="${path}/resources/images/favicon.png" />
-  
-  
-  
-  
-  
-  <!-- plugins:js -->
-  <script src="${path}/resources/vendors/js/vendor.bundle.base.js"></script>
-  <!-- endinject -->
-  <!-- Plugin js for this page -->
-  <script src="${path}/resources/vendors/chart.js/Chart.min.js"></script>
-  <script src="${path}/resources/vendors/datatables.net/jquery.dataTables.js"></script>
-  <script src="${path}/resources/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
-  <script src="${path}/resources/js/dataTables.select.min.js"></script>
-
-  <!-- End plugin js for this page -->
-  <!-- inject:js -->
-  <script src="${path}/resources/js/off-canvas.js"></script>
-  <script src="${path}/resources/js/hoverable-collapse.js"></script>
-  <script src="${path}/resources/js/template.js"></script>
-  <script src="${path}/resources/js/settings.js"></script>
-  <script src="${path}/resources/js/todolist.js"></script>
-  <!-- endinject -->
-  <!-- Custom js for this page-->
-  <script src="${path}/resources/js/dashboard.js"></script>
-  <script src="${path}/resources/js/Chart.roundedBarCharts.js"></script>
-  <!-- End custom js for this page-->
+	<!-- tiles로 변경작업 -->
+	<jsp:include page="${path}/WEB-INF/hash/plugins/plugins_css.jsp" />
+	
+	<!-- tiles로 변경작업 -->
+    <jsp:include page="${path}/WEB-INF/hash/plugins/plugins_js.jsp" />
   
   <script>
   	function goHome(){
