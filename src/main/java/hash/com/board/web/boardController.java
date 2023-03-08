@@ -36,7 +36,7 @@ public class boardController {
 		return "board/postList";
 	}
 	
-	 
+	
 	@RequestMapping(value="/board/postInfoView")
 	public String postInfoView(HttpSession session, Model model, HttpServletRequest request) throws Exception {
 		
