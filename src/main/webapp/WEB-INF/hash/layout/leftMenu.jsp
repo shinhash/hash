@@ -5,9 +5,9 @@
 	<nav class="sidebar sidebar-offcanvas" id="sidebar">
 	  <ul class="nav">
 	    <li class="nav-item">
-	      <a class="nav-link" href="#" onclick="goPostList();">
+	      <a class="nav-link" href="javascript:goPostList();" >
 	        <i class="icon-grid menu-icon"></i>
-	        <span class="menu-title">Dashboard</span>
+	        <span class="menu-title">Drum Board</span>
 	      </a>
 	    </li>
 	    <li class="nav-item">

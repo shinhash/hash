@@ -15,3 +15,7 @@
 	<link rel="stylesheet" href="${path}/resources/css/vertical-layout-light/style.css">
 	<!-- endinject -->
 	<link rel="shortcut icon" href="${path}/resources/images/favicon.png" />
+	
+	
+	<!-- summernote lite version css -->
+	<link rel="stylesheet" href="${path}/resources/summernote/summernote-lite.css">

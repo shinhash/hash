@@ -5,17 +5,19 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+
 import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import egovframework.rte.psl.dataaccess.EgovAbstractMapper;
 
-@SuppressWarnings("rawtypes")
 @Repository("boardMapperDao")
-public class boardMapperDao {
+public class boardMapperDao extends EgovAbstractMapper{
 	
-	@Resource(name="sqlSessionTemplate")
-	private SqlSessionTemplate sqlSession;
-	
+	private static final Logger logger = LoggerFactory.getLogger(boardMapperDao.class);
+		
 	/**
 	 * 게시물 목록정보 가져오기
 	 * @param map
@@ -23,7 +25,7 @@ public class boardMapperDao {
 	 * @throws Exception
 	 */
 	public List<Map> selectPostList(Map<String, Object> map) throws Exception {
-		return sqlSession.selectList("boardMapperDao.selectPostList", map);
+		return selectList("boardMapperDao.selectPostList", map);
 	}
 	
 	
@@ -33,8 +35,8 @@ public class boardMapperDao {
 	 * @return 게시물 정보
 	 * @throws Exception
 	 */
-	public Map selectPost(Map<String, Object> map) throws Exception {
-		return sqlSession.selectOne("boardMapperDao.selectPost", map);
+	public Map selectPostInfo(Map<String, Object> map) throws Exception {
+		return selectOne("boardMapperDao.selectPostInfo", map);
 	}
 	
 	
@@ -45,37 +47,42 @@ public class boardMapperDao {
 	 * @throws Exception
 	 */
 	public List<Map> selectRepleList(Map<String, Object> map) throws Exception {
-		return sqlSession.selectList("boardMapperDao.selectRepleList", map);
+		return selectList("boardMapperDao.selectRepleList", map);
 	}
 	
 	
 	/**
 	 * 게시물 저장
 	 * @param map
+	 * @return Integer
 	 * @throws Exception
 	 */
-	public void insertPostInfo(Map<String, Object> map) throws Exception {
-		sqlSession.insert("boardMapperDao.insertPostInfo", map);
+	public int insertPostInfo(Map<String, Object> map) throws Exception {
+		return insert("boardMapperDao.insertPostInfo", map);
 	}
 	
-	
-	/**
-	 * 게시물 수정
-	 * @param map
-	 * @throws Exception
-	 */
-	public void updatePostInfo(Map<String, Object> map) throws Exception {
-		sqlSession.update("boardMapperDao.updatePostInfo", map);
-	}
-
-	
+		
 	/**
 	 * 게시물 삭제
 	 * @param map
 	 * @throws Exception
 	 */
 	public void deletePostInfo(Map<String, Object> map) throws Exception {
-		sqlSession.delete("boardMapperDao.deletePostInfo", map);
+		delete("boardMapperDao.deletePostInfo", map);
 	}
+
+
+	/**
+	 * 게시물 수정
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public int updatePostInfo(Map<String, Object> map) throws Exception {
+		return update("boardMapperDao.updatePostInfo", map);
+	}
+
+
+	
 	
 }

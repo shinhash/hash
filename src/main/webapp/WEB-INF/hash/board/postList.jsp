@@ -3,13 +3,15 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
 
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- 암호화된 HTTPS 페이지에 암호화되지 않은 HTTP를 통해 요청할 때 발생하는 에러관련 META설정 -->
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 	<title>IRON DRUM</title>
   
 	<!-- tiles로 변경작업 -->
@@ -20,19 +22,35 @@
 	
   
 	<script>
-		function goHome(){
-			var homeForm = document.getElementById("pageControllDiv");
-			homeForm.setAttribute("method","post");
-			homeForm.setAttribute("action","/main/mainpage");
-			homeForm.submit();
-		}
-  	
-		function goPostList(){
-			var homeForm = document.getElementById("pageControllDiv");
-			homeForm.setAttribute("method","post");
-			homeForm.setAttribute("action","/board/postList");
-			homeForm.submit();
-		}
+	
+		$(document).ready(function (){
+			
+			// 게시글 상세정보 페이지
+			$(".postInfoVIew").on("click", function(){
+				
+				var formInfo = document.getElementById("pageControllDiv");
+				formInfo.setAttribute("method","post");
+				formInfo.setAttribute("action","/board/postInfoView");
+				
+				let bbsPostId = document.createElement("input");
+				bbsPostId.setAttribute("name", "bbsPostId");
+				bbsPostId.setAttribute("value", $(this).attr("bbs-post-id"));
+				formInfo.appendChild(bbsPostId);
+				
+				formInfo.submit();
+			});
+			
+			$("#postWrite").on("click", function(){
+				
+				var formInfo = document.getElementById("pageControllDiv");
+				formInfo.setAttribute("method","post");
+				formInfo.setAttribute("action","/board/postRegistView");
+				formInfo.submit();
+				
+			});
+			
+		});
+		
   </script>
   
   
@@ -101,7 +119,7 @@
 													</c:when>
 													<c:otherwise>
 														<c:forEach var="postInfo" items="${postList}" >
-															<tr> 
+															<tr class="postInfoVIew" bbs-post-id="${postInfo.bbsPostId}"> 
 																<td>${postInfo.rn}	</td>
 																<td>${postInfo.bbsPostTitle}	</td>
 																<td>${postInfo.bbsPostRegId}	</td>
@@ -116,22 +134,19 @@
 												</tbody>
 											</table>
 										</div>
+										<br>
+										<button style="display: inline-block; float: right;" type="submit" class="add btn btn-success todo-list-add-btn" id="postWrite">Write</button>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 					<!-- content-wrapper ends -->
-					<!-- partial:partials/_footer.html -->
-					<footer class="footer">
-						<div class="d-sm-flex justify-content-center justify-content-sm-between">
-							<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021.  Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash. All rights reserved.</span>
-							<span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="ti-heart text-danger ml-1"></i></span>
-						</div>
-						<div class="d-sm-flex justify-content-center justify-content-sm-between">
-							<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Distributed by <a href="https://www.themewagon.com/" target="_blank">Themewagon</a></span> 
-						</div>
-					</footer> 
+					
+					<!-- tiles로 변경작업 -->
+    				<jsp:include page="${path}/WEB-INF/hash/layout/footer.jsp" />
+    				
+					 
 				<!-- partial -->
 				</div>
 			<!-- main-panel ends -->

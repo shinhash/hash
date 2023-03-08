@@ -9,6 +9,8 @@
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- 암호화된 HTTPS 페이지에 암호화되지 않은 HTTP를 통해 요청할 때 발생하는 에러관련 META설정 -->
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 	<title>IRON DRUM</title>
   
 	<!-- tiles로 변경작업 -->
@@ -16,24 +18,7 @@
 	
 	<!-- tiles로 변경작업 -->
     <jsp:include page="${path}/WEB-INF/hash/plugins/plugins_js.jsp" />
-  
-  <script>
-  	function goHome(){
-  		var homeForm = document.getElementById("pageControllDiv");
-  		homeForm.setAttribute("method","post");
-  		homeForm.setAttribute("action","/main/mainpage");
-  		homeForm.submit();
-  	}
-  	
-  	function goPostList(){
-  		var homeForm = document.getElementById("pageControllDiv");
-  		homeForm.setAttribute("method","post");
-  		homeForm.setAttribute("action","/board/postList");
-  		homeForm.submit();
-  	}
-  </script>
-  
-  
+    
 </head>
 
 <body>

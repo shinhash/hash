@@ -10,6 +10,8 @@
 	
 	<context:component-scan base-package="hash.com">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
 	</context:component-scan>
 	
 	<!-- ajax view -->
@@ -26,6 +28,9 @@
 		<property name="prefix" value="/WEB-INF/hash/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
+	
+	<!-- multipartform -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 	
 	<mvc:annotation-driven/>
 	<mvc:default-servlet-handler/>

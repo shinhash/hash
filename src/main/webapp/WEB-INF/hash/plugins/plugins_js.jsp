@@ -22,3 +22,39 @@
 	<script src="${path}/resources/js/dashboard.js"></script>
 	<script src="${path}/resources/js/Chart.roundedBarCharts.js"></script>
 	<!-- End custom js for this page-->
+	
+	<!-- jquery -->
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	
+	<!-- summernote lite version js -->
+	<script src="${path}/resources/summernote/summernote-lite.js"></script>
+	<script src="${path}/resources/summernote/lang/summernote-ko-KR.js"></script>
+	
+	<!-- 공통 javascript code -->
+	<script>
+		
+		// 홈페이지 메인페이지
+		function goHome(){
+			
+			let formInfo = document.createElement("form");
+			formInfo.setAttribute("id", "pageControllDiv");
+			formInfo.setAttribute("method", "post");
+			formInfo.setAttribute("action", "/main/mainpage");
+			document.body.appendChild(formInfo);
+			formInfo.submit();
+		}
+	 	
+		// 게시판 페이지
+		function goPostList(){
+			
+			let formInfo = document.createElement("form");
+			formInfo.setAttribute("id", "pageControllDiv");
+			formInfo.setAttribute("method", "post");
+			formInfo.setAttribute("action", "/board/postList");
+			document.body.appendChild(formInfo);
+			formInfo.submit();
+		}
+  </script>
+  
+  
+  

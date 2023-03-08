@@ -3,13 +3,25 @@
 <mapper namespace="boardMapperDao">
 
 	<select id="selectPostList" parameterType="HashMap" resultType="customCamelMap">
+		/*
+			queryId = selectPostList
+		*/
 		<![CDATA[
 		SELECT 	ROWNUM AS RN,
-				BBS_POST_TITLE,
-				BBS_POST_REG_ID,
-				BBS_POST_MOD_DATE
-		  FROM 	BBS_POST
-		 WHERE  BBS_POST_STATUS = 'N'
+				BBS_CATALOG.BBS_CATAL_NM,
+				BBS_POST.BBS_CATAL_ID, 
+				BBS_POST.BBS_POST_ID, 
+				BBS_POST.BBS_POST_TITLE, 
+				BBS_POST.BBS_POST_ATTCH_ID, 
+				BBS_POST.BBS_POST_REG_DATE, 
+				BBS_POST.BBS_POST_REG_ID, 
+				BBS_POST.BBS_POST_MOD_DATE, 
+				BBS_POST.BBS_POST_MOD_ID, 
+				BBS_POST.BBS_POST_STATUS
+		  FROM 	BBS_POST, BBS_CATALOG
+		 WHERE  1 = 1
+		   AND  BBS_POST.BBS_CATAL_ID = BBS_CATALOG.BBS_CATAL_ID
+		   AND  BBS_POST.BBS_POST_STATUS = 'N'
 		]]>
 		<if test='startDt != null and !startDt.equals("")'>
 			<if test='endDt != null and !endDt.equals("")'>
@@ -17,5 +29,113 @@
 			</if>
 		</if>
 	</select>
+	
+	
+	<resultMap id="postInfoMap" type="customCamelMap">
+		<result column="BBS_POST_CONTENT" property="BBS_POST_CONTENT" jdbcType="CLOB" javaType="java.lang.String"/>
+	</resultMap>
+	<select id="selectPostInfo" parameterType="HashMap" resultMap="postInfoMap">
+		/*
+			queryId = selectPostInfo
+		*/
+		<![CDATA[
+		SELECT 	ROWNUM AS RN,
+				BBS_CATAL_ID,
+				BBS_POST_ID,
+				BBS_POST_TITLE, 
+				BBS_POST_CONTENT, 
+				BBS_POST_ATTCH_ID, 
+				BBS_POST_REG_DATE, 
+				BBS_POST_REG_ID, 
+				BBS_POST_MOD_DATE, 
+				BBS_POST_MOD_ID, 
+				BBS_POST_STATUS
+		  FROM 	BBS_POST
+		 WHERE  BBS_POST_STATUS = 'N'
+		   AND  BBS_POST_ID = #{bbsPostId}
+		]]>
+	</select>
+	
+	
+	<select id="selectRepleList" parameterType="HashMap" resultType="customCamelMap">
+		/*
+			queryId = selectRepleList
+		*/
+		<![CDATA[
+		SELECT 	ROWNUM AS RN,
+				BBS_POST_ID, 
+				BBS_REPLE_ID, 
+				BBS_REPLE_CONTENT, 
+				BBS_REPLE_REG_DATE, 
+				BBS_REPLE_REG_ID, 
+				BBS_REPLE_MOD_DATE, 
+				BBS_REPLE_MOD_ID, 
+				BBS_REPLE_STATUS
+		  FROM 	BBS_REPLE
+		 WHERE  BBS_REPLE_STATUS = 'N'
+		   AND  BBS_POST_ID = #{bbsPostId}
+		]]>
+	</select>
+	
+	
+	<update id="updatePostInfo" parameterType="HashMap">
+		/*
+			queryId = updatePostInfo
+		*/
+		<![CDATA[
+		UPDATE 	BBS_POST 
+		   SET 	BBS_POST_TITLE = #{bbsPostTitle},
+		   		BBS_POST_CONTENT = #{bbsPostContent},
+		   		BBS_POST_MOD_DATE = TO_CHAR(SYSDATE,'YYYYMMDDHHMMDD')
+		 WHERE	BBS_POST_ID = #{bbsPostId}
+		]]>
+	</update>
+	
+	
+	<insert id="insertPostInfo" parameterType="HashMap">
+		/*
+			queryId = insertPostInfo
+		*/
+		<![CDATA[
+		INSERT INTO 
+			BBS_POST(
+				BBS_CATAL_ID,
+				BBS_POST_ID,
+				BBS_POST_TITLE, 
+				BBS_POST_CONTENT, 
+				BBS_POST_ATTCH_ID, 
+				BBS_POST_REG_DATE, 
+				BBS_POST_REG_ID, 
+				BBS_POST_MOD_DATE, 
+				BBS_POST_MOD_ID, 
+				BBS_POST_STATUS
+			)
+			SELECT 
+					'BC002' AS BBS_CATAL_ID,
+					('BP' 
+			        || NVL(SUBSTR(MAX(BBS_POST_ID),3,8), TO_CHAR(SYSDATE,'YYYYMMDD')) 
+			        || CASE WHEN SUBSTR(MAX(BBS_POST_ID),11,13) IS NULL
+			                THEN '001'
+			                ELSE LPAD(TO_CHAR(TO_NUMBER(SUBSTR(MAX(BBS_POST_ID),11,13))+1), 3, '0')
+			                END
+			       ) AS BBS_POST_ID,
+					#{bbsPostTitle} AS BBS_POST_TITLE, 
+					EMPTY_CLOB() AS BBS_POST_CONTENT, 
+					'' AS BBS_POST_ATTCH_ID, 
+					TO_CHAR(SYSDATE,'YYYYMMDDHHMMDD') AS BBS_POST_REG_DATE, 
+					'' AS BBS_POST_REG_ID, 
+					TO_CHAR(SYSDATE,'YYYYMMDDHHMMDD') AS BBS_POST_MOD_DATE, 
+					'' AS BBS_POST_MOD_ID, 
+					'N' AS BBS_POST_STATUS
+			  FROM BBS_POST 
+			 WHERE SUBSTR(BBS_POST_ID,3,8) = TO_CHAR(SYSDATE,'YYYYMMDD')
+		]]>
+		<selectKey keyProperty="bbsPostId" order="AFTER" resultType="String">
+			SELECT MAX(BBS_POST_ID) AS bbsPostId
+			  FROM BBS_POST
+		</selectKey>
+	</insert>
+	
+	
 
 </mapper>
