@@ -31,7 +31,7 @@ public class boardController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		// 게시글 리스트 추출
+		// 게시글 리스트 추출 
 		model.addAttribute("postList", boardService.selectPostList(map));
 		return "board/postList";
 	}
