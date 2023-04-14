@@ -12,9 +12,12 @@
 	    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 	    <title>IRON DRUM</title>
 	    
-	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> 
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
 	    <script>
 	    	$(function(){
+				
+	    		// 배너 setInterval
+				
 	    		// search-bar 라벨을 클릭할 경우 라벨에 포커스
 		    	$("html").on("click", function(e){
 		    		if(!$(e.target).hasClass("search-bar")){
@@ -23,12 +26,38 @@
 		    			$("#srbLabel").attr("class", "search-bar label focus");
 		    		}
 		    	});
-	    		
 		    	window.blur();
+		    	
+		    	fnRollBanner();
 	    	});
+	    	
+	    	
+	    	function fnRollBanner(){
+	    		// DB에서 배너이미지정보 조회
+	    		//var tempBannerArr = ["rolling-banner-01", "rolling-banner-02", "rolling-banner-03"];
+	    		$(".rolling-banner-div").css("background-color", "rgb(44,44,44)");
+				let bannerClass = $("#rollImg").attr("class");
+				let baseImgPath = "${path}/resources/images/banner/roll-banner-";
+				let imgExt = ".jpg";
+				let imgNo = "";
+				
+				if(bannerClass == "rollban-01"){
+					imgNo = "02";
+					bannerClass = "rollban-02";
+				}else if(bannerClass == "rollban-02"){
+					imgNo = "01";
+					bannerClass = "rollban-01";
+				}
+				let bannerImgInfo = baseImgPath + imgNo + imgExt;
+				$("#rollImg").attr("src", bannerImgInfo).stop(true,true).hide().fadeIn();
+				$("#rollImg").css("width", "80%");
+				$("#rollImg").attr("class", bannerClass);
+	    		setTimeout(fnRollBanner, 5000);
+	    	}
 	    </script>
 	    <style type="text/css">
 	    	body {
+	    		margin: 0px;
 	    		min-width: 1200px;
 	    		display: block;
 	    		font-family: "Noto Sans KR", "NanumGothic", "나눔고딕", "Nanum Gothic", "맑은 고딕", "Malgun Gothic", Dotum;
@@ -65,7 +94,6 @@
 	    	}
 	    	.toolbar-mlist-ul {
 	    		margin: inherit;
-	    		display: flex;
 	    		display: -webkit-flex;
 		    	padding: inherit;
 	    		height: 100%;
@@ -93,6 +121,10 @@
 	    	a {
 	    		font-family: "Noto Sans KR", "NanumGothic", "나눔고딕", "Nanum Gothic", "맑은 고딕", "Malgun Gothic", Dotum;
 	    	}
+	    	
+	    	.flex{
+	    		display: flex;
+	    	}
 	    </style>
 	</head>
 	<body>
@@ -100,12 +132,12 @@
 			<header id="page-head">
 				<div class="toolbar inner">
 					<div class="toolbar-area">
-						<div class="toolbar-area-top" style="display: flex;">
-							<div class="toolbar-area-top-left" style="display: flex; width: 70%">
+						<div class="toolbar-area-top flex" >
+							<div class="toolbar-area-top-left flex" style=" width: 70%">
 								<a class="home-logo">
 									<img alt="홈페이지 아이콘" style="height: 50px; width: 50px;" src="${path}/resources/images/logo/irondrum-logo_icon_mini.jpg">
 								</a>
-								<div class="search-bar" style="width: 370px; display: flex; position: relative; margin-left: 10px;">
+								<div class="search-bar flex" style="width: 370px;  position: relative; margin-left: 10px;">
 									<label	id="srbLabel"
 											class="search-bar label"
 											style="width: 100%; height: 30px; 
@@ -114,8 +146,7 @@
 											position: relative;
 											border-radius: 23px;
 											background-color: rgb(245, 246, 247);
-											margin-top: 5px;
-											">
+											margin-top: 5px;">
 										<input 	class="search-bar input"
 												style="width: 100%; 
 												height: 30px; 
@@ -139,20 +170,20 @@
 								</div>
 							</div>
 							<div class="toolbar-util" style="float: right;">
-								<ul class="toolbar-util-ul" style="display: flex;">
-									<li class="toolbar-util-li" style="display: flex;"><a href="#">로그인</a></li>
-									<li class="toolbar-util-li" style="display: flex;"><a href="#">회원가입</a></li>
-									<li class="toolbar-util-li" style="display: flex;"><a href="#">안내</a></li>
+								<ul class="toolbar-util-ul flex" >
+									<li class="toolbar-util-li flex" ><a href="#">로그인</a></li>
+									<li class="toolbar-util-li flex" ><a href="#">회원가입</a></li>
+									<li class="toolbar-util-li flex" ><a href="#">안내</a></li>
 								</ul>
 							</div>
 						</div>
 						<div class="toolbar-mlist" >
-							<ul class="toolbar-mlist-ul">
-								<li class="toolbar-mlist-li" style="display: flex;"><a href="#">전체보기</a></li>
-								<li class="toolbar-mlist-li" style="display: flex;"><a href="#">공지사항</a></li>
-								<li class="toolbar-mlist-li" style="display: flex;"><a href="#">게시판</a></li>
-								<li class="toolbar-mlist-li" style="display: flex;"><a href="#">추천음악</a></li>
-								<li class="toolbar-mlist-li" style="display: flex;"><a href="#">악보봐</a></li>
+							<ul class="toolbar-mlist-ul flex">
+								<li class="toolbar-mlist-li flex" ><a href="#">전체보기</a></li>
+								<li class="toolbar-mlist-li flex" ><a href="#">공지사항</a></li>
+								<li class="toolbar-mlist-li flex" ><a href="#">게시판</a></li>
+								<li class="toolbar-mlist-li flex" ><a href="#">추천음악</a></li>
+								<li class="toolbar-mlist-li flex" ><a href="#">악보봐</a></li>
 							</ul>
 						</div>
 					</div>
@@ -160,10 +191,34 @@
 			</header>
 			<div></div>
 			<div id="page-body">
-				<div>body-top[rollingtab]</div>	
-				<div class="inner">body-middle[contents]</div>				
+				<div class="rolling-banner-div">
+					<div class="wrap">
+						<div class="roller">
+							<ul>
+								<li class="banner flex" >
+									<div id="rollBanDiv">
+										<img 	id="rollImg" class="rollban-01"
+												src="${path}/resources/images/banner/roll-banner-01.jpg" />
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="inner">body-middle[contents]</div>			
+				<div class="inner">body-middle[contents]</div>			
+				<div class="inner">body-middle[contents]</div>			
+				<div class="inner">body-middle[contents]</div>			
+				<div class="bottomBanner" style="width: 100%; height: 150px; background-color: rgb(44,44,44);">
+					
+				</div>			
 			</div>
-			<footer id="page-foot">footer</footer>
+			<footer id="page-foot" class="inner" style="height: 500px; background-color: yellow;">
+				<div class="inner footer-div" style="background-color: green;">
+					<div class="flex">
+					</div>
+				</div>
+			</footer>
 		</div>
 	</body>
 </html>
