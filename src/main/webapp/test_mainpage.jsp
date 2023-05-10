@@ -12,6 +12,110 @@
 	    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 	    <title>IRON DRUM</title>
 	    
+	    <style type="text/css">
+	    	body {
+	    		margin: 0px;
+	    		min-width: 1200px;
+	    		display: block;
+	    		font: 12px/18px "Noto Sans KR",NanumGothic,"나눔고딕","Nanum Gothic","맑은 고딕","Malgun Gothic",Dotum;
+	    	}
+	    	
+	    	.inner {
+	    		width: 1200px;
+	    		margin: 0 auto;
+	    		padding: 0 80px;
+	    		padding-left: 80px;
+	    		padding-right: 80px;
+	    	}
+	    
+	    
+	    	.focus {
+	    		border: 1px solid rgb(38, 86, 246);
+	    	}
+	    	
+	    	.toolbar-util-li {
+	    		margin-left: 15px;
+	    	}
+	    	.toolbar-util-li > a {
+	    		display: block;
+	    	}
+	    	.toolbar-util-li > a {
+	    		color: rgb(0, 0, 0);
+	    		text-decoration: none;
+	    		font-weight: 700;
+	    		font-size: 14px;
+	    	}
+			.toolbar-util-ul a:hover {
+	    		color: rgb(110, 109, 122);
+	    	}
+
+	    	
+	    	.toolbar-mlist{
+	    		height: 55px;
+	    	}
+	    	.toolbar-mlist-ul {
+	    		margin: inherit;
+	    		display: -webkit-flex;
+		    	padding: inherit;
+	    		height: 100%;
+	    		align-items: center;
+	    		-webkit-align-items: center;
+	    	}
+	    	.toolbar-mlist-li {
+	    		margin-right: 50px;
+	    	}
+	    	.toolbar-mlist-li a {
+	    		display: block;
+	    	}
+	    	.toolbar-mlist-li > a {
+	    		color: #101c33;
+	    		text-decoration: none;
+	    		font-weight: 800;
+	    		font-size: 15px;
+	    	}
+	    	
+	    	.toolbar-mlist-li a:hover{
+	    		color: blue;
+	    	}
+	    	
+	    	
+	    	a {
+	    		font-family: "Noto Sans KR", "NanumGothic", "나눔고딕", "Nanum Gothic", "맑은 고딕", "Malgun Gothic", Dotum;
+	    		color: rgb(110, 109, 122);
+	    	}
+	    	
+	    	.flex{
+	    		display: flex;
+	    	}
+	    	
+	    	footer{
+	    		height: 500px;
+	    		display: block;
+	    	}
+	    	.footer-div > .inner{
+	    		width: 100%;
+	    		max-width: 1440px;
+	    		min-width: 1200px;
+	    		padding: 0px 80px;
+	    		margin: 0px auto;
+	    	}
+	    	
+	    	#bottomLogo{
+	    		width: 300px;
+	    	}
+	    	
+	    	.bottomBanner{
+	    		width: 100%; 
+	    		height: 150px; 
+	    		background-color: rgb(44,44,44);
+	    	}
+	    	
+	    	.contents-item{
+	    		width: 150px;
+	    		height: 150px;
+	    	}
+	    </style>
+	    
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
 	    <script>
 	    	$(function(){
@@ -52,80 +156,10 @@
 				$("#rollImg").attr("src", bannerImgInfo).stop(true,true).hide().fadeIn();
 				$("#rollImg").css("width", "80%");
 				$("#rollImg").attr("class", bannerClass);
-	    		setTimeout(fnRollBanner, 5000);
+	    		setTimeout(fnRollBanner, 10000);
 	    	}
 	    </script>
-	    <style type="text/css">
-	    	body {
-	    		margin: 0px;
-	    		min-width: 1200px;
-	    		display: block;
-	    		font-family: "Noto Sans KR", "NanumGothic", "나눔고딕", "Nanum Gothic", "맑은 고딕", "Malgun Gothic", Dotum;
-	    	}
-	    	
-	    	.inner {
-	    		width: 1200px;
-	    		margin: 0 auto;
-	    		padding: 0 80px;
-	    	}
 	    
-	    
-	    	.focus {
-	    		border: 1px solid rgb(38, 86, 246);
-	    	}
-	    	
-	    	.toolbar-util-li {
-	    		margin-left: 15px;
-	    	}
-	    	.toolbar-util-li a {
-	    		display: block;
-	    	}
-	    	.toolbar-util-li > a {
-	    		color: #6e6d7a;
-	    		text-decoration: none;
-	    		font-weight: 500;
-	    		font-size: 14px;
-	    	}
-
-
-	    	
-	    	.toolbar-mlist{
-	    		height: 55px;
-	    	}
-	    	.toolbar-mlist-ul {
-	    		margin: inherit;
-	    		display: -webkit-flex;
-		    	padding: inherit;
-	    		height: 100%;
-	    		align-items: center;
-	    		-webkit-align-items: center;
-	    	}
-	    	.toolbar-mlist-li {
-	    		margin-right: 50px;
-	    	}
-	    	.toolbar-mlist-li a {
-	    		display: block;
-	    	}
-	    	.toolbar-mlist-li > a {
-	    		color: #101c33;
-	    		text-decoration: none;
-	    		font-weight: 700;
-	    		font-size: 15px;
-	    	}
-	    	
-	    	.toolbar-mlist-li > a:hover {
-	    		color: blue;
-	    	}
-	    	
-	    	
-	    	a {
-	    		font-family: "Noto Sans KR", "NanumGothic", "나눔고딕", "Nanum Gothic", "맑은 고딕", "Malgun Gothic", Dotum;
-	    	}
-	    	
-	    	.flex{
-	    		display: flex;
-	    	}
-	    </style>
 	</head>
 	<body>
 		<div id="root" class="root">
@@ -170,7 +204,7 @@
 								</div>
 							</div>
 							<div class="toolbar-util" style="float: right;">
-								<ul class="toolbar-util-ul flex" >
+								<ul id="toolbar-util-ul" class="toolbar-util-ul flex" >
 									<li class="toolbar-util-li flex" ><a href="#">로그인</a></li>
 									<li class="toolbar-util-li flex" ><a href="#">회원가입</a></li>
 									<li class="toolbar-util-li flex" ><a href="#">안내</a></li>
@@ -197,25 +231,47 @@
 							<ul>
 								<li class="banner flex" >
 									<div id="rollBanDiv">
-										<img 	id="rollImg" class="rollban-01"
-												src="${path}/resources/images/banner/roll-banner-01.jpg" />
+										<img id="rollImg" class="rollban-01" src="${path}/resources/images/banner/roll-banner-01.jpg" />
 									</div>
 								</li>
 							</ul>
 						</div>
 					</div>
 				</div>
-				<div class="inner">body-middle[contents]</div>			
-				<div class="inner">body-middle[contents]</div>			
-				<div class="inner">body-middle[contents]</div>			
-				<div class="inner">body-middle[contents]</div>			
-				<div class="bottomBanner" style="width: 100%; height: 150px; background-color: rgb(44,44,44);">
-					
-				</div>			
+				<div class="body-contents">
+					<div class="inner">
+						<div class="contents">
+							<div class="contents-item">
+								<a href="#" class="item-link">
+									<div class="item-img">
+										<img style="width: 100px; height: 100px;" alt="드럼이미지" src="${path}/resources/images/banner/roll-banner-01.jpg">
+									</div>
+									<div class="item-title">
+										콘텐츠 1
+									</div>
+									<div class="item-cont">
+										이 콘텐츠를 클릭시 페이지가 이동됩니다.
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="bottomBanner"></div>			
 			</div>
-			<footer id="page-foot" class="inner" style="height: 500px; background-color: yellow;">
-				<div class="inner footer-div" style="background-color: green;">
-					<div class="flex">
+			<footer id="page-foot">
+				<div class="footer-div">
+					<div class="inner">
+						<div class="flex" style="justify-content: space-between;">
+							<div class="footer-left">
+								<div style="letter-spacing: -0.25px; margin-top: 32px;">
+									<img id="bottomLogo" src="${path}/resources/images/logo/irondrum-logo_icon.jpg" />
+								</div>
+								<div style="margin-top: 97px;">bottom compony info</div>
+							</div>
+							<div class="footer-right" style="width: 25%">right</div>
+						</div>
+						<div class="footer-link"></div>
 					</div>
 				</div>
 			</footer>
