@@ -3,149 +3,302 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="path" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
-<html lang="ko">
+<html>
+	<head>
+		<meta charset="UTF-8">
+	    <meta name="description" content="Male_Fashion Template">
+	    <meta name="keywords" content="Male_Fashion, unica, creative, html">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	    <title>IRON DRUM</title>
+	    
+	    <!-- summernote lite version css -->
+		<link rel="stylesheet" href="${path}/resources/summernote/summernote-lite.css">
+	    <style type="text/css">
+	    	body {
+	    		margin: 0px;
+	    		min-width: 1200px;
+	    		display: block;
+	    		font: 12px/18px "Noto Sans KR",NanumGothic,"나눔고딕","Nanum Gothic","맑은 고딕","Malgun Gothic",Dotum;
+	    	}
+	    	
+	    	.inner {
+	    		width: 1200px;
+	    		margin: 0 auto;
+	    		padding: 0 80px;
+	    		padding-left: 80px;
+	    		padding-right: 80px;
+	    	}
+	    
+	    
+	    	.focus {
+	    		border: 1px solid rgb(38, 86, 246);
+	    	}
+	    	
+	    	.toolbar-util-li {
+	    		margin-left: 15px;
+	    	}
+	    	.toolbar-util-li > a {
+	    		display: block;
+	    	}
+	    	.toolbar-util-li > a {
+	    		color: rgb(0, 0, 0);
+	    		text-decoration: none;
+	    		font-weight: 700;
+	    		font-size: 14px;
+	    	}
+			.toolbar-util-ul a:hover {
+	    		color: rgb(110, 109, 122);
+	    	}
 
-<head>
-
-	<!-- Required meta tags -->
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<!-- 암호화된 HTTPS 페이지에 암호화되지 않은 HTTP를 통해 요청할 때 발생하는 에러관련 META설정 -->
-	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-	<title>IRON DRUM</title>
-  
-	<!-- tiles로 변경작업 -->
-	<jsp:include page="${path}/WEB-INF/hash/plugins/plugins_css.jsp" />
-	
-	<!-- tiles로 변경작업 -->
-    <jsp:include page="${path}/WEB-INF/hash/plugins/plugins_js.jsp" />
-	
-  
-	<script>
-	
-		$(document).ready(function (){		
-			
-			// summernote setting and view
-			$('#summernote').summernote({
-				  height: 300,                 // 에디터 높이
-				  minHeight: null,             // 최소 높이
-				  maxHeight: null,             // 최대 높이
-				  focus: true,                  // 에디터 로딩후 포커스를 맞출지 여부
-				  lang: "ko-KR",					// 한글 설정
-				  placeholder: '최대 2048자까지 쓸 수 있습니다'	//placeholder 설정
-		          
-			});
-			
-			$("#postRegist").on("click", function(){
-				var formInfo = document.getElementById("postRegistForm");
-				formInfo.setAttribute("method","post");
-				formInfo.setAttribute("action","/board/postInfoRegist");
+	    	
+	    	.toolbar-mlist{
+	    		height: 55px;
+	    	}
+	    	.toolbar-mlist-ul {
+	    		margin: inherit;
+	    		display: -webkit-flex;
+		    	padding: inherit;
+	    		height: 100%;
+	    		align-items: center;
+	    		-webkit-align-items: center;
+	    	}
+	    	.toolbar-mlist-li {
+	    		margin-right: 50px;
+	    	}
+	    	.toolbar-mlist-li a {
+	    		display: block;
+	    	}
+	    	.toolbar-mlist-li > a {
+	    		color: #101c33;
+	    		text-decoration: none;
+	    		font-weight: 800;
+	    		font-size: 15px;
+	    	}
+	    	
+	    	.toolbar-mlist-li a:hover{
+	    		color: blue;
+	    	}
+	    	
+	    	
+	    	a {
+	    		font-family: "Noto Sans KR", "NanumGothic", "나눔고딕", "Nanum Gothic", "맑은 고딕", "Malgun Gothic", Dotum;
+	    		color: rgb(110, 109, 122);
+	    	}
+	    	
+	    	.flex{
+	    		display: flex;
+	    	}
+	    	
+	    	footer{
+	    		height: 500px;
+	    		display: block;
+	    	}
+	    	.footer-div > .inner{
+	    		width: 100%;
+	    		max-width: 1440px;
+	    		min-width: 1200px;
+	    		padding: 0px 80px;
+	    		margin: 0px auto;
+	    	}
+	    	
+	    	#bottomLogo{
+	    		width: 300px;
+	    	}
+	    	
+	    	.bottomBanner{
+	    		width: 100%; 
+	    		height: 150px; 
+	    		background-color: rgb(44,44,44);
+	    	}
+	    	
+	    	.contents-item{
+	    		width: 150px;
+	    		height: 150px;
+	    	}
+	    	
+	    	.rolling-banner-div{
+	    		background-color: rgb(44,44,44);
+	    		height: 50px;
+	    	}
+	    </style>
+	    
+	   	<!-- jquery -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
+		
+		<!-- summernote lite version js -->
+		<script src="${path}/resources/summernote/summernote-lite.js"></script>
+		<script src="${path}/resources/summernote/lang/summernote-ko-KR.js"></script>
+	    <script>
+	    	$(document).ready(function (){
+				
+				// summernote setting and view
+				$("#summernote").summernote({
+					  height: 300,                 // 에디터 높이
+					  minHeight: null,             // 최소 높이
+					  maxHeight: null,             // 최대 높이
+					  focus: true,                  // 에디터 로딩후 포커스를 맞출지 여부
+					  lang: "ko-KR"					// 한글 설정
+// 					  placeholder: '최대 2048자까지 쓸 수 있습니다'	//placeholder 설정
+				});
+				// 서머노트 쓰기 활성화
+				$("#summernote").summernote('enable');
+				
+				$("#postRegist").on("click", function(){
+					var formInfo = document.getElementById("postRegistForm");
+					formInfo.setAttribute("method","post");
+					formInfo.setAttribute("action","/board/postInfoRegist");
+					formInfo.submit();
+				});
+	    	});
+	    	
+	    	
+	    	// 홈페이지 메인페이지
+			function goHome(){
+				
+				let formInfo = document.createElement("form");
+				formInfo.setAttribute("id", "pageControllDiv");
+				formInfo.setAttribute("method", "post");
+				formInfo.setAttribute("action", "/main/mainpage");
+				document.body.appendChild(formInfo);
 				formInfo.submit();
-			});
-		});
-	
-  </script>
-  
-  
-</head>
-
-<body>
-	<div class="container-scroller">
-	 
-		<!-- tiles로 변경작업 -->
-    	<jsp:include page="${path}/WEB-INF/hash/layout/topMenu.jsp" />
-    	
-			<!-- partial -->
-			<div class="container-fluid page-body-wrapper">
-				<!-- partial:partials/_settings-panel.html -->
-				<div class="theme-setting-wrapper">
-					<div id="settings-trigger">
-						<i class="ti-settings"></i>
-					</div>
-					<div id="theme-settings" class="settings-panel">
-						<i class="settings-close ti-close"></i>
-						<p class="settings-heading">SIDEBAR SKINS</p>
-						<div class="sidebar-bg-options selected" id="sidebar-light-theme">
-							<div class="img-ss rounded-circle bg-light border mr-3"></div>
-							Light
-						</div>
-						<div class="sidebar-bg-options" id="sidebar-dark-theme"><div class="img-ss rounded-circle bg-dark border mr-3"></div>Dark</div>
-						<p class="settings-heading mt-2">HEADER SKINS</p>
-						<div class="color-tiles mx-0 px-4">
-							<div class="tiles success"></div>
-							<div class="tiles warning"></div>
-							<div class="tiles danger"></div>
-							<div class="tiles info"></div>
-							<div class="tiles dark"></div>
-							<div class="tiles default"></div>
-						</div>
-					</div>
-				</div>
-      
-				<!-- tiles로 변경작업 -->
-				<jsp:include page="${path}/WEB-INF/hash/layout/leftMenu.jsp" />
-
-				<!-- partial -->
-				<div class="main-panel">
-					<div class="content-wrapper">
-						<div class="row">
-							<p>게시판</p>
-						</div>
-						<div class="row">
-							<div class="col-md-15 grid-margin stretch-card">
-								<div class="card">
-									<div class="card-body" align="center">
-										<br><br>
-										<form id="postRegistForm" enctype="multipart/form-data">
-											<table border="1" style="align-content: center; width: 100%">
-												<tr>
-													<td>제목</td>
-													<td>
-														<input type="text" name="bbsPostTitle" style="width:100%; font-weight: bold"/>
-													</td>
-												</tr>
-												<tr>
-													<td>내용</td>
-													<td>
-														<textarea id="summernote" name="bbsPostContent"></textarea>
-													</td>
-												</tr>
-												<tr>
-													<td>첨부파일</td>
-													<td>
-														<input type="file" name="bbsPostAttchId" />
-													</td>
-												</tr>
-											</table>
-										</form>
-										<br>
-										<button style="display: inline-block; float: right; margin-left: 10px;" type="submit" class="add btn btn-success todo-list-add-btn" id="postRegist">Regist</button>
-										<button style="display: inline-block; float: right;" type="submit" class="add btn btn-secondary todo-list-add-btn" id="postList" onclick="goPostList();">List</button>
-									</div>
+			}
+		 	
+			// 게시판 페이지
+			function goPostList(){
+				
+				let formInfo = document.createElement("form");
+				formInfo.setAttribute("id", "pageControllDiv");
+				formInfo.setAttribute("method", "post");
+				formInfo.setAttribute("action", "/board/postList");
+				document.body.appendChild(formInfo);
+				formInfo.submit();
+			}
+	    </script>
+	    
+	</head>
+	<body>
+		<div id="root" class="root">
+			<header id="page-head">
+				<div class="toolbar inner">
+					<div class="toolbar-area">
+						<div class="toolbar-area-top flex" >
+							<div class="toolbar-area-top-left flex" style=" width: 70%">
+								<a class="home-logo" onclick="goHome()">
+									<img alt="홈페이지 아이콘" style="height: 50px; width: 50px;" src="${path}/resources/images/logo/irondrum-logo_icon_mini.jpg">
+								</a>
+								<div class="search-bar flex" style="width: 370px;  position: relative; margin-left: 10px;">
+									<label	id="srbLabel"
+											class="search-bar label"
+											style="width: 100%; height: 30px; 
+											align-items :center; 
+											padding: 8px 32px 8px 16px; 
+											position: relative;
+											border-radius: 23px;
+											background-color: rgb(245, 246, 247);
+											margin-top: 5px;">
+										<input 	class="search-bar input"
+												style="width: 100%; 
+												height: 30px; 
+												border: none; 
+												background-color: rgb(245, 246, 247);
+												outline-style: none;" 
+												placeholder="검색어를 입력해주세요"/>
+									</label>
+									<svg	class="search-svg"
+											style="width: 18px; height: 18px; 
+											position: absolute; right: 20px;
+											margin-top: 17px;" 
+											color="#101C33" 
+											viewBox="0 0 12 12"
+											tabindex="-1"
+											onclick="alert('test!!');">
+										<path fill-rule="evenodd" clip-rule="evenodd" d="M5.16483 8.33C3.41907 8.33 1.99996 6.91 1.99996 5.165C1.99996 3.41917 3.41907 1.99917 5.16483 1.99917C6.91059 1.99917 8.32969 3.41917 8.32969 5.165C8.32969 6.91 6.91059 8.33 5.16483 8.33ZM10.8538 10.1483L8.42886 7.7225C8.98467 7.015 9.32965 6.13417 9.32965 5.165C9.32965 2.86417 7.46473 1 5.16483 1C2.86492 1 1 2.86417 1 5.165C1 7.465 2.86492 9.32917 5.16483 9.32917C6.13395 9.32917 7.01558 8.98417 7.72222 8.42917L10.1471 10.8533C10.2454 10.9517 10.3729 11 10.5004 11C10.6288 11 10.7563 10.9517 10.8538 10.8533C11.0487 10.6592 11.0487 10.3417 10.8538 10.1483Z">
+										</path>
+										<defs></defs>
+									</svg>
 								</div>
 							</div>
+							<div class="toolbar-util" style="float: right;">
+								<ul id="toolbar-util-ul" class="toolbar-util-ul flex" >
+									<li class="toolbar-util-li flex" ><a href="#">로그인</a></li>
+									<li class="toolbar-util-li flex" ><a href="#">회원가입</a></li>
+									<li class="toolbar-util-li flex" ><a href="#">안내</a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="toolbar-mlist" >
+							<ul class="toolbar-mlist-ul flex">
+								<li class="toolbar-mlist-li flex" ><a href="#">전체보기</a></li>
+								<li class="toolbar-mlist-li flex" ><a href="#">공지사항</a></li>
+								<li class="toolbar-mlist-li flex" ><a onclick="goPostList()">게시판</a></li>
+								<li class="toolbar-mlist-li flex" ><a href="#">추천음악</a></li>
+								<li class="toolbar-mlist-li flex" ><a href="#">악보봐</a></li>
+							</ul>
 						</div>
 					</div>
-					<!-- content-wrapper ends -->
-					<!-- partial:partials/_footer.html -->
-					<footer class="footer">
-						<div class="d-sm-flex justify-content-center justify-content-sm-between">
-							<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021.  Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash. All rights reserved.</span>
-							<span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="ti-heart text-danger ml-1"></i></span>
-						</div>
-						<div class="d-sm-flex justify-content-center justify-content-sm-between">
-							<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Distributed by <a href="https://www.themewagon.com/" target="_blank">Themewagon</a></span> 
-						</div>
-					</footer> 
-				<!-- partial -->
 				</div>
-			<!-- main-panel ends -->
-			</div>   
-		<!-- page-body-wrapper ends -->
+			</header>
+			<div></div>
+			<div id="page-body">
+				<div class="rolling-banner-div"></div>
+				<br>
+				<div class="body-contents">
+					<div class="inner">
+						<div class="contents">
+							<br><br>
+							<form id="postRegistForm" enctype="multipart/form-data">
+								<table border="1" style="align-content: center; width: 80%">
+									<tr>
+										<td>제목</td>
+										<td>
+											<input type="text" name="bbsPostTitle" style="width:100%; font-weight: bold"/>
+										</td>
+									</tr>
+									<tr>
+										<td>내용</td>
+										<td>
+											<textarea id="summernote" name="bbsPostContent"></textarea>
+										</td>
+									</tr>
+									<tr>
+										<td>첨부파일</td>
+										<td>
+											<input type="file" name="bbsPostAttchId" />
+										</td>
+									</tr>
+								</table>
+							</form>
+							<br>
+							<button style="display: inline-block; float: right; margin-left: 10px;" type="submit" class="add btn btn-success todo-list-add-btn" id="postRegist">Regist</button>
+							<button style="display: inline-block; float: right;" type="submit" class="add btn btn-secondary todo-list-add-btn" id="postList" onclick="goPostList();">List</button>
+						</div>
+						<br><br>
+					</div>
+				</div>
+				<div class="bottomBanner"></div>			
+			</div>
+			<footer id="page-foot">
+				<div class="footer-div">
+					<div class="inner">
+						<div class="flex" style="justify-content: space-between;">
+							<div class="footer-left">
+								<div style="letter-spacing: -0.25px; margin-top: 32px;">
+									<img id="bottomLogo" src="${path}/resources/images/logo/irondrum-logo_icon.jpg" />
+								</div>
+								<div style="margin-top: 97px;">bottom compony info</div>
+							</div>
+							<div class="footer-right" style="width: 25%">right</div>
+						</div>
+						<div class="footer-link"></div>
+					</div>
+				</div>
+			</footer>
 		</div>
-		<!-- container-scroller -->
-  
+		
+		<div>
+			<form id="pageControllDiv"></form>
+		</div>
+		
 	</body>
-
 </html>
-

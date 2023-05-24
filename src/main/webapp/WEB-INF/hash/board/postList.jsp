@@ -280,6 +280,7 @@
 				<div class="body-contents">
 					<div class="inner">
 						<div class="contents">
+							<br><br>
 							<table>
 								<thead>
 									<tr>
@@ -311,8 +312,9 @@
 								</tbody>
 							</table>
 						</div>
-						<br>
+						<br><br>
 						<button style="display: inline-block; float: right;" type="submit" class="add btn btn-success todo-list-add-btn" id="postWrite">Write</button>
+						<br><br>
 					</div>
 				</div>
 				<div class="bottomBanner"></div>			
