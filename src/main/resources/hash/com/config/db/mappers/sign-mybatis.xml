@@ -2,11 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="signMapperDao">
 	
-	<select id="selectSignInfo" parameterType="HashMap" resultType="customCamelMap">
-		SELECT USER_ID
-		     , USER_PW
-		     , USER_NAME
-		  FROM IRON_DRUM_USER
+	<select id="loginCheck" parameterType="HashMap" resultType="customCamelMap">
+		SELECT    USER_ID
+			    , USER_PW
+			    , USER_NM
+			    , GENDER
+				, BIRTH
+				, MAIL
+				, PHONE
+				, RESIGN_YN
+				, ADDR
+				, ADDR_DETAIL
+				, ZIP_CODE
+				, REG_DATE
+				, REG_ID
+				, MODI_DATE
+				, MODI_ID
+		  FROM IRON_USER
+		 WHERE USER_ID = #{userId}
+	</select>
+	
+	<select id="singUpIdChk" parameterType="HashMap" resultType="int">
+		SELECT COUNT(USER_ID)
+		  FROM IRON_USER
+		 WHERE USER_ID = #{userId}
 	</select>
 
 </mapper>

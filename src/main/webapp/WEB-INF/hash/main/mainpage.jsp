@@ -180,6 +180,27 @@
 				document.body.appendChild(formInfo);
 				formInfo.submit();
 			}
+			
+			// 로그인 페이지
+			function goSignIn(){
+				let formInfo = document.createElement("form");
+				formInfo.setAttribute("id", "pageControllDiv");
+				formInfo.setAttribute("method", "post");
+				formInfo.setAttribute("action", "/sign/loginPage");
+				document.body.appendChild(formInfo);
+				formInfo.submit();
+			}
+			
+			// 회원가입 페이지
+			function goSignUp(){
+				let formInfo = document.createElement("form");
+				formInfo.setAttribute("id", "pageControllDiv");
+				formInfo.setAttribute("method", "post");
+				formInfo.setAttribute("action", "/sign/signUpPage");
+				document.body.appendChild(formInfo);
+				formInfo.submit();
+			}
+			
 	    </script>
 	    
 	</head>
@@ -227,8 +248,8 @@
 							</div>
 							<div class="toolbar-util" style="float: right;">
 								<ul id="toolbar-util-ul" class="toolbar-util-ul flex" >
-									<li class="toolbar-util-li flex" ><a href="#">로그인</a></li>
-									<li class="toolbar-util-li flex" ><a href="#">회원가입</a></li>
+									<li class="toolbar-util-li flex" ><a href="#" onclick="goSignIn()">로그인</a></li>
+									<li class="toolbar-util-li flex" ><a href="#" onclick="goSignUp()">회원가입</a></li>
 									<li class="toolbar-util-li flex" ><a href="#">안내</a></li>
 								</ul>
 							</div>

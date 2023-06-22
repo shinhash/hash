@@ -16,13 +16,13 @@ public class signServiceImpl implements signService{
 	private signMapperDao signMapperDao;
 
 	@Override
-	public List<?> selectSignInfo(Map<String, Object> map) throws Exception{
-		return signMapperDao.selectSignInfo(map);
+	public List<?> loginCheck(Map<String, Object> map) throws Exception{
+		return signMapperDao.loginCheck(map);
 	}
 
 	@Override
-	public int selectTemp() throws Exception{
-		return 0;
+	public int singUpIdChk(Map<String, Object> map) throws Exception {
+		return signMapperDao.singUpIdChk(map);
 	}
 
 }

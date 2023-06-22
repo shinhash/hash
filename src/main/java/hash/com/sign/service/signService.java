@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 public interface signService {
 	
 	
-	List<?> selectSignInfo(Map<String, Object> map) throws Exception;
-	
-	public int selectTemp() throws Exception;
+	List<?> loginCheck(Map<String, Object> map) throws Exception;
+
+	int singUpIdChk(Map<String, Object> map) throws Exception;
 
 }
