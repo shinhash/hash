@@ -29,34 +29,44 @@ public class signController {
 	
 	@RequestMapping(value="/sign/loginPage")
 	public String signloginPage(HttpSession session, Model model) throws Exception {
-		return "sign/loginPage";
+		return "/sign/loginPage";
 	}
 	
 	
 	@RequestMapping(value="/sign/loginCheck")
 	public String loginCheck(HttpSession session, Model model, HttpServletRequest request) throws Exception {
 		
-		String userId = request.getParameter("userId");
-		logger.debug(userId);
+		String inputUserId = request.getParameter("inputUserId");
+		String inputUserPw = request.getParameter("inputUserPw");
+		logger.debug(inputUserId);
+		
+		String resultInfo = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userId);
+		map.put("userId", inputUserId);
 		
 		List<Map> signInfoList = (List<Map>) signService.loginCheck(map);
 		if(signInfoList != null && signInfoList.size() > 0) {
 			for(Map<String, Object> userInfo : signInfoList) {
 				logger.debug(userInfo.toString());
-				model.addAttribute("userInfo", userInfo);
+				if(inputUserPw.equals(userInfo.get("userPw"))) {
+					// session에 user정보 저장 후 메인페이지로 이동
+					resultInfo = "/main/mainpage";
+				}else {
+					model.addAttribute("errorRst", "입력하신 비밀번호가 일치하지 않습니다.");
+					resultInfo = "redirect:/sign/loginPage";
+				}
 			}
 		}else {
-			model.addAttribute("userInfo", null);
+			model.addAttribute("errorRst", "입력하신 ID는 없는 정보입니다.");
+			resultInfo = "redirect:/sign/loginPage";
 		}
-		return "jsonView";
+		return resultInfo;
 	}
 	
 	@RequestMapping(value="/sign/signUpPage")
 	public String signUpPage(HttpSession session, Model model) throws Exception {
-		return "sign/signUpPage";
+		return "/sign/signUpPage";
 	}
 	
 	@RequestMapping(value="/sign/singUpIdChk")
