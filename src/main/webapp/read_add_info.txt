@@ -1,0 +1,23 @@
+oracle IRON_DRUM table info
+pw : 1234
+
+======================
+next info
+======================
+db change
+oracle -> mysql
+ - download and install
+ - dbeaver setting
+ - testing
+_______________________
+jsp display
+  - top, contents, botton setting
+_______________________  
+page deisign
+ - insert, update, delete, select display
+_______________________
+add functions
+ - file upload
+ - file download
+ - search song
+_______________________
