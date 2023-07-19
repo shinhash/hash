@@ -121,6 +121,11 @@
 	    		background-color: rgb(44,44,44);
 	    		height: 50px;
 	    	}
+	    	
+	    	#postRegistTable{
+	    		margin: auto;
+	    	}
+	    	
 	    </style>
 	    
 	   	<!-- jquery -->
@@ -248,7 +253,7 @@
 						<div class="contents">
 							<br><br>
 							<form id="postRegistForm" enctype="multipart/form-data">
-								<table border="1" style="align-content: center; width: 80%">
+								<table id="postRegistTable" border="1" style="width: 80%">
 									<tr>
 										<td>제목</td>
 										<td>

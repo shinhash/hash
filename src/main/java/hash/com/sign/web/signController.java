@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import hash.com.sign.service.signService;
 
@@ -28,13 +30,20 @@ public class signController {
 	private signService signService;
 	
 	@RequestMapping(value="/sign/loginPage")
-	public String signloginPage(HttpSession session, Model model) throws Exception {
+	public String signloginPage(HttpSession session, Model model, HttpServletRequest request) throws Exception {
+		
+		Map<String, Object> flashMap = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
+		String isError = "";
+		if(flashMap != null && flashMap.get("errorRst") != null) {
+			isError = (String) flashMap.get("errorRst");
+		}
+		model.addAttribute("errorRst", isError);
 		return "/sign/loginPage";
 	}
 	
 	
 	@RequestMapping(value="/sign/loginCheck")
-	public String loginCheck(HttpSession session, Model model, HttpServletRequest request) throws Exception {
+	public String loginCheck(HttpSession session, Model model, HttpServletRequest request, RedirectAttributes rs) throws Exception {
 		
 		String inputUserId = request.getParameter("inputUserId");
 		String inputUserPw = request.getParameter("inputUserPw");
@@ -53,12 +62,14 @@ public class signController {
 					// session에 user정보 저장 후 메인페이지로 이동
 					resultInfo = "/main/mainpage";
 				}else {
-					model.addAttribute("errorRst", "입력하신 비밀번호가 일치하지 않습니다.");
+					String errorRst = "입력하신 비밀번호가 일치하지 않습니다.";
+					rs.addFlashAttribute("errorRst", errorRst);
 					resultInfo = "redirect:/sign/loginPage";
 				}
 			}
 		}else {
-			model.addAttribute("errorRst", "입력하신 ID는 없는 정보입니다.");
+			String errorRst = "입력하신 ID는 없는 정보입니다.";
+			rs.addFlashAttribute("errorRst", errorRst);
 			resultInfo = "redirect:/sign/loginPage";
 		}
 		return resultInfo;
@@ -73,16 +84,17 @@ public class signController {
 	public String singUpIdChk(HttpSession session, Model model, HttpServletRequest request) throws Exception {
 		
 		String userId = request.getParameter("inputId");
-		boolean isUsedRst = false;
-		logger.debug(userId);
+		boolean isAleadyUsed = false;
+		logger.debug("input userId = "+userId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		int signUpIdChk = signService.singUpIdChk(map);
+		logger.debug("signUpIdChk = "+signUpIdChk);
 		if(signUpIdChk > 0) {
-			isUsedRst = true;
+			isAleadyUsed = true;
 		}
-		model.addAttribute("isUsedRst", isUsedRst);
+		model.addAttribute("isAleadyUsed", isAleadyUsed);
 		
 		return "jsonView";
 	}

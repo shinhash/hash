@@ -121,6 +121,11 @@
 	    		background-color: rgb(44,44,44);
 	    		height: 50px;
 	    	}
+	    	
+	    	#bbsPostTitle{
+	    		font-weight: bold; 
+	    		width: 90%;
+	    	}
 	    </style>
 	    
 	   	<!-- jquery -->
@@ -350,7 +355,7 @@
 									<tr>
 										<td>제목</td>
 										<td>
-											<input id="bbsPostTitle" name="bbsPostTitle" type="text" style="font-weight: bold; width: 100%" value="${postInfo.bbsPostTitle}"/>
+											<input id="bbsPostTitle" name="bbsPostTitle" type="text" value="${postInfo.bbsPostTitle}"/>
 										</td>
 									</tr>
 									<tr>

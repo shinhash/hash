@@ -119,6 +119,10 @@
 	    		background-color: rgb(44,44,44);
 	    		height: 50px;
 	    	}
+	    	
+	    	#boardListTable{
+	    		margin: auto;
+	    	}
 	    </style>
 	    
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
@@ -281,7 +285,7 @@
 					<div class="inner">
 						<div class="contents">
 							<br><br>
-							<table>
+							<table id="boardListTable">
 								<thead>
 									<tr>
 										<th>번호</th>

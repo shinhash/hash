@@ -121,6 +121,10 @@
 	    		background-color: rgb(44,44,44);
 	    		height: 50px;
 	    	}
+	    	
+	    	#boardPostTable{
+	    		margin: auto;
+	    	}
 	    </style>
 	    
 	   	<!-- jquery -->

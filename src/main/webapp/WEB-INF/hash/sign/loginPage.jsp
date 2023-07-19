@@ -9,6 +9,10 @@
 <script type="text/javascript">
 
 	$(function(){
+		if('${errorRst}' != ''){
+			alert('${errorRst}');
+		}
+		
 		$("#loginBtn").on("click", function(){
 			loginProcess();
 		});

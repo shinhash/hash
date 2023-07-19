@@ -114,6 +114,10 @@
 	    		width: 150px;
 	    		height: 150px;
 	    	}
+	    	
+	    	#rollBanDiv{
+	    		margin: auto;
+	    	}
 	    </style>
 	    
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
@@ -140,6 +144,7 @@
 	    		// DB에서 배너이미지정보 조회
 	    		//var tempBannerArr = ["rolling-banner-01", "rolling-banner-02", "rolling-banner-03"];
 	    		$(".rolling-banner-div").css("background-color", "rgb(44,44,44)");
+	    		$(".rolling-banner-div").css("height", "300px");
 				let bannerClass = $("#rollImg").attr("class");
 				let baseImgPath = "${path}/resources/images/banner/roll-banner-";
 				let imgExt = ".jpg";
@@ -152,9 +157,12 @@
 					imgNo = "01";
 					bannerClass = "rollban-01";
 				}
+				
 				let bannerImgInfo = baseImgPath + imgNo + imgExt;
 				$("#rollImg").attr("src", bannerImgInfo).stop(true,true).hide().fadeIn();
-				$("#rollImg").css("width", "80%");
+				$("#rollImg").css("margin-top", "10px");
+				$("#rollImg").css("margin-bottom", "10px");
+				$("#rollImg").css("height", "280px");
 				$("#rollImg").attr("class", bannerClass);
 	    		setTimeout(fnRollBanner, 10000);
 	    	}
