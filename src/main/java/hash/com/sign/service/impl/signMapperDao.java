@@ -17,8 +17,12 @@ public class signMapperDao extends EgovAbstractMapper{
 		return selectList("signMapperDao.loginCheck", map);
 	}
 
-	public int singUpIdChk(Map<String, Object> map) {
-		return selectOne("signMapperDao.singUpIdChk", map);
+	public int signUpIdChk(Map<String, Object> map) {
+		return selectOne("signMapperDao.signUpIdChk", map);
+	}
+
+	public void signUpProcess(Map<String, Object> map) {
+		insert("signMapperDao.signUpProcess", map);
 	}
 
 }

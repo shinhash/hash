@@ -1,12 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
     
-	<!-- partial:partials/_footer.html -->
-	<footer class="footer">
-		<div class="d-sm-flex justify-content-center justify-content-sm-between">
-			<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2021.  Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash. All rights reserved.</span>
-			<span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="ti-heart text-danger ml-1"></i></span>
+<footer id="page-foot">
+	<div class="bottomBanner lineTopBottomDiv"></div>			
+	<div class="footer-div">
+		<div class="footerInner">
+			<div class="flex" style="justify-content: space-between;">
+				<div class="footer-left">
+					<div style="letter-spacing: -0.25px; margin-top: 32px;">
+						<img id="bottomLogo" src="${path}/resources/images/logo/irondrum-logo_icon.jpg" />
+					</div>
+					<div style="margin-top: 97px;">bottom compony info</div>
+				</div>
+				<div class="footer-right" style="width: 25%">right</div>
+			</div>
+			<div class="footer-link"></div>
 		</div>
-		<div class="d-sm-flex justify-content-center justify-content-sm-between">
-			<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Distributed by <a href="https://www.themewagon.com/" target="_blank">Themewagon</a></span> 
-		</div>
-	</footer>
+	</div>
+</footer>

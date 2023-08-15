@@ -12,7 +12,7 @@ public class mainController {
 	
 	@RequestMapping(value="/main/mainpage")
 	public String mainPage(HttpSession session, Model model) {
-		return "main/mainpage";
+		return "tiles/main/mainpage";
 	}
 
 }

@@ -15,7 +15,7 @@
 	</context:component-scan>
 	
 	<!-- ajax view -->
-	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"></bean>
+	<bean id="ajaxJasonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"></bean>
 	<bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">
    		<property name="order" value="1"/>
    </bean>
@@ -29,10 +29,25 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 	
+	
+	<!-- tiles ViewResolver -->
+	 <bean id="tilesViewResolver" class="org.springframework.web.servlet.view.tiles3.TilesViewResolver">
+    	<property name="order" value="0"/>
+    	<property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView"/>
+   </bean>
+   <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+    	<property name="definitions">
+    		<list>
+    			<value>classpath:hash/com/config/spring/context-tiles.xml</value>
+    		</list>
+    	</property>
+    </bean>
+    
+	
 	<!-- multipartform -->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 	
 	<mvc:annotation-driven/>
 	<mvc:default-servlet-handler/>
-<!-- 	<mvc:resources mapping="/resource/**" location="/resource/" /> -->
+	
 </beans>

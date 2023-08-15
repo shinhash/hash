@@ -6,28 +6,46 @@
 		/*
 			queryId = selectPostList
 		*/
-		<![CDATA[
-		SELECT 	ROWNUM AS RN,
-				BBS_CATALOG.BBS_CATAL_NM,
-				BBS_POST.BBS_CATAL_ID, 
-				BBS_POST.BBS_POST_ID, 
-				BBS_POST.BBS_POST_TITLE, 
-				BBS_POST.BBS_POST_ATTCH_ID, 
-				BBS_POST.BBS_POST_REG_DATE, 
-				BBS_POST.BBS_POST_REG_ID, 
-				BBS_POST.BBS_POST_MOD_DATE, 
-				BBS_POST.BBS_POST_MOD_ID, 
-				BBS_POST.BBS_POST_STATUS
-		  FROM 	BBS_POST, BBS_CATALOG
-		 WHERE  1 = 1
-		   AND  BBS_POST.BBS_CATAL_ID = BBS_CATALOG.BBS_CATAL_ID
-		   AND  BBS_POST.BBS_POST_STATUS = 'N'
-		]]>
-		<if test='startDt != null and !startDt.equals("")'>
-			<if test='endDt != null and !endDt.equals("")'>
-				AND BBS_POST_MOD_DATE BETWEEN #{startDt} AND #{endDt}
+		SELECT ALL_LIST.*
+		  FROM (
+			<![CDATA[
+			SELECT 	ROWNUM AS RN,
+					BBS_CATALOG.BBS_CATAL_NM,
+					BBS_POST.BBS_CATAL_ID, 
+					BBS_POST.BBS_POST_ID, 
+					BBS_POST.BBS_POST_TITLE, 
+					BBS_POST.BBS_POST_ATTCH_ID, 
+					BBS_POST.BBS_POST_REG_DATE, 
+					BBS_POST.BBS_POST_REG_ID, 
+					BBS_POST.BBS_POST_MOD_DATE, 
+					BBS_POST.BBS_POST_MOD_ID, 
+					BBS_POST.BBS_POST_STATUS
+			  FROM 	BBS_POST, BBS_CATALOG
+			 WHERE  1 = 1
+			   AND  BBS_POST.BBS_CATAL_ID = BBS_CATALOG.BBS_CATAL_ID
+			   AND  BBS_POST.BBS_POST_STATUS = 'N'
+			]]>
+			<if test='startDt != null and !startDt.equals("")'>
+				<if test='endDt != null and !endDt.equals("")'>
+				AND BBS_POST_REG_DATE BETWEEN #{startDt} AND #{endDt}
+				</if>
 			</if>
-		</if>
+			) ALL_LIST
+			WHERE 1 = 1
+			  AND RN BETWEEN ((#{pageViewInfo} - 1) * #{pageRowInfo}) + 1 AND #{pageViewInfo} * #{pageRowInfo}
+	</select>
+	
+	<select id="selectPageTotalCnt" resultType="int">
+		/* 
+			queryId = selectPageTotalCnt
+		*/
+		<![CDATA[
+		SELECT CASE WHEN MOD(COUNT(1),10) > 0
+		       THEN FLOOR(COUNT(1)/10)+1 
+		       ELSE FLOOR(COUNT(1)/10) 
+		       END PAGE_TOTAL_CNT
+		  FROM BBS_POST
+		]]>
 	</select>
 	
 	

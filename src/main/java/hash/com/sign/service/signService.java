@@ -11,6 +11,8 @@ public interface signService {
 	
 	List<?> loginCheck(Map<String, Object> map) throws Exception;
 
-	int singUpIdChk(Map<String, Object> map) throws Exception;
+	int signUpIdChk(Map<String, Object> map) throws Exception;
+
+	void signUpProcess(Map<String, Object> map) throws Exception;
 
 }

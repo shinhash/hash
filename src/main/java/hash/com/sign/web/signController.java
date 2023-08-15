@@ -1,10 +1,12 @@
 package hash.com.sign.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -12,13 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import hash.com.sign.service.signService;
-
-
 
 @Controller
 @SuppressWarnings({"unchecked","rawtypes"})
@@ -29,21 +32,38 @@ public class signController {
 	@Resource(name="signService")
 	private signService signService;
 	
-	@RequestMapping(value="/sign/loginPage")
-	public String signloginPage(HttpSession session, Model model, HttpServletRequest request) throws Exception {
+	/**
+	 * 로그인 페이지로 이동
+	 * @param session
+	 * @param model
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/sign/signInPage")
+	public String signInloginPage(HttpSession session, Model model, HttpServletRequest request) throws Exception {
 		
+		// FlashMap으로 RedirectAttributes을 통해 받은 로그인 오류관련 정보를 가져온다.
 		Map<String, Object> flashMap = (Map<String, Object>) RequestContextUtils.getInputFlashMap(request);
 		String isError = "";
 		if(flashMap != null && flashMap.get("errorRst") != null) {
 			isError = (String) flashMap.get("errorRst");
 		}
 		model.addAttribute("errorRst", isError);
-		return "/sign/loginPage";
+		return "/sign/signInPage";
 	}
 	
-	
-	@RequestMapping(value="/sign/loginCheck")
-	public String loginCheck(HttpSession session, Model model, HttpServletRequest request, RedirectAttributes rs) throws Exception {
+	/**
+	 * 로그인 프로세스
+	 * @param session
+	 * @param model
+	 * @param request
+	 * @param rs
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/sign/signInCheck")
+	public String signInCheck(HttpSession session, Model model, HttpServletRequest request, RedirectAttributes rs) throws Exception {
 		
 		String inputUserId = request.getParameter("inputUserId");
 		String inputUserPw = request.getParameter("inputUserPw");
@@ -54,34 +74,63 @@ public class signController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", inputUserId);
 		
+		ServletContext application = request.getServletContext();
+		List<Map> userList = (List<Map>) application.getAttribute("userList");
+		
 		List<Map> signInfoList = (List<Map>) signService.loginCheck(map);
 		if(signInfoList != null && signInfoList.size() > 0) {
 			for(Map<String, Object> userInfo : signInfoList) {
 				logger.debug(userInfo.toString());
 				if(inputUserPw.equals(userInfo.get("userPw"))) {
+					
 					// session에 user정보 저장 후 메인페이지로 이동
-					resultInfo = "/main/mainpage";
+					String ipInfo = getIpInfo();
+					userInfo.put("login_ip", ipInfo);
+					logger.debug("userInfo = " + userInfo);
+					
+					session.setAttribute("loginSession", userInfo);
+					resultInfo = "redirect:/main/mainpage";
+					
+					// 전체 로그인 유저리스트에 해당 유저정보 추가
+					loginListSessionUpdate(application, userInfo, userList);
 				}else {
+					// RedirectAttributes으로 로그인 오류내용을 일시적으로 다음 requestMapping 위치에 보낸다.
 					String errorRst = "입력하신 비밀번호가 일치하지 않습니다.";
 					rs.addFlashAttribute("errorRst", errorRst);
-					resultInfo = "redirect:/sign/loginPage";
+					resultInfo = "redirect:/sign/signInPage";
 				}
 			}
 		}else {
+			// RedirectAttributes으로 로그인 오류내용을 일시적으로 다음 requestMapping 위치에 보낸다.
 			String errorRst = "입력하신 ID는 없는 정보입니다.";
 			rs.addFlashAttribute("errorRst", errorRst);
-			resultInfo = "redirect:/sign/loginPage";
+			resultInfo = "redirect:/sign/signInPage";
 		}
 		return resultInfo;
 	}
 	
+	/**
+	 * 회원가입 페이지 이동
+	 * @param session
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value="/sign/signUpPage")
 	public String signUpPage(HttpSession session, Model model) throws Exception {
 		return "/sign/signUpPage";
 	}
 	
-	@RequestMapping(value="/sign/singUpIdChk")
-	public String singUpIdChk(HttpSession session, Model model, HttpServletRequest request) throws Exception {
+	/**
+	 * 회원가입시 ID 중복체크
+	 * @param session
+	 * @param model
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/sign/signUpIdChk")
+	public String signUpIdChk(HttpSession session, Model model, HttpServletRequest request) throws Exception {
 		
 		String userId = request.getParameter("inputId");
 		boolean isAleadyUsed = false;
@@ -89,19 +138,26 @@ public class signController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
-		int signUpIdChk = signService.singUpIdChk(map);
+		int signUpIdChk = signService.signUpIdChk(map);
 		logger.debug("signUpIdChk = "+signUpIdChk);
 		if(signUpIdChk > 0) {
 			isAleadyUsed = true;
 		}
 		model.addAttribute("isAleadyUsed", isAleadyUsed);
 		
-		return "jsonView";
+		return "ajaxJasonView";
 	}
 	
-	
-	@RequestMapping(value="/sign/singUpProcess")
-	public String singUpProcess(HttpSession session, Model model, HttpServletRequest request) throws Exception {
+	/**
+	 * 회원가입 프로세스
+	 * @param session
+	 * @param model
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/sign/signUpProcess")
+	public String signUpProcess(HttpSession session, Model model, HttpServletRequest request) throws Exception {
 		
 		String userId = request.getParameter("inputUserId");
 		String userPw = request.getParameter("inputUserPw");
@@ -113,7 +169,109 @@ public class signController {
 		String userAddrDetail = request.getParameter("inputUserAddr2");
 		String zipCode = request.getParameter("inputUserZipcode");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("userPw", userPw);
+		map.put("userNm", userNm);
+		map.put("userBirth", userBirth);
+		map.put("userMail", userMail);
+		map.put("userPhone", userPhone);
+		map.put("userAddr", userAddr);
+		map.put("userAddrDetail", userAddrDetail);
+		map.put("zipCode", zipCode);
+		
+		signService.signUpProcess(map);
+		
 		return "redirect:/main/mainpage";
+	}
+	
+	/**
+	 * 비밀번호 초기화 페이지 이동
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/sign/resetPwLink")
+	public String resetPwLink() throws Exception{
+		return "tiles/sign/resetPwLink";
+	}
+	
+	
+	/**
+	 * 접속한 브라우저의 ip정보 추출
+	 * @param request
+	 * @return
+	 */
+	public String getIpInfo() {
+		
+		String clientIp = null;
+		boolean isIpInHeader = false;
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+		List<String> headerList = new ArrayList<>();
+	    headerList.add("X-Forwarded-For");
+	    headerList.add("HTTP_CLIENT_IP");
+	    headerList.add("HTTP_X_FORWARDED_FOR");
+	    headerList.add("HTTP_X_FORWARDED");
+	    headerList.add("HTTP_FORWARDED_FOR");
+	    headerList.add("HTTP_FORWARDED");
+	    headerList.add("Proxy-Client-IP");
+	    headerList.add("WL-Proxy-Client-IP");
+	    headerList.add("HTTP_VIA");    
+	    headerList.add("IPV6_ADR");
+	    
+	    for (String header : headerList) {
+	        clientIp = request.getHeader(header);
+	        if (StringUtils.hasText(clientIp) && !clientIp.equals("unknown")) {
+	            isIpInHeader = true;
+	            break;
+	        }
+	    }
+	    
+	    if (!isIpInHeader) {
+	        clientIp = request.getRemoteAddr();
+	    }
+		return clientIp;
+	}
+	
+	/**
+	 * 유저리스트 최신화
+	 * @param application
+	 * @param userInfo
+	 * @param userList
+	 */
+	public void loginListSessionUpdate(ServletContext application, Map<String, Object> userInfo, List<Map> userList) {
+		if(userList == null) {
+			userList = new ArrayList<Map>();
+		}
+		userList.add(userInfo);
+		application.setAttribute("userList", userList);
+	}
+	
+	/**
+	 * 로그아웃 프로세스
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/sign/logoutProcess")
+	public String logoutProcess(HttpSession session, HttpServletRequest request) {
+		// 로그인한 유저 리스트
+		ServletContext application = request.getServletContext();
+		List<Map> userList = (List<Map>) application.getAttribute("userList");
+		
+		// 로그아웃 유저를 제외한 유저리스트
+		List<Map> reUserList = new ArrayList<Map>();
+		
+		// 로그인한 유저 리스트에서 로그아웃한 유저를 제외한 유저리스트를 reUserList에 추가
+		if(userList != null) {
+			for(Map userInfo : userList) {
+				if(!userInfo.get("userId").equals(((Map)session.getAttribute("loginSession")).get("userId"))) {
+					reUserList.add(userInfo);
+				}
+			}
+		}
+		application.setAttribute("userList", reUserList);
+		session.removeAttribute("loginSession");
+		
+		return "tiles/main/mainpage";
 	}
 
 }

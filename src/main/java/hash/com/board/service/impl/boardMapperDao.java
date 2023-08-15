@@ -83,6 +83,16 @@ public class boardMapperDao extends EgovAbstractMapper{
 	}
 
 
+	/**
+	 * 페이지 총 개수
+	 * @param map
+	 * @return
+	 */
+	public int selectPageTotalCnt() {
+		return selectOne("boardMapperDao.selectPageTotalCnt");
+	}
+
+
 	
 	
 }

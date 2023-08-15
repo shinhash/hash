@@ -3,6 +3,9 @@
 <mapper namespace="signMapperDao">
 	
 	<select id="loginCheck" parameterType="HashMap" resultType="customCamelMap">
+		/*
+		query id = signMapperDao.loginCheck
+		*/
 		SELECT    USER_ID
 			    , USER_PW
 			    , USER_NM
@@ -22,10 +25,53 @@
 		 WHERE USER_ID = #{userId}
 	</select>
 	
-	<select id="singUpIdChk" parameterType="HashMap" resultType="int">
+	<select id="signUpIdChk" parameterType="HashMap" resultType="int">
+		/*
+		query id = signMapperDao.signUpIdChk
+		*/
 		SELECT COUNT(USER_ID)
 		  FROM IRON_USER
 		 WHERE USER_ID = #{userId}
 	</select>
+	
+	<insert id="signUpProcess" parameterType="HashMap">
+		/*
+		query id = signMapperDao.signUpProcess
+		*/
+		INSERT INTO IRON_USER(
+				  USER_ID
+			    , USER_PW
+			    , USER_NM
+			    , GENDER
+				, BIRTH
+				, MAIL
+				, PHONE
+				, RESIGN_YN
+				, ADDR
+				, ADDR_DETAIL
+				, ZIP_CODE
+				, REG_DATE
+				, REG_ID
+				, MODI_DATE
+				, MODI_ID
+		)
+		VALUES(
+				  #{userId}
+			    , #{userPw}
+			    , #{userNm}
+			    , '1'
+				, #{userBirth}
+				, #{userMail}
+				, #{userPhone}
+				, 'N'
+				, #{userAddr}
+				, #{userAddrDetail}
+				, #{zipCode}
+				, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+				, #{userId}
+				, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+				, #{userId}
+		)
+	</insert>
 
 </mapper>

@@ -21,8 +21,18 @@ public class signServiceImpl implements signService{
 	}
 
 	@Override
-	public int singUpIdChk(Map<String, Object> map) throws Exception {
-		return signMapperDao.singUpIdChk(map);
+	public int signUpIdChk(Map<String, Object> map) throws Exception {
+		return signMapperDao.signUpIdChk(map);
+	}
+
+	@Override
+	public void signUpProcess(Map<String, Object> map) throws Exception {
+		
+		int signUpIdChkRst = signMapperDao.signUpIdChk(map);
+		if(signUpIdChkRst == 0) {
+			// transaction check success
+			signMapperDao.signUpProcess(map);
+		}
 	}
 
 }

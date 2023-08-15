@@ -1,0 +1,33 @@
+@charset "UTF-8";
+
+footer {
+	height: 500px;
+	display: block;
+}
+
+.footerInner {
+	width: 1200px;
+	margin: 0 auto;
+	padding: 0 80px;
+	padding-left: 80px;
+	padding-right: 80px;
+}
+
+#bottomLogo {
+	width: 300px;
+}
+
+.bottomBanner {
+	width: 100%;
+	height: 150px;
+	background-color: rgb(44, 44, 44);
+}
+
+.lineTopBottomDiv{
+	min-width: 1200px;
+	width: 100%;
+	margin: 0 auto;
+	padding: 0 80px;
+	padding-left: 80px;
+	padding-right: 80px;
+}

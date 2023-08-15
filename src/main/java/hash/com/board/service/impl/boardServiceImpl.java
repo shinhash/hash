@@ -1,5 +1,6 @@
 package hash.com.board.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,20 +24,20 @@ public class boardServiceImpl implements boardService {
 	private boardMapperDao boardMapperDao;
 	
 	@Override
-	public List<Map> selectPostList(Map<String, Object> map) throws Exception {
-		return boardMapperDao.selectPostList(map);
+	public Map<String, Object> selectPostList(Map<String, Object> map) throws Exception {
+		
+		Map<String, Object> postListInfo = new HashMap<String, Object>();
+		postListInfo.put("postList", boardMapperDao.selectPostList(map));
+		postListInfo.put("pageTotalCnt", boardMapperDao.selectPageTotalCnt());
+		return postListInfo;
 	}
 	
 
 	@Override
 	public String saveBoardInfo(Map<String, Object> map, MultipartHttpServletRequest multiPartrequest) throws Exception {
-		
-		int saveRst = 0;
-		int updatePostInfoRst = 0;
-		
 			try {
-				saveRst = boardMapperDao.insertPostInfo(map);
-				updatePostInfoRst = boardMapperDao.updatePostInfo(map);
+				boardMapperDao.insertPostInfo(map);
+				boardMapperDao.updatePostInfo(map);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new Exception();

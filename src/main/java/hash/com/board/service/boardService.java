@@ -13,7 +13,7 @@ public interface boardService {
 	 * @return 게시판 목록정보
 	 * @throws Exception
 	 */
-	List<Map> selectPostList(Map<String, Object> map) throws Exception;
+	Map<String, Object> selectPostList(Map<String, Object> map) throws Exception;
 	
 	
 	/**
