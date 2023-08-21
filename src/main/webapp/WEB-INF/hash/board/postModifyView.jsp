@@ -155,7 +155,7 @@
 								<input class="postInfoBtn" type="button" id="postEditCancle" value="취소" />
 							</div>
 						</div>
-						<br><br>
+						<br><br><br><br>
 					</div>
 				</div>
 			</div>

@@ -13,14 +13,6 @@
 	    <title>IRON DRUM</title>
 	    
 	    <style type="text/css">
-	    	#bottomLogo{
-	    		width: 300px;
-	    	}
-	    	.bottomBanner{
-	    		width: 100%; 
-	    		height: 150px; 
-	    		background-color: rgb(44,44,44);
-	    	}
 	    	.contents-item{
 	    		width: 150px;
 	    		height: 150px;
@@ -38,6 +30,7 @@
 	    		//var tempBannerArr = ["rolling-banner-01", "rolling-banner-02", "rolling-banner-03"];
 	    		$(".rolling-banner-div").css("background-color", "rgb(44,44,44)");
 	    		$(".rolling-banner-div").css("height", "250px");
+	    		$(".rolling-banner-div").css("width", "100%");
 				let bannerClass = $("#rollImg").attr("class");
 				let baseImgPath = "${path}/resources/images/banner/roll-banner-";
 				let imgExt = ".jpg";

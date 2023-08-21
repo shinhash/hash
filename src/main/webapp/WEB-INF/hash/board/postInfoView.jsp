@@ -93,7 +93,7 @@
 								<input class="postInfoBtn" type="button" id="postList" value="목록" onclick="goPostList();" />
 							</div>
 						</div>
-						<br><br>
+						<br><br><br><br>
 					</div>
 				</div>
 			</div>
