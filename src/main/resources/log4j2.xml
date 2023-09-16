@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<!-- FATAL > ERROR > WARN > INFO > DEBUG > TRACE -->
+    <Appenders>
+    	<Console name="console" target="System.out">
+            <PatternLayout pattern="%d %5p [%c] [%L LINE] %n%m%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+    	<!-- application loggers -->
+    	<Logger name="hash.com" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="java.sql" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="org.springframework" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        
+    	<!-- sql loggers -->
+    	<!-- Query Loggers 쿼리(파라미터까지) --> 
+<!--         <Logger name="jdbc.sqlonly" value="INFO" additivity="false">  -->
+<!-- 	        <appender-ref ref="console" /> -->
+<!--         </Logger> -->
+        <!--  SQL문과 해당 SQL을 실행시키는데 수행된 시간 정보(milliseconds)를 포함한다. 필요시 open -->
+        <Logger name="jdbc.sqltiming" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        
+        <!-- Root logger -->
+<!--         <Root level="INFO"> -->
+<!--             <AppenderRef ref="console" /> -->
+<!--         </Root> -->
+    </Loggers>
+</Configuration>

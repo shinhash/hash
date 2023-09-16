@@ -6,45 +6,66 @@
 		/*
 			queryId = selectPostList
 		*/
-		SELECT ALL_LIST.*
-		  FROM (
-			<![CDATA[
-			SELECT 	ROWNUM AS RN,
-					BBS_CATALOG.BBS_CATAL_NM,
-					BBS_POST.BBS_CATAL_ID, 
-					BBS_POST.BBS_POST_ID, 
-					BBS_POST.BBS_POST_TITLE, 
-					BBS_POST.BBS_POST_ATTCH_ID, 
-					BBS_POST.BBS_POST_REG_DATE, 
-					BBS_POST.BBS_POST_REG_ID, 
-					BBS_POST.BBS_POST_MOD_DATE, 
-					BBS_POST.BBS_POST_MOD_ID, 
-					BBS_POST.BBS_POST_STATUS
-			  FROM 	BBS_POST, BBS_CATALOG
-			 WHERE  1 = 1
-			   AND  BBS_POST.BBS_CATAL_ID = BBS_CATALOG.BBS_CATAL_ID
-			   AND  BBS_POST.BBS_POST_STATUS = 'N'
-			]]>
-			<if test='startDt != null and !startDt.equals("")'>
-				<if test='endDt != null and !endDt.equals("")'>
-				AND BBS_POST_REG_DATE BETWEEN #{startDt} AND #{endDt}
-				</if>
+		SELECT ALL_LIST_MST.* 
+		  FROM ( 
+				SELECT   ROWNUM PAGE_RN 
+					   , ALL_LIST_DTL.* 
+				  FROM ( 
+						SELECT 	ROWNUM RN, 
+								BBS_CATALOG.BBS_CATAL_NM, 
+								BBS_POST.BBS_CATAL_ID, 
+								BBS_POST.BBS_POST_ID, 
+								BBS_POST.BBS_POST_TITLE, 
+								BBS_POST.BBS_POST_REG_DATE, 
+								BBS_POST.BBS_POST_REG_ID, 
+								BBS_POST.BBS_POST_MOD_DATE, 
+								BBS_POST.BBS_POST_MOD_ID, 
+								BBS_POST.BBS_POST_STATUS 
+						  FROM 	BBS_POST, BBS_CATALOG 
+						 WHERE  1 = 1 
+						   AND  BBS_POST.BBS_CATAL_ID = BBS_CATALOG.BBS_CATAL_ID 
+						   AND  BBS_POST.BBS_POST_STATUS = 'N' 
+		                   <if test='bbsCatalId != null and !bbsCatalId.equals("")'>
+							AND BBS_POST.BBS_CATAL_ID = #{bbsCatalId}
+						   </if>
+						ORDER BY BBS_POST.BBS_POST_REG_DATE DESC 
+						) ALL_LIST_DTL 
+				) ALL_LIST_MST 
+		WHERE 1 = 1
+		  AND ALL_LIST_MST.PAGE_RN BETWEEN ((#{pageViewInfo} - 1) * #{pageRowInfo}) + 1 AND #{pageViewInfo} * #{pageRowInfo}
+		<if test='startDt != null and !startDt.equals("")'>
+			<if test='endDt != null and !endDt.equals("")'>
+		  		AND ALL_LIST_MST.BBS_POST_REG_DATE BETWEEN #{startDt} AND #{endDt}
 			</if>
-			) ALL_LIST
-			WHERE 1 = 1
-			  AND RN BETWEEN ((#{pageViewInfo} - 1) * #{pageRowInfo}) + 1 AND #{pageViewInfo} * #{pageRowInfo}
+		</if>
 	</select>
 	
-	<select id="selectPageTotalCnt" resultType="int">
+	
+	<select id="selectPostCatalInfo" parameterType="HashMap" resultType="customCamelMap">
+		/*
+			queryId = selectPostCatalInfo
+		*/
+		<![CDATA[
+		SELECT  BBS_CATALOG.BBS_CATAL_ID, 
+				BBS_CATALOG.BBS_CATAL_NM 
+		  FROM  BBS_CATALOG 
+		 WHERE  BBS_CATAL_USE_YN = 'Y'
+		   AND  BBS_CATAL_ID = #{bbsCatalId}
+		]]>
+	</select>
+	
+
+	<select id="selectPageTotalCnt" parameterType="HashMap" resultType="int">
 		/* 
 			queryId = selectPageTotalCnt
 		*/
 		<![CDATA[
-		SELECT CASE WHEN MOD(COUNT(1),10) > 0
-		       THEN FLOOR(COUNT(1)/10)+1 
-		       ELSE FLOOR(COUNT(1)/10) 
+		SELECT CASE WHEN MOD(COUNT(1),#{pageRowInfo}) > 0
+		       THEN FLOOR(COUNT(1)/#{pageRowInfo}) + 1 
+		       ELSE FLOOR(COUNT(1)/#{pageRowInfo})
 		       END PAGE_TOTAL_CNT
 		  FROM BBS_POST
+		 WHERE BBS_POST_STATUS = 'N'
 		]]>
 	</select>
 	
@@ -62,7 +83,6 @@
 				BBS_POST_ID,
 				BBS_POST_TITLE, 
 				BBS_POST_CONTENT, 
-				BBS_POST_ATTCH_ID, 
 				BBS_POST_REG_DATE, 
 				BBS_POST_REG_ID, 
 				BBS_POST_MOD_DATE, 
@@ -91,7 +111,8 @@
 				BBS_REPLE_STATUS
 		  FROM 	BBS_REPLE
 		 WHERE  BBS_REPLE_STATUS = 'N'
-		   AND  BBS_POST_ID = #{bbsPostId}
+		   AND  BBS_POST_ID = #{bbsPostId} 
+		   ORDER BY BBS_REPLE_REG_DATE
 		]]>
 	</select>
 	
@@ -121,7 +142,6 @@
 				BBS_POST_ID,
 				BBS_POST_TITLE, 
 				BBS_POST_CONTENT, 
-				BBS_POST_ATTCH_ID, 
 				BBS_POST_REG_DATE, 
 				BBS_POST_REG_ID, 
 				BBS_POST_MOD_DATE, 
@@ -129,24 +149,23 @@
 				BBS_POST_STATUS
 			)
 			SELECT 
-					'BC002' AS BBS_CATAL_ID,
+					#{bbsCatalId} AS BBS_CATAL_ID,
 					('BP' 
 			        || NVL(SUBSTR(MAX(BBS_POST_ID),3,8), TO_CHAR(SYSDATE,'YYYYMMDD')) 
-			        || CASE WHEN SUBSTR(MAX(BBS_POST_ID),11,13) IS NULL
+			        || CASE WHEN SUBSTR(MAX(BBS_POST_ID),11,3) IS NULL
 			                THEN '001'
 			                ELSE LPAD(TO_CHAR(TO_NUMBER(SUBSTR(MAX(BBS_POST_ID),11,13))+1), 3, '0')
 			                END
 			       ) AS BBS_POST_ID,
 					#{bbsPostTitle} AS BBS_POST_TITLE, 
 					EMPTY_CLOB() AS BBS_POST_CONTENT, 
-					'' AS BBS_POST_ATTCH_ID, 
 					TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') AS BBS_POST_REG_DATE, 
-					'' AS BBS_POST_REG_ID, 
+					#{bbsPostRegId} AS BBS_POST_REG_ID, 
 					TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') AS BBS_POST_MOD_DATE, 
-					'' AS BBS_POST_MOD_ID, 
+					#{bbsPostRegId} AS BBS_POST_MOD_ID, 
 					'N' AS BBS_POST_STATUS
 			  FROM BBS_POST 
-			 WHERE SUBSTR(BBS_POST_ID,3,8) = TO_CHAR(SYSDATE,'YYYYMMDD')
+			 WHERE SUBSTR(BBS_POST_ID, 3, 8) = TO_CHAR(SYSDATE, 'YYYYMMDD')
 		]]>
 		<selectKey keyProperty="bbsPostId" order="AFTER" resultType="String">
 			SELECT MAX(BBS_POST_ID) AS bbsPostId
@@ -155,5 +174,107 @@
 	</insert>
 	
 	
-
+	<insert id="insertPostAttach" parameterType="HashMap">
+		/*
+			queryId = insertPostAttach
+		*/
+		<![CDATA[
+		INSERT INTO 
+			BBS_ATTACH(
+				BBS_POST_ID, 
+				BBS_ATTACH_ID, 
+				BBS_ATTACH_SN, 
+				BBS_ATTACH_LOC, 
+				BBS_ATTACH_SAVE_NM, 
+				BBS_ATTACH_ORIGIN_NM,
+				BBS_ATTACH_REG_DT,
+				BBS_ATTACH_REG_ID
+			)
+			SELECT 
+					#{bbsPostId} AS BBS_POST_ID, 
+					('POST_AT' 
+			        || NVL(SUBSTR(MAX(BBS_ATTACH_ID),8,8), TO_CHAR(SYSDATE,'YYYYMMDD')) 
+			        || CASE WHEN SUBSTR(MAX(BBS_ATTACH_ID),16,3) IS NULL
+			                THEN '001'
+			                ELSE LPAD(TO_CHAR(TO_NUMBER(SUBSTR(MAX(BBS_ATTACH_ID),16,3))+1), 3, '0')
+			                END
+			        ) AS BBS_ATTACH_ID, 
+					(NVL(MAX(BBS_ATTACH_SN), 0) + 1) AS BBS_ATTACH_SN, 
+					#{bbsAttachLoc} AS BBS_ATTACH_LOC, 
+					#{bbsAttachSaveNm} AS BBS_ATTACH_SAVE_NM, 
+					#{bbsAttachOriginNm} AS BBS_ATTACH_ORIGIN_NM, 
+					TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') AS BBS_ATTACH_REG_DT, 
+					#{bbsPostRegId} AS BBS_ATTACH_REG_ID
+			  FROM BBS_ATTACH 
+			 WHERE SUBSTR(BBS_ATTACH_ID, 8, 8) = TO_CHAR(SYSDATE, 'YYYYMMDD')
+		]]>
+	</insert>
+	
+	
+	<select id="selectAttachListList" parameterType="HashMap" resultType="customCamelMap">
+		/*
+			queryId = selectAttachListList
+		*/
+		<![CDATA[
+		SELECT  BBS_POST_ID
+		     ,  BBS_ATTACH_ID
+		     ,  BBS_ATTACH_SN
+		     ,  BBS_ATTACH_LOC
+		     ,  BBS_ATTACH_SAVE_NM
+		     ,  BBS_ATTACH_ORIGIN_NM
+		  FROM BBS_ATTACH
+		 WHERE BBS_POST_ID = #{bbsPostId} 
+		 ORDER BY BBS_ATTACH_ID, BBS_ATTACH_SN
+		]]>
+	</select>
+	
+	
+	<insert id="insertRepleInfo" parameterType="HashMap">
+		/*
+			queryId = insertRepleInfo
+		*/
+		<![CDATA[
+		INSERT INTO 
+			BBS_REPLE(
+				BBS_POST_ID, 
+				BBS_REPLE_ID, 
+				BBS_REPLE_CONTENT, 
+				BBS_REPLE_REG_DATE, 
+				BBS_REPLE_REG_ID, 
+				BBS_REPLE_MOD_DATE, 
+				BBS_REPLE_MOD_ID, 
+				BBS_REPLE_STATUS
+			)
+			SELECT 
+					#{bbsPostId} AS BBS_POST_ID, 
+					('BR' 
+					|| NVL(SUBSTR(MAX(BBS_REPLE_ID),3,8), TO_CHAR(SYSDATE,'YYYYMMDD')) 
+					|| CASE WHEN SUBSTR(MAX(BBS_REPLE_ID),11,3) IS NULL
+				            THEN '001'
+				            ELSE LPAD(TO_CHAR(TO_NUMBER(SUBSTR(MAX(BBS_REPLE_ID),11,13))+1), 3, '0')
+				            END
+					) AS BBS_REPLE_ID, 
+					#{bbsRepleContent} AS BBS_REPLE_CONTENT, 
+					TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') AS BBS_REPLE_REG_DATE, 
+					#{bbsRepleRegId} AS BBS_REPLE_REG_ID, 
+					TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') AS BBS_REPLE_MOD_DATE, 
+					#{bbsRepleRegId} AS BBS_REPLE_MOD_ID, 
+					'N' AS BBS_REPLE_STATUS
+			  FROM BBS_REPLE
+			 WHERE SUBSTR(BBS_REPLE_ID, 3, 8) = TO_CHAR(SYSDATE, 'YYYYMMDD')
+		]]>
+	</insert>
+	
+	
+	<update id="deletePostInfo" parameterType="HashMap">
+		/*
+			queryId = deletePostInfo
+		*/
+		<![CDATA[
+		UPDATE 	BBS_POST 
+		   SET 	BBS_POST_STATUS = 'Y'
+		 WHERE	BBS_POST_ID = #{bbsPostId}
+		]]>
+	</update>
+	
 </mapper>
