@@ -67,7 +67,7 @@ public class signController {
 		
 		String inputUserId = request.getParameter("inputUserId");
 		String inputUserPw = request.getParameter("inputUserPw");
-		logger.debug(inputUserId);
+//		logger.debug(inputUserId);
 		
 		String resultInfo = "";
 		
@@ -80,13 +80,13 @@ public class signController {
 		List<Map> signInfoList = (List<Map>) signService.loginCheck(map);
 		if(signInfoList != null && signInfoList.size() > 0) {
 			for(Map<String, Object> userInfo : signInfoList) {
-				logger.debug(userInfo.toString());
+//				logger.debug(userInfo.toString());
 				if(inputUserPw.equals(userInfo.get("userPw"))) {
 					
 					// session에 user정보 저장 후 메인페이지로 이동
 					String ipInfo = getIpInfo();
 					userInfo.put("login_ip", ipInfo);
-					logger.debug("userInfo = " + userInfo);
+//					logger.debug("userInfo = " + userInfo);
 					
 					session.setAttribute("loginSession", userInfo);
 					resultInfo = "redirect:/main/mainpage";
@@ -134,12 +134,12 @@ public class signController {
 		
 		String userId = request.getParameter("inputId");
 		boolean isAleadyUsed = false;
-		logger.debug("input userId = "+userId);
+//		logger.debug("input userId = "+userId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		int signUpIdChk = signService.signUpIdChk(map);
-		logger.debug("signUpIdChk = "+signUpIdChk);
+//		logger.debug("signUpIdChk = "+signUpIdChk);
 		if(signUpIdChk > 0) {
 			isAleadyUsed = true;
 		}
@@ -271,7 +271,7 @@ public class signController {
 		application.setAttribute("userList", reUserList);
 		session.removeAttribute("loginSession");
 		
-		return "tiles/main/mainpage";
+		return "redirect:/main/mainpage";
 	}
 
 }

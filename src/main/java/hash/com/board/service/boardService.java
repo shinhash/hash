@@ -3,6 +3,9 @@ package hash.com.board.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 public interface boardService {
@@ -17,13 +20,13 @@ public interface boardService {
 	
 	
 	/**
-	 * 게시판 정보 저장
+	 * 게시글 정보 저장
 	 * @param map
 	 * @param multiPartrequest 
 	 * @return Integer
 	 * @throws Exception
 	 */
-	String saveBoardInfo(Map<String, Object> map, MultipartHttpServletRequest multiPartrequest) throws Exception;
+	String insertPostInfo(MultipartHttpServletRequest multiPartrequest) throws Exception;
 
 
 	/**
@@ -32,16 +35,33 @@ public interface boardService {
 	 * @return 게시글 정보
 	 * @throws Exception
 	 */
-	Map selectPostRepleInfo(Map<String, Object> map) throws Exception;
+	Map selectPostRepleAttInfo(Map<String, Object> map) throws Exception;
 
 
 	/**
 	 * 게시글 수정 정보 저장
-	 * @param map
 	 * @param multiPartrequest 
 	 * @return 게시글 수정
 	 * @throws Exception
 	 */
-	int updatePostInfo(Map<String, Object> map, MultipartHttpServletRequest multiPartrequest) throws Exception;
+	int updatePostInfo(MultipartHttpServletRequest multiPartrequest) throws Exception;
+
+
+	/**
+	 * 댓글 정보저장
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	List<Map> insertPostRepleInfo(HttpServletRequest request) throws Exception;
+
+
+	
+	/**
+	 * 게시글 정보 삭제
+	 * @param map
+	 * @throws Exception
+	 */
+	void deletePostInfo(Map<String, Object> map) throws Exception;
 	
 }

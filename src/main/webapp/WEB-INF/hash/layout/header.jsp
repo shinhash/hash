@@ -102,6 +102,7 @@
 				</div>
 				<c:choose>
 				<c:when test="${loginSession ne null}">
+					<input type="hidden" id="loginUserId" value="${loginSession.userId}" />
 					<div id="toolbar-util" class="toolbar-util">
 						<!-- 로그인 화면을 드롭다운 메뉴로 변환 필요 -->
 						<input type="checkbox" id="signUserMenuChk">
@@ -131,6 +132,7 @@
 					</div>
 				</c:when>
 				<c:otherwise>
+					<input type="hidden" id="loginUserId" value="" />
 					<div class="toolbar-util" style="float: right; margin-left: 10%;">
 						<ul id="toolbar-util-ul" class="toolbar-util-ul flex" >
 							<li class="toolbar-util-li flex" ><a onclick="goSignIn()">로그인</a></li>

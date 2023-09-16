@@ -25,28 +25,32 @@ public class boardController {
 	@Resource(name="boardService")
 	private boardService boardService;
 	
+	
 	/**
 	 * 게시글 리스트 조회
 	 * @param request
-	 * @param session
 	 * @param model
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/board/postList")
-	public String postList(HttpServletRequest request, HttpSession session, Model model) throws Exception {
+	@RequestMapping(value="/board/postListView")
+	public String postListView(HttpServletRequest request, Model model) throws Exception {
 		
 		// pagenation and pageRowCnt info
-		String pageViewInfo = request.getParameter("pageViewInfo") == null ? "1" : request.getParameter("pageViewInfo");
-		String pageRowInfo = request.getParameter("pageRowInfo") == null ? "10" : request.getParameter("pageRowInfo");
+		int pageViewInfo = request.getParameter("pageViewInfo") == null ? 1 : Integer.parseInt(request.getParameter("pageViewInfo"));
+		int pageRowInfo = request.getParameter("pageRowInfo") == null ? 10 :  Integer.parseInt(request.getParameter("pageRowInfo"));
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("pageViewInfo", pageViewInfo);
 		map.put("pageRowInfo", pageRowInfo);
+		map.put("bbsCatalId", request.getParameter("bbsCatalId"));
+		
+		Map postListInfo = boardService.selectPostList(map);
 		
 		// 게시글 리스트 추출 
-		model.addAttribute("postList", boardService.selectPostList(map).get("postList"));
-		model.addAttribute("pageTotalCnt", boardService.selectPostList(map).get("pageTotalCnt"));
+		model.addAttribute("postList", postListInfo.get("postList"));
+		model.addAttribute("bbsCatalInfo", postListInfo.get("bbsCatalInfo"));
+		model.addAttribute("pageTotalCnt", postListInfo.get("pageTotalCnt"));
 		model.addAttribute("pageViewInfo", pageViewInfo);
 		model.addAttribute("pageRowInfo", pageRowInfo);
 		return "tiles/board/postList";
@@ -54,69 +58,86 @@ public class boardController {
 	
 	
 	/**
+	 * 게시글 작성 페이지
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/board/postRegistView")
+	public String postRegistView(Model model, HttpServletRequest request) throws Exception {
+		model.addAttribute("bbsCatalId", request.getParameter("bbsCatalId"));
+		return "tiles/board/postRegistView";
+	}
+	
+	
+	/**
 	 * 게시글 조회
-	 * @param session
 	 * @param model
 	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/board/postInfoView")
-	public String postInfoView(HttpSession session, Model model, HttpServletRequest request) throws Exception {
-		
-		String bbsPostId = request.getParameter("bbsPostId");
+	public String postInfoView(Model model, HttpServletRequest request) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("bbsPostId", bbsPostId);
+		map.put("bbsCatalId", request.getParameter("bbsCatalId"));
+		map.put("bbsPostId", request.getParameter("bbsPostId"));
 		
-		Map<String, Object> postInfo = (Map<String, Object>) boardService.selectPostRepleInfo(map).get("postInfo");
-		List<Map> RepleList = (List<Map>) boardService.selectPostRepleInfo(map).get("repleList");
+		Map postRepleAttInfo = boardService.selectPostRepleAttInfo(map);
 		
-//		logger.debug("bbsPostId = "+(String) postInfo.get("bbsPostId"));
-//		logger.debug("bbsPostTitle = "+(String) postInfo.get("bbsPostTitle"));
-//		logger.debug("bbsPostContent = "+(String) postInfo.get("bbsPostContent"));
+		Map<String, Object> postInfo = (Map<String, Object>) postRepleAttInfo.get("postInfo");
+		List<Map> repleList = (List<Map>) postRepleAttInfo.get("repleList");
+		List<Map> attachList = (List<Map>) postRepleAttInfo.get("attachList");
 		
 		// 게시글 리스트 추출
 		model.addAttribute("postInfo", postInfo);
-		model.addAttribute("RepleList", RepleList);
+		model.addAttribute("repleList", repleList);
+		model.addAttribute("attachList", attachList);
 		return "tiles/board/postInfoView";
 	}
 	
 	
 	/**
-	 * 게시글 작성 페이지
-	 * @param session
+	 * 게시글 수정 페이지
 	 * @param model
+	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/board/postRegistView")
-	public String postRegistView(HttpSession session, Model model) throws Exception {
-		return "tiles/board/postRegistView";
+	@RequestMapping(value="/board/postModifyView")
+	public String postModifyView(Model model, HttpServletRequest request) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("bbsPostId", request.getParameter("bbsPostId"));
+		map.put("bbsCatalId", request.getParameter("bbsCatalId"));
+		
+		Map postRepleAttInfo = boardService.selectPostRepleAttInfo(map);
+		
+		Map<String, Object> postInfo = (Map<String, Object>) postRepleAttInfo.get("postInfo");
+		List<Map> attachList = (List<Map>) postRepleAttInfo.get("attachList");
+		
+		// 게시글 리스트 추출
+		model.addAttribute("bbsCatalId", map.get("bbsCatalId"));
+		model.addAttribute("postInfo", postInfo);
+		model.addAttribute("attachList", attachList);
+		return "tiles/board/postModifyView";
 	}
 	
 	
 	/**
 	 * 게시글 작성 저장
-	 * @param session
 	 * @param model
 	 * @param request
 	 * @param multiPartrequest
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/board/postInfoRegist")
-	public String postInfoRegist(HttpSession session, Model model, MultipartHttpServletRequest multiPartrequest) throws Exception {
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		logger.debug("bbsPostTitle = "+multiPartrequest.getParameter("bbsPostTitle"));
-		
-		map.put("bbsPostTitle", multiPartrequest.getParameter("bbsPostTitle"));
-		map.put("bbsPostContent", multiPartrequest.getParameter("bbsPostContent"));
+	@RequestMapping(value="/board/insertPostInfo")
+	public String insertPostInfo(Model model, MultipartHttpServletRequest multiPartrequest) throws Exception {
 		
 		// 게시글 저장 및 첨부파일 저장
-		String bbsPostId = boardService.saveBoardInfo(map, multiPartrequest);
+		String bbsPostId = boardService.insertPostInfo(multiPartrequest);
 		
 		// 게시글 저장 성공여부
 		model.addAttribute("bbsPostId", bbsPostId);
@@ -125,58 +146,57 @@ public class boardController {
 	
 	
 	/**
-	 * 게시글 수정 페이지
-	 * @param session
-	 * @param model
-	 * @param request
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value="/board/postModifyView")
-	public String postModifyView(HttpSession session, Model model, HttpServletRequest request) throws Exception {
-		
-		String bbsPostId = request.getParameter("bbsPostId");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("bbsPostId", bbsPostId);
-		
-		Map<String, Object> postInfo = (Map<String, Object>) boardService.selectPostRepleInfo(map).get("postInfo");
-		
-		// 게시글 리스트 추출
-		model.addAttribute("postInfo", postInfo);
-		return "tiles/board/postModifyView";
-	}
-	
-	
-	/**
 	 * 게시글 수정 저장
-	 * @param session
 	 * @param model
 	 * @param request
 	 * @param multiPartrequest
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/board/postModiEdit")
-	public String postModiEdit(	HttpSession session, Model model, HttpServletRequest request, MultipartHttpServletRequest multiPartrequest) throws Exception {
+	@RequestMapping(value="/board/updatePostInfo")
+	public String updatePostInfo(Model model, MultipartHttpServletRequest multiPartrequest) throws Exception {
+		
+		int modiEditRst = boardService.updatePostInfo(multiPartrequest);
+		return "ajaxJasonView";
+	}
+	
+	
+	/**
+	 * 게시글 정보 삭제
+	 * @param model
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/board/deletePostInfo")
+	public String deletePostInfo(Model model, HttpServletRequest request) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		String bbsPostId = request.getParameter("bbsPostId");
-		String bbsPostTitle = request.getParameter("bbsPostTitle");
-		String bbsPostContent = request.getParameter("bbsPostContent");
+		map.put("bbsPostId", request.getParameter("bbsPostId"));
+		map.put("bbsCatalId", request.getParameter("bbsCatalId"));
 		
-		map.put("bbsPostId", bbsPostId);
-		map.put("bbsPostTitle", bbsPostTitle);
-		map.put("bbsPostContent", bbsPostContent);
+		boardService.deletePostInfo(map);
 		
-		logger.debug("bbsPostContent = "+bbsPostContent);
+		model.addAttribute("bbsCatalId", map.get("bbsCatalId"));
+		return "ajaxJasonView";
+	}
+	
+	
+	/**
+	 * 댓글 저장
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/board/insertPostReple")
+	public String insertPostReple(HttpServletRequest request, Model model) throws Exception {
 		
+		List<Map> postRepleList = boardService.insertPostRepleInfo(request);
 		
-		int modiEditRst = boardService.updatePostInfo(map, multiPartrequest);
+		model.addAttribute("postRepleList", postRepleList);
 		
-		// 게시글 리스트 추출
-		model.addAttribute("bbsPostId", bbsPostId);
-		return "redirect:/board/postInfoView";
+		return "ajaxJasonView";
 	}
 	
 	

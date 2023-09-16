@@ -13,7 +13,15 @@ function goPostList(){
 	let formInfo = document.createElement("form");
 	formInfo.setAttribute("id", "pageControllDiv");
 	formInfo.setAttribute("method", "post");
-	formInfo.setAttribute("action", "/board/postList");
+	formInfo.setAttribute("action", "/board/postListView");
+	
+	let bbsCatalId = document.createElement("input");
+	bbsCatalId.setAttribute("name", "bbsCatalId");
+	bbsCatalId.setAttribute("type", "hidden");
+	bbsCatalId.setAttribute("value", "BC002");
+	
+	formInfo.appendChild(bbsCatalId);
+	
 	document.body.appendChild(formInfo);
 	formInfo.submit();
 }

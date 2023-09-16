@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-    
+
 <footer id="page-foot">
 	<div class="bottomBanner lineTopBottomDiv"></div>			
 	<div class="footer-div">

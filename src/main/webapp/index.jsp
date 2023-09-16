@@ -23,7 +23,7 @@
 				<th style="width: 30%;">접속IP</th>
 			</tr>
 			<c:choose>
-				<c:when test="${applicationScope.userList != null and applicationScope.userList.size() > 0 }">
+				<c:when test="${applicationScope.userList ne null and applicationScope.userList.size() > 0 }">
 					<c:forEach  var="userInfo" items="${applicationScope.userList }">
 						<tr>
 							<td>${userInfo.userId}</td>

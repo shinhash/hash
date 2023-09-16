@@ -18,6 +18,7 @@ public class boardMapperDao extends EgovAbstractMapper{
 	
 	private static final Logger logger = LoggerFactory.getLogger(boardMapperDao.class);
 		
+	
 	/**
 	 * 게시물 목록정보 가져오기
 	 * @param map
@@ -26,6 +27,27 @@ public class boardMapperDao extends EgovAbstractMapper{
 	 */
 	public List<Map> selectPostList(Map<String, Object> map) throws Exception {
 		return selectList("boardMapperDao.selectPostList", map);
+	}
+	
+	
+	/**
+	 * 게시판 정보 조회
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public Map selectPostCatalInfo(Map<String, Object> map) throws Exception {
+		return selectOne("boardMapperDao.selectPostCatalInfo", map);
+	}
+	
+	
+	/**
+	 * 페이지 총 개수
+	 * @param map
+	 * @return
+	 */
+	public int selectPageTotalCnt(Map<String, Object> map) throws Exception {
+		return selectOne("boardMapperDao.selectPageTotalCnt", map);
 	}
 	
 	
@@ -49,6 +71,16 @@ public class boardMapperDao extends EgovAbstractMapper{
 	public List<Map> selectRepleList(Map<String, Object> map) throws Exception {
 		return selectList("boardMapperDao.selectRepleList", map);
 	}
+
+
+	/**
+	 * 첨부파일 리스트 조회
+	 * @param map
+	 * @return
+	 */
+	public List<Map> selectAttachListList(Map<String, Object> map) throws Exception {
+		return selectList("boardMapperDao.selectAttachListList", map);
+	}
 	
 	
 	/**
@@ -60,8 +92,8 @@ public class boardMapperDao extends EgovAbstractMapper{
 	public int insertPostInfo(Map<String, Object> map) throws Exception {
 		return insert("boardMapperDao.insertPostInfo", map);
 	}
-	
-		
+
+
 	/**
 	 * 게시물 삭제
 	 * @param map
@@ -84,15 +116,22 @@ public class boardMapperDao extends EgovAbstractMapper{
 
 
 	/**
-	 * 페이지 총 개수
-	 * @param map
-	 * @return
+	 * 첨부파일 저장
+	 * @param attchInfo
 	 */
-	public int selectPageTotalCnt() {
-		return selectOne("boardMapperDao.selectPageTotalCnt");
+	public int insertPostAttach(Map<String, Object> attchInfo) throws Exception {
+		return insert("boardMapperDao.insertPostAttach", attchInfo);
 	}
 
 
-	
+	/**
+	 * 댓글정보 저장
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public int insertRepleInfo(Map<String, Object> map) throws Exception {
+		return insert("boardMapperDao.insertRepleInfo", map);
+	}
 	
 }
