@@ -8,8 +8,18 @@ function goHome(){
 	formInfo.submit();
 }
 
+// bbsCatalList page
+function goBbsCatalList(){
+	let formInfo = document.createElement("form");
+	formInfo.setAttribute("id", "pageControllDiv");
+	formInfo.setAttribute("method", "post");
+	formInfo.setAttribute("action", "/board/bbsCatalList");	
+	document.body.appendChild(formInfo);
+	formInfo.submit();
+}
+
 // postList page
-function goPostList(){
+function goPostList(bbsCatalIdInfo){
 	let formInfo = document.createElement("form");
 	formInfo.setAttribute("id", "pageControllDiv");
 	formInfo.setAttribute("method", "post");
@@ -18,7 +28,7 @@ function goPostList(){
 	let bbsCatalId = document.createElement("input");
 	bbsCatalId.setAttribute("name", "bbsCatalId");
 	bbsCatalId.setAttribute("type", "hidden");
-	bbsCatalId.setAttribute("value", "BC002");
+	bbsCatalId.setAttribute("value", bbsCatalIdInfo);
 	
 	formInfo.appendChild(bbsCatalId);
 	

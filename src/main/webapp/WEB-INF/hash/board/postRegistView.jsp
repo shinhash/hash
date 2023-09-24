@@ -23,7 +23,7 @@
 	}
 	.buttonDiv{
 		float: right;
-		margin-right: 60px;
+		margin-right: 70px;
 	}
 	.postInfoBtn{
 		width: 50px;
@@ -65,8 +65,6 @@
 	}
 	
 	
-	
-	
 	/**
 	게시글 저장시 로딩처리
 	*/
@@ -81,11 +79,13 @@
 	}
 	#loading_img{ /*화면 전체를 어둡게 합니다.*/
 		position: fixed;
-		margin-top: 300px;
+		margin-top: 200px;
 		margin-left: 45%;
 		z-index: 1;
 	}
-	
+	body.no-scroll{
+		position: fixed;
+	}
 	
 	
 	/**
@@ -99,8 +99,6 @@
 	#bbsPostAttchInfo{
 		display: none;
 	}
-	
-	
 	
 	
 	/**
@@ -168,7 +166,6 @@
 			maxHeight: null,	// 최대 높이
 			focus: true,		// 에디터 로딩후 포커스를 맞출지 여부
 			lang: "ko-KR",		// 한글 설정
-			placeholder: "게시글 내용",
 			toolbar: [
 					    ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
 					    ['color', ['forecolor','color']],
@@ -181,7 +178,6 @@
 		});
 		/* summernote 쓰기 활성화 */
 		$("#summernote").summernote('enable');
-		$(".note-editable").empty();
 		/* summernote */
 		$(".note-editable").css("height", "auto");
 		
@@ -218,9 +214,11 @@
 				async		: true,
 				beforeSend	: function(xhr){
 					$(".note-toolbar").css("display", "none");
+					document.body.classList.add("no-scroll");
 					loadingDiv.show();
 				},
 				complete : function(){
+					document.body.classList.remove("no-scroll");
 					loadingDiv.hide();
 			    },
 				success : function(result){
@@ -402,7 +400,14 @@
 								<td>
 									<div id="filesUploadDiv">
 										<div class="dropBox">
-											<span class="dropSpan">Drag & Drop</span>
+											<!-- 
+											&lt; 	: < (부등호 꺽쇠)
+											&gt; 	: > (부등호 꺽쇠)
+											&nbsp; 	: ' ' (공백, Space 한칸)
+											&amp; 	: & (앰퍼샌드)
+											&quot; 	: " (큰따옴표 하나)
+											 -->
+											<span class="dropSpan">Drag &amp; Drop</span>
 										</div>
 										<input id="bbsPostAttchInfo" type="file" name="bbsPostAttchInfo" multiple="multiple" />
 									</div>
@@ -413,7 +418,7 @@
 					<br>
 					<div class="buttonDiv">
 						<input class="postInfoBtn" type="button" id="postRegistBtn" value="저장" />
-						<input class="postInfoBtn" type="button" id="postListBtn" value="목록" onclick="goPostList();" />
+						<input class="postInfoBtn" type="button" id="postListBtn" value="목록" onclick="goPostList('${bbsCatalId}');" />
 					</div>
 				</div>
 				<br><br>

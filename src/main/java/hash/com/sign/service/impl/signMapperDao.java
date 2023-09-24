@@ -3,9 +3,6 @@ package hash.com.sign.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import egovframework.rte.psl.dataaccess.EgovAbstractMapper;

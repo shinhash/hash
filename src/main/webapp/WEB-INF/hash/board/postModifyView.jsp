@@ -22,7 +22,7 @@
 	}
 	.buttonDiv{
 		float: right;
-		margin-right: 60px;
+		margin-right: 70px;
 	}
 	.postInfoBtn{
 		width: 50px;
@@ -34,7 +34,10 @@
 	.note-resizebar{
 		display: none;
 	}
-	
+	.contents{
+		overflow: hidden;
+		height: auto;
+	}
 	
 	
 	/**
@@ -54,6 +57,9 @@
 		margin-top: 300px;
 		margin-left: 45%;
 		z-index: 1;
+	}
+	body.no-scroll{
+		position: fixed;
 	}
 	
 	
@@ -198,9 +204,11 @@
 				async		: true,
 				beforeSend	: function(xhr){
 					$(".note-toolbar").css("display", "none");
+					document.body.classList.add("no-scroll");
 					loadingDiv.show();
 				},
 				complete : function(){
+					document.body.classList.remove("no-scroll");
 					loadingDiv.hide();
 			    },
 				success : function(result){
@@ -398,7 +406,14 @@
 								<td>
 									<div id="filesUploadDiv">
 										<div class="dropBox">
-											<span class="dropSpan">Drag & Drop</span>
+											<!-- 
+											&lt; 	: < (부등호 꺽쇠)
+											&gt; 	: > (부등호 꺽쇠)
+											&nbsp; 	: ' ' (공백, Space 한칸)
+											&amp; 	: & (앰퍼샌드)
+											&quot; 	: " (큰따옴표 하나)
+											 -->
+											<span class="dropSpan">Drag &amp; Drop</span>
 										</div>
 										<input id="bbsPostAttchInfo" type="file" name="bbsPostAttchInfo" multiple="multiple" />
 									</div>
@@ -414,7 +429,7 @@
 						<input class="postInfoBtn" type="button" id="postEditCancleBtn" value="취소" />
 					</div>
 				</div>
-				<br><br><br><br>
+				<br><br>
 			</div>
 		</div>
 	</div>

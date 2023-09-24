@@ -256,7 +256,7 @@
 						</c:choose>
 					</ul>
 				</nav>
-				<br><br>
+				<br>
 			</div>
 		</div>
 	</div>

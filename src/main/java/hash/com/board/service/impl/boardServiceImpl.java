@@ -10,8 +10,8 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -21,11 +21,27 @@ import hash.com.board.service.boardService;
 @Service("boardService")
 public class boardServiceImpl implements boardService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(boardServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(boardServiceImpl.class);
 	final static String POST_FILE_SAVE_PATH = "E:\\my_dev\\springToolsSuite3\\attachFiles\\bbs\\normal\\";
 	
 	@Resource(name="boardMapperDao")
 	private boardMapperDao boardMapperDao;
+	
+	/**
+	 * 게시판 및 게시글 목록 조회
+	 */
+	@Override
+	public Map<String, Object> bbsCatalPostListInfo() throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pageViewInfo", "1");
+		map.put("pageRowInfo", "5");
+		
+		Map<String, Object> bbsCatalPostListInfo = new HashMap<String, Object>();
+		bbsCatalPostListInfo.put("bbsCatalList", boardMapperDao.selectPostCatalInfo(map));
+		bbsCatalPostListInfo.put("postList", boardMapperDao.selectPostList(map));
+		return bbsCatalPostListInfo;
+	}
 	
 	
 	/**
@@ -36,7 +52,7 @@ public class boardServiceImpl implements boardService {
 		
 		Map<String, Object> postListInfo = new HashMap<String, Object>();
 		postListInfo.put("postList", boardMapperDao.selectPostList(map));
-		postListInfo.put("bbsCatalInfo", boardMapperDao.selectPostCatalInfo(map));
+		postListInfo.put("bbsCatalInfo", boardMapperDao.selectPostCatalInfo(map).get(0));
 		postListInfo.put("pageTotalCnt", boardMapperDao.selectPageTotalCnt(map));
 		return postListInfo;
 	}
@@ -46,7 +62,7 @@ public class boardServiceImpl implements boardService {
 	 * 게시글, 댓글, 첨부파일 정보 조회
 	 */
 	@Override
-	public Map selectPostRepleAttInfo(Map<String, Object> map) throws Exception {
+	public Map<String, Object> selectPostRepleAttInfo(Map<String, Object> map) throws Exception {
 		
 		Map<String, Object> selectPostRepleAttInfo = new HashMap<String, Object>();
 		selectPostRepleAttInfo.put("postInfo", boardMapperDao.selectPostInfo(map));
@@ -170,7 +186,7 @@ public class boardServiceImpl implements boardService {
 	 * 댓글 저장
 	 */
 	@Override
-	public List<Map> insertPostRepleInfo(HttpServletRequest request) throws Exception {
+	public List<Map<String, Object>> insertPostRepleInfo(HttpServletRequest request) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("bbsPostId", request.getParameter("bbsPostId"));
@@ -178,7 +194,7 @@ public class boardServiceImpl implements boardService {
 		map.put("bbsRepleRegId", request.getParameter("bbsRepleRegId"));
 		map.put("bbsRepleContent", request.getParameter("bbsRepleContent"));
 		
-		List<Map> saveRepleInfoAndSelectRepleInfo = new ArrayList<Map>();
+		List<Map<String, Object>> saveRepleInfoAndSelectRepleInfo = new ArrayList<Map<String, Object>>();
 		
 		try {
 			// 댓글 저장
@@ -192,5 +208,28 @@ public class boardServiceImpl implements boardService {
 		
 		return saveRepleInfoAndSelectRepleInfo;
 	}
+
+
 	
+	/**
+	 * 댓글 삭제
+	 */
+	@Override
+	public List<Map<String, Object>> deletePostRepleInfo(Map<String, Object> map) throws Exception {
+		
+		List<Map<String, Object>> delteRepleInfoAndSelectRepleInfo = new ArrayList<Map<String, Object>>();
+		
+		try {
+			// 댓글 삭제
+			boardMapperDao.deletePostRepleInfo(map);
+			// 댓글 목록 조회
+			delteRepleInfoAndSelectRepleInfo = boardMapperDao.selectRepleList(map);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new Exception();
+		}
+		
+		return delteRepleInfoAndSelectRepleInfo;
+	}
+
 }

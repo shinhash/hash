@@ -3,12 +3,6 @@ package hash.com.board.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
-
-import org.mybatis.spring.SqlSessionTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import egovframework.rte.psl.dataaccess.EgovAbstractMapper;
@@ -16,16 +10,14 @@ import egovframework.rte.psl.dataaccess.EgovAbstractMapper;
 @Repository("boardMapperDao")
 public class boardMapperDao extends EgovAbstractMapper{
 	
-	private static final Logger logger = LoggerFactory.getLogger(boardMapperDao.class);
-		
 	
 	/**
-	 * 게시물 목록정보 가져오기
+	 * 게시글 목록정보 가져오기
 	 * @param map
 	 * @return 게시물 목록정보
 	 * @throws Exception
 	 */
-	public List<Map> selectPostList(Map<String, Object> map) throws Exception {
+	public List<Map<String, Object>> selectPostList(Map<String, Object> map) throws Exception {
 		return selectList("boardMapperDao.selectPostList", map);
 	}
 	
@@ -36,8 +28,8 @@ public class boardMapperDao extends EgovAbstractMapper{
 	 * @return
 	 * @throws Exception
 	 */
-	public Map selectPostCatalInfo(Map<String, Object> map) throws Exception {
-		return selectOne("boardMapperDao.selectPostCatalInfo", map);
+	public List<Map<String, Object>> selectPostCatalInfo(Map<String, Object> map) throws Exception {
+		return selectList("boardMapperDao.selectPostCatalInfo", map);
 	}
 	
 	
@@ -45,6 +37,7 @@ public class boardMapperDao extends EgovAbstractMapper{
 	 * 페이지 총 개수
 	 * @param map
 	 * @return
+	 * @throws Exception
 	 */
 	public int selectPageTotalCnt(Map<String, Object> map) throws Exception {
 		return selectOne("boardMapperDao.selectPageTotalCnt", map);
@@ -57,7 +50,7 @@ public class boardMapperDao extends EgovAbstractMapper{
 	 * @return 게시물 정보
 	 * @throws Exception
 	 */
-	public Map selectPostInfo(Map<String, Object> map) throws Exception {
+	public Map<String, Object> selectPostInfo(Map<String, Object> map) throws Exception {
 		return selectOne("boardMapperDao.selectPostInfo", map);
 	}
 	
@@ -68,7 +61,7 @@ public class boardMapperDao extends EgovAbstractMapper{
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map> selectRepleList(Map<String, Object> map) throws Exception {
+	public List<Map<String, Object>> selectRepleList(Map<String, Object> map) throws Exception {
 		return selectList("boardMapperDao.selectRepleList", map);
 	}
 
@@ -77,8 +70,9 @@ public class boardMapperDao extends EgovAbstractMapper{
 	 * 첨부파일 리스트 조회
 	 * @param map
 	 * @return
+	 * @throws Exception
 	 */
-	public List<Map> selectAttachListList(Map<String, Object> map) throws Exception {
+	public List<Map<String, Object>> selectAttachListList(Map<String, Object> map) throws Exception {
 		return selectList("boardMapperDao.selectAttachListList", map);
 	}
 	
@@ -100,7 +94,7 @@ public class boardMapperDao extends EgovAbstractMapper{
 	 * @throws Exception
 	 */
 	public void deletePostInfo(Map<String, Object> map) throws Exception {
-		delete("boardMapperDao.deletePostInfo", map);
+		update("boardMapperDao.deletePostInfo", map);
 	}
 
 
@@ -118,6 +112,8 @@ public class boardMapperDao extends EgovAbstractMapper{
 	/**
 	 * 첨부파일 저장
 	 * @param attchInfo
+	 * @return
+	 * @throws Exception
 	 */
 	public int insertPostAttach(Map<String, Object> attchInfo) throws Exception {
 		return insert("boardMapperDao.insertPostAttach", attchInfo);
@@ -132,6 +128,16 @@ public class boardMapperDao extends EgovAbstractMapper{
 	 */
 	public int insertRepleInfo(Map<String, Object> map) throws Exception {
 		return insert("boardMapperDao.insertRepleInfo", map);
+	}
+
+
+	/**
+	 * 댓글정보 삭제
+	 * @param map
+	 * @throws Exception
+	 */
+	public void deletePostRepleInfo(Map<String, Object> map) throws Exception {
+		update("boardMapperDao.deletePostRepleInfo", map);
 	}
 	
 }

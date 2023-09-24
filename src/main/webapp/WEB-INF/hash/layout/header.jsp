@@ -52,7 +52,6 @@
 		color: black;
 	}
 </style>
-<script src="https://kit.fontawesome.com/3d4638d271.js" crossorigin="anonymous"></script>
 <script type="text/javascript">
 	$(document).ready(function (){
 		//배너 setInterval
@@ -147,7 +146,8 @@
 				<ul class="toolbar-mlist-ul flex">
 					<li class="toolbar-mlist-li flex" ><a href="#">전체보기</a></li>
 					<li class="toolbar-mlist-li flex" ><a href="#">공지사항</a></li>
-					<li class="toolbar-mlist-li flex" ><a onclick="goPostList()">게시판</a></li>
+					<li class="toolbar-mlist-li flex" ><a onclick="goPostList('BC002')">게시판</a></li>
+					<li class="toolbar-mlist-li flex" ><a onclick="goBbsCatalList()">게시판확인테스트</a></li>
 					<li class="toolbar-mlist-li flex" ><a href="#">추천음악</a></li>
 					<li class="toolbar-mlist-li flex" ><a href="#">악보봐</a></li>
 				</ul>

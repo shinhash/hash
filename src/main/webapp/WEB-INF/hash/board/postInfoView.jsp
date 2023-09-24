@@ -34,7 +34,7 @@
 	}
 	#buttonDiv{
 		float: right;
-		margin-right: 60px;
+		margin-right: 70px;
 	}
 	.postInfoBtn{
 		width: 50px;
@@ -46,7 +46,33 @@
 	.note-resizebar{
 		display: none;
 	}
+	.contents{
+		overflow: hidden;
+		height: auto;
+	}
 	
+	
+	/**
+	게시글 삭제시 로딩처리
+	*/
+	#loading{ /*화면 전체를 어둡게 합니다.*/
+		position: fixed;
+		left:0;
+		right:0;
+		top:0;
+		bottom:0;
+		background: rgba(0,0,0,0.2); /*not in ie */
+		filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr='#20000000', endColorstr='#20000000');    /* ie */
+	}
+	#loading_img{ /*화면 전체를 어둡게 합니다.*/
+		position: fixed;
+		margin-top: 300px;
+		margin-left: 45%;
+		z-index: 1;
+	}
+	body.no-scroll{
+		position: fixed;
+	}
 	
 	
 	/**
@@ -147,7 +173,6 @@
 	.repleDelBtn:hover{
 		background-color: gray;
 	}
-	
 
 
 	/**
@@ -199,6 +224,8 @@
 </style>
 <script type="text/javascript">
 
+	var loadingDiv = $('<div id="loading" class="loading"></div><img id="loading_img" alt="loading" src="${path}/resources/images/loading/loading.gif" />').appendTo(document.body).hide();
+	
 	$(document).ready(function (){
 		// summernote setting and view
 		$("#summernote").summernote({
@@ -211,6 +238,7 @@
 		});
 		// 서머노트 쓰기 비활성화
 		$("#summernote").summernote('disable');
+		
 		
 		// 게시글 삭제
 		$("#postDeleteBtn").on("click", function(){
@@ -240,9 +268,17 @@
 				contentType	: false,
 				processData	: false,
 				async		: true,
+				beforeSend	: function(xhr){
+					document.body.classList.add("no-scroll");
+					loadingDiv.show();
+				},
+				complete : function(){
+					document.body.classList.remove("no-scroll");
+					loadingDiv.hide();
+			    },
 				success : function(result){
 					alert("게시글 삭제완료");
-					goPostList();
+					goPostList($("#boardPostTable").attr("bbs-catal-id"));
 				},
 				error : function(request, status, error){
 					console.log(error);
@@ -274,6 +310,7 @@
 			document.body.appendChild(formInfo);
 			formInfo.submit();
 		});
+		
 		
 		// 댓글 저장
 		$("#repleBtn").on("click", function(){
@@ -328,11 +365,9 @@
 			form.appendChild(bbsPostId);
 			form.appendChild(bbsRepleId);
 			
-			console.log("bbsPostId : "+bbsPostId.value);
-			console.log("bbsRepleId : "+bbsRepleId.value);
+// 			console.log("bbsPostId : "+bbsPostId.value);
+// 			console.log("bbsRepleId : "+bbsRepleId.value);
 			
-			return;
-
 			let formInfo = new FormData(form);
 			$.ajax({
 				type		: "POST",
@@ -358,10 +393,11 @@
 		function bbsRepleListView(result){
 			$("#repleAreaBody").empty();
 			$("#bbsRepleContent").val("");
+			$(".repleCnt").text(result.postRepleList.length);
 			let repleList = result.postRepleList;
 			
 			repleList.forEach(function(bbsRepleInfo){
-				console.log(bbsRepleInfo);
+// 				console.log(bbsRepleInfo);
 				
 				// repleAreaBody
 				let repleInfoBody = document.createElement("div");
@@ -403,7 +439,9 @@
 
 				
 				// append (repleDelBtn) to repleDelSpan
-				repleDelSpan.appendChild(repleDelBtn);
+				if(bbsRepleInfo.bbsRepleRegId == $("#bbsRepleRegId").val()){
+					repleDelSpan.appendChild(repleDelBtn);					
+				}
 				
 				// append (repleRegId, repleDelSpan) to repleWriter
 				repleWriter.appendChild(repleRegId);
@@ -447,7 +485,7 @@
 										<span>0</span>
 										<span>|</span>
 										<span>댓글</span>
-										<span>0</span>
+										<span class="repleCnt">${repleList.size()}</span>
 										<span>|</span>
 										<span>작성일</span>
 										<span>
@@ -485,9 +523,11 @@
 					<br>
 					<div id="buttonDivLine">
 						<div id="buttonDiv">
-							<input class="postInfoBtn" type="button" id="postDeleteBtn" value="삭제" />
-							<input class="postInfoBtn" type="button" id="postModifyBtn" value="수정" />
-							<input class="postInfoBtn" type="button" id="postListBtn" value="목록" onclick="goPostList()" />
+							<c:if test="${loginSession.userId eq postInfo.bbsPostRegId}">
+								<input class="postInfoBtn" type="button" id="postDeleteBtn" value="삭제" />
+								<input class="postInfoBtn" type="button" id="postModifyBtn" value="수정" />
+							</c:if>
+							<input class="postInfoBtn" type="button" id="postListBtn" value="목록" onclick="goPostList('${postInfo.bbsCatalId}')" />
 						</div>
 					</div>
 					<!-- reple area -->
@@ -505,7 +545,9 @@
 											<div class="repleInfo" bbs-reple-id="${repleInfo.bbsRepleId}">
 												<div class="repleWriter">
 													<span class="repleRegId">${repleInfo.bbsRepleRegId}</span>
-													<span class="repleDelSpan"><input type="button" class="repleDelBtn" value="댓글삭제" /></span>
+													<c:if test="${loginSession.userId eq repleInfo.bbsRepleRegId}">
+														<span class="repleDelSpan"><input type="button" class="repleDelBtn" value="댓글삭제" /></span>
+													</c:if>
 												</div>
 												<div class="repleWrtieLine"></div>
 												<div class="repleContent">${repleInfo.bbsRepleContent}</div>
@@ -520,8 +562,8 @@
 							<div id="bbsRepleInfo">
 								<input type="hidden" name="bbsCatalId" value="${postInfo.bbsCatalId}" />
 								<input id="bbsPostId" type="hidden" name="bbsPostId" value="${postInfo.bbsPostId}" />
-								<input type="hidden" name="bbsRepleRegId" value="${loginSession.userId}" />
-								<div id="bbsRepleWriter">${loginSession.userNm }</div>
+								<input type="hidden" id="bbsRepleRegId" name="bbsRepleRegId" value="${loginSession.userId}" />
+								<div id="bbsRepleWriter">${loginSession.userNm}</div>
 								<div class="repleWrtieLine"></div>
 								<textarea id="bbsRepleContent" name="bbsRepleContent" placeholder="댓글내용은 2000자 이하로 작성해주세요."></textarea>
 								<input type="button" id="repleBtn" value="등록" />

@@ -10,8 +10,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -27,7 +27,7 @@ import hash.com.sign.service.signService;
 @SuppressWarnings({"unchecked","rawtypes"})
 public class signController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(signController.class);
+//	private static final Logger logger = LoggerFactory.getLogger(signController.class);
 	
 	@Resource(name="signService")
 	private signService signService;
