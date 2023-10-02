@@ -297,4 +297,49 @@
 		]]>
 	</update>
 	
+	
+	<select id="selectUserPostViewCnt" parameterType="HashMap" resultType="int">
+		/*
+			queryId = selectUserPostViewCnt
+		*/
+		<![CDATA[
+		SELECT COUNT(BBS_VIEW_ID)
+		  FROM BBS_VIEWS
+		 WHERE BBS_POST_ID = #{bbsPostId}
+		]]>
+		<if test='userId != null and !userId.equals("")'>
+		   AND BBS_POST_VIEW_USER_ID = #{userId}
+		</if>
+		  
+	</select>
+	
+	
+	<insert id="insertUserPostView" parameterType="HashMap">
+		/*
+			queryId = selectUserPostViewCnt
+		*/
+		<![CDATA[
+		INSERT INTO 
+			BBS_VIEWS(
+				BBS_VIEW_ID, 
+				BBS_POST_ID, 
+				BBS_POST_VIEW_USER_ID, 
+				BBS_POST_VIEW_DATE
+			)
+			SELECT  
+					('BV' 
+					|| NVL(SUBSTR(MAX(BBS_VIEW_ID),3,8), TO_CHAR(SYSDATE,'YYYYMMDD')) 
+					|| CASE WHEN SUBSTR(MAX(BBS_VIEW_ID),11,6) IS NULL 
+				            THEN '000001' 
+				            ELSE LPAD(TO_CHAR(TO_NUMBER(SUBSTR(MAX(BBS_VIEW_ID),11,16))+1), 6, '0') 
+				            END 
+					) AS BBS_VIEW_ID, 
+					#{bbsPostId} AS BBS_POST_ID, 
+					#{userId} AS BBS_POST_VIEW_USER_ID, 
+					TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') AS BBS_POST_VIEW_DATE 
+			  FROM BBS_VIEWS 
+			 WHERE SUBSTR(BBS_VIEW_ID, 3, 8) = TO_CHAR(SYSDATE, 'YYYYMMDD') 
+		]]>
+	</insert>
+	
 </mapper>

@@ -59,6 +59,21 @@ public class boardServiceImpl implements boardService {
 	
 	
 	/**
+	 * 게시글 조회수 정보 업데이트
+	 */
+	@Override
+	public void updateUserPostViewCnt(Map<String, Object> map, Map<String, Object> userInfo) throws Exception {
+		Map<String, Object> userPostViewInfo = new HashMap<String, Object>();
+		userPostViewInfo.put("bbsPostId", map.get("bbsPostId"));
+		userPostViewInfo.put("userId", userInfo.get("userId").toString());
+		int userPostViewCnt = boardMapperDao.selectPostViewCnt(userPostViewInfo);
+		if(userPostViewCnt == 0) {
+			boardMapperDao.insertUserPostView(userPostViewInfo);
+		}
+	}
+	
+	
+	/**
 	 * 게시글, 댓글, 첨부파일 정보 조회
 	 */
 	@Override
@@ -68,11 +83,12 @@ public class boardServiceImpl implements boardService {
 		selectPostRepleAttInfo.put("postInfo", boardMapperDao.selectPostInfo(map));
 		selectPostRepleAttInfo.put("repleList", boardMapperDao.selectRepleList(map));
 		selectPostRepleAttInfo.put("attachList", boardMapperDao.selectAttachListList(map));
+		selectPostRepleAttInfo.put("postViewCnt", boardMapperDao.selectPostViewCnt(map));
 		
 		return selectPostRepleAttInfo;
 	}
 	
-
+	
 	/**
 	 * 게시글 정보 저장
 	 */
@@ -231,5 +247,6 @@ public class boardServiceImpl implements boardService {
 		
 		return delteRepleInfoAndSelectRepleInfo;
 	}
+
 
 }

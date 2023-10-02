@@ -482,7 +482,7 @@
 									<div id="bbsPostRegId">${postInfo.bbsPostRegId}</div>
 									<div id="bbsPostInfo">
 										<span>조회수</span>
-										<span>0</span>
+										<span>${postViewCnt}</span>
 										<span>|</span>
 										<span>댓글</span>
 										<span class="repleCnt">${repleList.size()}</span>
@@ -523,7 +523,7 @@
 					<br>
 					<div id="buttonDivLine">
 						<div id="buttonDiv">
-							<c:if test="${loginSession.userId eq postInfo.bbsPostRegId}">
+							<c:if test="${loginSession.userId ne null and loginSession.userId eq postInfo.bbsPostRegId}">
 								<input class="postInfoBtn" type="button" id="postDeleteBtn" value="삭제" />
 								<input class="postInfoBtn" type="button" id="postModifyBtn" value="수정" />
 							</c:if>
@@ -558,17 +558,19 @@
 							</c:choose>
 						</div>
 						<br><br>
-						<form id="repleForm">
-							<div id="bbsRepleInfo">
-								<input type="hidden" name="bbsCatalId" value="${postInfo.bbsCatalId}" />
-								<input id="bbsPostId" type="hidden" name="bbsPostId" value="${postInfo.bbsPostId}" />
-								<input type="hidden" id="bbsRepleRegId" name="bbsRepleRegId" value="${loginSession.userId}" />
-								<div id="bbsRepleWriter">${loginSession.userNm}</div>
-								<div class="repleWrtieLine"></div>
-								<textarea id="bbsRepleContent" name="bbsRepleContent" placeholder="댓글내용은 2000자 이하로 작성해주세요."></textarea>
-								<input type="button" id="repleBtn" value="등록" />
-							</div>
-						</form>
+						<c:if test="${loginSession.userId ne null}">
+							<form id="repleForm">
+								<div id="bbsRepleInfo">
+									<input type="hidden" name="bbsCatalId" value="${postInfo.bbsCatalId}" />
+									<input id="bbsPostId" type="hidden" name="bbsPostId" value="${postInfo.bbsPostId}" />
+									<input type="hidden" id="bbsRepleRegId" name="bbsRepleRegId" value="${loginSession.userId}" />
+									<div id="bbsRepleWriter">${loginSession.userNm}</div>
+									<div class="repleWrtieLine"></div>
+									<textarea id="bbsRepleContent" name="bbsRepleContent" placeholder="댓글내용은 2000자 이하로 작성해주세요."></textarea>
+									<input type="button" id="repleBtn" value="등록" />
+								</div>
+							</form>
+						</c:if>
 					</div>
 				</div>
 				<br><br>

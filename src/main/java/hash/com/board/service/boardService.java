@@ -35,6 +35,15 @@ public interface boardService {
 	 * @throws Exception
 	 */
 	String insertPostInfo(MultipartHttpServletRequest multiPartrequest) throws Exception;
+	
+	
+	/**
+	 * 게시글 조회수 정보 업데이트
+	 * @param map
+	 * @param userInfo 
+	 * @throws Exception
+	 */
+	void updateUserPostViewCnt(Map<String, Object> map, Map<String, Object> userInfo) throws Exception;
 
 
 	/**
@@ -44,8 +53,8 @@ public interface boardService {
 	 * @throws Exception
 	 */
 	Map<String, Object> selectPostRepleAttInfo(Map<String, Object> map) throws Exception;
-
-
+	
+	
 	/**
 	 * 게시글 수정 정보 저장
 	 * @param multiPartrequest 
@@ -78,6 +87,5 @@ public interface boardService {
 	 * @throws Exception
 	 */
 	List<Map<String, Object>> deletePostRepleInfo(Map<String, Object> map) throws Exception;
-
 
 }

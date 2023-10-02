@@ -227,7 +227,9 @@
 					</table>
 				</div>
 				<br><br>
-				<input id="postWriteBtn" class="postBtn" type="button" value="글쓰기" />
+				<c:if test="${loginSession.userId ne null}">
+					<input id="postWriteBtn" class="postBtn" type="button" value="글쓰기" />
+				</c:if>
 				<br><br>
 				<nav id="page-navi">
 					<ul id="page-navi-ul">

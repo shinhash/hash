@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,22 +98,31 @@ public class boardController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/board/postInfoView")
-	public String postInfoView(Model model, HttpServletRequest request) throws Exception {
+	public String postInfoView(Model model, HttpServletRequest request, HttpSession session) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("bbsCatalId", request.getParameter("bbsCatalId"));
 		map.put("bbsPostId", request.getParameter("bbsPostId"));
 		
+		// 게시글의 조회수 정보 업데이트
+		Map<String, Object> userInfo = (Map<String, Object>) session.getAttribute("loginSession");
+		if(userInfo != null) {
+			boardService.updateUserPostViewCnt(map, userInfo);
+		}
+		
+		// 게시글, 댓글, 첨부파일정보 조회
 		Map<String, Object> postRepleAttInfo = boardService.selectPostRepleAttInfo(map);
 		
 		Map<String, Object> postInfo = (Map<String, Object>) postRepleAttInfo.get("postInfo");
 		List<Map<String, Object>> repleList = (List<Map<String, Object>>) postRepleAttInfo.get("repleList");
 		List<Map<String, Object>> attachList = (List<Map<String, Object>>) postRepleAttInfo.get("attachList");
+		int postViewCnt = (int) postRepleAttInfo.get("postViewCnt");
 		
 		// 게시글 리스트 추출
 		model.addAttribute("postInfo", postInfo);
 		model.addAttribute("repleList", repleList);
 		model.addAttribute("attachList", attachList);
+		model.addAttribute("postViewCnt", postViewCnt);
 		return "tiles/board/postInfoView";
 	}
 	
