@@ -42,6 +42,7 @@
 			<param-name>contextConfigLocation</param-name>
 			<param-value>
 			/WEB-INF/config/springmvc/dispatcher-servlet.xml
+			classpath:hash/com/config/spring/context-interceptor.xml
 			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
