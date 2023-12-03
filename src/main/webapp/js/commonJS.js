@@ -69,7 +69,7 @@ function logout(){
 // null check
 function isNull(inputTemp){
 	var isNullRst = false;
-	if(inputTemp == undefined || inputTemp == "" || inputTemp == null){
+	if(typeof inputTemp === "undefined" || inputTemp == "" || inputTemp == null){
 		isNullRst = true;
 	}
 	return isNullRst;

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -87,5 +88,14 @@ public interface boardService {
 	 * @throws Exception
 	 */
 	List<Map<String, Object>> deletePostRepleInfo(Map<String, Object> map) throws Exception;
+
+
+	/**
+	 * 첨부파일 다운로드
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	Map<String, Object> postAttachDownload(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 }

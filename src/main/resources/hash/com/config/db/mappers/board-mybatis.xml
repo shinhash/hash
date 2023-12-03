@@ -16,25 +16,68 @@
 								BBS_POST.BBS_CATAL_ID, 
 								BBS_POST.BBS_POST_ID, 
 								BBS_POST.BBS_POST_TITLE, 
+								(SELECT COUNT(1) 
+								   FROM BBS_REPLE 
+								  WHERE BBS_REPLE.BBS_POST_ID = BBS_POST.BBS_POST_ID
+								    AND BBS_REPLE.BBS_REPLE_DEL_STAT = 'N') AS POST_REPLE_CNT, 
+								(SELECT COUNT(1) 
+								   FROM BBS_VIEWS 
+								  WHERE BBS_POST.BBS_POST_ID = BBS_POST_ID) AS BBS_VIEW_CNT, 
 								BBS_POST.BBS_POST_REG_DATE, 
+								(SELECT IRON_USER.USER_NM 
+								   FROM IRON_USER 
+								  WHERE IRON_USER.USER_ID = BBS_POST.BBS_POST_REG_ID) AS BBS_POST_WRITER, 
 								BBS_POST.BBS_POST_REG_ID, 
 								BBS_POST.BBS_POST_MOD_DATE, 
 								BBS_POST.BBS_POST_MOD_ID, 
 								BBS_POST.BBS_POST_STATUS 
-						  FROM 	BBS_POST, BBS_CATALOG 
+						  FROM 	BBS_POST, BBS_CATALOG, IRON_USER 
 						 WHERE  1 = 1 
 						   AND  BBS_POST.BBS_CATAL_ID = BBS_CATALOG.BBS_CATAL_ID 
+						   AND  BBS_POST.BBS_POST_REG_ID = IRON_USER.USER_ID(+)
 						   AND  BBS_POST.BBS_POST_STATUS = 'N' 
-		                   <if test='bbsCatalId != null and !bbsCatalId.equals("")'>
-							AND BBS_POST.BBS_CATAL_ID = #{bbsCatalId}
+							<if test="bbsCatalId != null and bbsCatalId != '' and bbsCatalId != 'ALL'">
+								AND BBS_POST.BBS_CATAL_ID = #{bbsCatalId}
+							</if>
+							<if test="selAllKey != null and selAllKey != ''">
+								AND (
+									BBS_POST.BBS_POST_TITLE LIKE '%' || #{selAllKey} || '%'
+									OR
+									BBS_POST.BBS_POST_CONTENT LIKE '%' || #{selAllKey} || '%'
+									)
+							</if>
+							<if test="selSrcKey != null and selSrcKey != ''">
+								<if test="srcTypeInfo != null and srcTypeInfo != ''">
+									<choose>
+										<when test="srcTypeInfo == 'postAll'">
+											AND (
+												BBS_POST.BBS_POST_TITLE LIKE '%' || #{selSrcKey} || '%'
+												OR
+												BBS_POST.BBS_POST_CONTENT LIKE '%' || #{selSrcKey} || '%'
+												OR
+												BBS_POST.BBS_POST_REG_ID LIKE '%' || #{selSrcKey} || '%'
+												)
+										</when>
+										<when test="srcTypeInfo == 'postTitleContent'">
+											AND (
+												BBS_POST.BBS_POST_TITLE LIKE '%' || #{selSrcKey} || '%'
+												OR
+												BBS_POST.BBS_POST_CONTENT LIKE '%' || #{selSrcKey} || '%'
+												)
+										</when>
+										<when test="srcTypeInfo == 'bbsPostRegId'">
+											AND IRON_USER.USER_NM LIKE '%' || #{selSrcKey} || '%'
+										</when>
+									</choose>
+								</if>
 						   </if>
 						ORDER BY BBS_POST.BBS_POST_REG_DATE DESC 
 						) ALL_LIST_DTL 
 				) ALL_LIST_MST 
 		WHERE 1 = 1
-		  AND ALL_LIST_MST.PAGE_RN BETWEEN ((#{pageViewInfo} - 1) * #{pageRowInfo}) + 1 AND #{pageViewInfo} * #{pageRowInfo}
-		<if test='startDt != null and !startDt.equals("")'>
-			<if test='endDt != null and !endDt.equals("")'>
+		  AND ALL_LIST_MST.PAGE_RN BETWEEN ((#{pageNumInfo} - 1) * #{pageRowInfo}) + 1 AND #{pageNumInfo} * #{pageRowInfo}
+		<if test="startDt != null and startDt != ''">
+			<if test="endDt != null and endDt != ''">
 		  		AND ALL_LIST_MST.BBS_POST_REG_DATE BETWEEN #{startDt} AND #{endDt}
 			</if>
 		</if>
@@ -56,7 +99,7 @@
 		  FROM  BBS_CATALOG 
 		 WHERE  BBS_CATAL_USE_YN = 'Y'
 		]]>
-		 <if test='bbsCatalId != null and !bbsCatalId.equals("")'>
+		 <if test="bbsCatalId != null and bbsCatalId != '' and bbsCatalId != 'ALL'">
 		   AND  BBS_CATAL_ID = #{bbsCatalId}
 		 </if>
 	</select>
@@ -71,9 +114,45 @@
 		       THEN FLOOR(COUNT(1)/#{pageRowInfo}) + 1 
 		       ELSE FLOOR(COUNT(1)/#{pageRowInfo})
 		       END PAGE_TOTAL_CNT
-		  FROM BBS_POST
-		 WHERE BBS_POST_STATUS = 'N'
+		  FROM BBS_POST, IRON_USER
+		 WHERE BBS_POST.BBS_POST_STATUS = 'N'
+		   AND BBS_POST.BBS_POST_REG_ID = IRON_USER.USER_ID(+)
 		]]>
+		<if test="bbsCatalId != null and bbsCatalId != '' and bbsCatalId != 'ALL'">
+			AND BBS_CATAL_ID = #{bbsCatalId}
+		</if>
+		<if test="selAllKey != null and selAllKey != ''">
+			AND (
+				BBS_POST.BBS_POST_TITLE LIKE '%' || #{selAllKey} || '%'
+				OR
+				BBS_POST.BBS_POST_CONTENT LIKE '%' || #{selAllKey} || '%'
+				)
+		</if>
+		<if test="selSrcKey != null and selSrcKey != ''">
+			<if test="srcTypeInfo != null and srcTypeInfo != ''">
+				<choose>
+					<when test="srcTypeInfo == 'postAll'">
+						AND (
+							BBS_POST.BBS_POST_TITLE LIKE '%' || #{selSrcKey} || '%'
+							OR
+							BBS_POST.BBS_POST_CONTENT LIKE '%' || #{selSrcKey} || '%'
+							OR
+							BBS_POST.BBS_POST_REG_ID LIKE '%' || #{selSrcKey} || '%'
+							)
+					</when>
+					<when test="srcTypeInfo == 'postTitleContent'">
+						AND (
+							BBS_POST.BBS_POST_TITLE LIKE '%' || #{selSrcKey} || '%'
+							OR
+							BBS_POST.BBS_POST_CONTENT LIKE '%' || #{selSrcKey} || '%'
+							)
+					</when>
+					<when test="srcTypeInfo == 'bbsPostRegId'">
+						AND IRON_USER.USER_NM LIKE '%' || #{selSrcKey} || '%'
+					</when>
+				</choose>
+			</if>
+	   </if>
 	</select>
 	
 	
@@ -90,8 +169,13 @@
 				BBS_POST_ID,
 				BBS_POST_TITLE, 
 				BBS_POST_CONTENT, 
+				(SELECT COUNT(1) 
+				   FROM BBS_REPLE 
+				  WHERE BBS_REPLE.BBS_POST_ID = BBS_POST.BBS_POST_ID
+				    AND BBS_REPLE.BBS_REPLE_DEL_STAT = 'N') AS POST_REPLE_CNT, 
 				BBS_POST_REG_DATE, 
 				BBS_POST_REG_ID, 
+				(SELECT USER_NM FROM IRON_USER WHERE USER_ID = BBS_POST_REG_ID) AS BBS_POST_REG_NM, 
 				BBS_POST_MOD_DATE, 
 				BBS_POST_MOD_ID, 
 				BBS_POST_STATUS
@@ -113,11 +197,13 @@
 				BBS_REPLE_CONTENT, 
 				BBS_REPLE_REG_DATE, 
 				BBS_REPLE_REG_ID, 
+				(SELECT USER_NM FROM IRON_USER WHERE USER_ID = BBS_REPLE_REG_ID) AS BBS_REPLE_REG_NM, 
 				BBS_REPLE_MOD_DATE, 
 				BBS_REPLE_MOD_ID, 
 				BBS_REPLE_DEL_STAT
 		  FROM 	BBS_REPLE
-		 WHERE  BBS_POST_ID = #{bbsPostId}
+		 WHERE  1 = 1 
+		   AND  BBS_POST_ID = #{bbsPostId}
 		   AND  BBS_REPLE_DEL_STAT = 'N'
 		   ORDER BY BBS_REPLE_REG_DATE
 		]]>
@@ -230,9 +316,17 @@
 		     ,  BBS_ATTACH_SAVE_NM
 		     ,  BBS_ATTACH_ORIGIN_NM
 		  FROM BBS_ATTACH
-		 WHERE BBS_POST_ID = #{bbsPostId} 
+		 WHERE 1 = 1
+		 ]]>
+		 <if test="bbsPostId != null and bbsPostId != ''">
+		   AND BBS_POST_ID = #{bbsPostId} 
+		 </if>
+		 <if test="bbsAttachId != null and bbsAttachId != ''">
+		   AND BBS_ATTACH_ID = #{bbsAttachId}
+		 </if>
+		 <![CDATA[
 		 ORDER BY BBS_ATTACH_ID, BBS_ATTACH_SN
-		]]>
+		 ]]>
 	</select>
 	
 	
@@ -307,7 +401,7 @@
 		  FROM BBS_VIEWS
 		 WHERE BBS_POST_ID = #{bbsPostId}
 		]]>
-		<if test='userId != null and !userId.equals("")'>
+		<if test="userId != null and userId != ''">
 		   AND BBS_POST_VIEW_USER_ID = #{userId}
 		</if>
 		  
@@ -341,5 +435,36 @@
 			 WHERE SUBSTR(BBS_VIEW_ID, 3, 8) = TO_CHAR(SYSDATE, 'YYYYMMDD') 
 		]]>
 	</insert>
+	
+	<select id="selectPostAttach" parameterType="HashMap" resultType="customCamelMap">
+		/*
+			queryId = selectPostAttach
+		*/
+		<![CDATA[
+		SELECT   BBS_POST_ID
+		       , BBS_ATTACH_ID
+		       , BBS_ATTACH_SN
+		       , BBS_ATTACH_LOC
+		       , BBS_ATTACH_SAVE_NM
+		       , BBS_ATTACH_ORIGIN_NM
+		       , BBS_ATTACH_REG_ID
+		       , BBS_ATTACH_REG_DT
+		  FROM BBS_ATTACH
+		 WHERE BBS_POST_ID = #{bbsPostId}
+		   AND BBS_ATTACH_ID = #{bbsAttachId}
+		]]>
+	</select>
+	
+	
+	<delete id="deleteAttachInfo" parameterType="HashMap">
+		/*
+			queryId = deleteAttachInfo
+		*/
+		<![CDATA[
+		DELETE FROM BBS_ATTACH
+		 WHERE BBS_POST_ID = #{bbsPostId}
+		   AND BBS_ATTACH_ID = #{bbsAttachId}
+		]]>
+	</delete>
 	
 </mapper>

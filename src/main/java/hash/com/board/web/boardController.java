@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -55,24 +56,33 @@ public class boardController {
 	public String postListView(HttpServletRequest request, Model model) throws Exception {
 		
 		// pagenation and pageRowCnt info
-		int pageViewInfo = request.getParameter("pageViewInfo") == null ? 1 : Integer.parseInt(request.getParameter("pageViewInfo"));
+		int pageNumInfo = request.getParameter("pageNumInfo") == null ? 1 : Integer.parseInt(request.getParameter("pageNumInfo"));
 		int pageRowInfo = request.getParameter("pageRowInfo") == null ? 10 :  Integer.parseInt(request.getParameter("pageRowInfo"));
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("pageViewInfo", pageViewInfo);
+		map.put("pageNumInfo", pageNumInfo);
 		map.put("pageRowInfo", pageRowInfo);
 		map.put("bbsCatalId", request.getParameter("bbsCatalId"));
-		logger.debug("bbsCatalId = "+request.getParameter("bbsCatalId"));
+		map.put("selAllKey", request.getParameter("selAllKey"));
+		map.put("srcTypeInfo", request.getParameter("srcTypeInfo"));
+		map.put("selSrcKey", request.getParameter("selSrcKey"));
 		
 		Map<String, Object> postListInfo = boardService.selectPostList(map);
 		
-		logger.debug("bbsCatalInfo = "+postListInfo.get("bbsCatalInfo").toString());
 		// 게시글 리스트 추출 
 		model.addAttribute("postList", postListInfo.get("postList"));
 		model.addAttribute("bbsCatalInfo", postListInfo.get("bbsCatalInfo"));
 		model.addAttribute("pageTotalCnt", postListInfo.get("pageTotalCnt"));
-		model.addAttribute("pageViewInfo", pageViewInfo);
+		model.addAttribute("pageNumInfo", pageNumInfo);
 		model.addAttribute("pageRowInfo", pageRowInfo);
+		
+		if(request.getParameter("selAllKey") != null && !request.getParameter("selAllKey").equals("")) {
+			model.addAttribute("selAllKey", request.getParameter("selAllKey"));
+		}
+		if(request.getParameter("selSrcKey") != null && !request.getParameter("selSrcKey").equals("")) {
+			model.addAttribute("srcTypeInfo", request.getParameter("srcTypeInfo"));
+			model.addAttribute("selSrcKey", request.getParameter("selSrcKey"));
+		}
 		return "tiles/board/postList";
 	}
 	
@@ -123,6 +133,8 @@ public class boardController {
 		model.addAttribute("repleList", repleList);
 		model.addAttribute("attachList", attachList);
 		model.addAttribute("postViewCnt", postViewCnt);
+		model.addAttribute("srcTypeInfo", request.getParameter("srcTypeInfo"));
+		model.addAttribute("selSrcKey", request.getParameter("selSrcKey"));
 		return "tiles/board/postInfoView";
 	}
 	
@@ -212,6 +224,28 @@ public class boardController {
 	
 	
 	/**
+	 * 첨부파일 다운로드
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/board/postAttachDownload")
+	public String postAttachDownload(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		Map<String, Object> fileInfo = boardService.postAttachDownload(request, response);
+		
+		if(fileInfo.get("bbsAttachLoc") != null && !fileInfo.get("bbsAttachLoc").equals("")) {
+			model.addAttribute("fileInfo", fileInfo);
+			return "attachDownloadView";
+		}else {
+			model.addAttribute("bbsCatalId", request.getAttribute("bbsCatalId"));
+			model.addAttribute("bbsPostId", request.getAttribute("bbsPostId"));
+			return "redirect:/board/postInfoView";
+		}
+	}
+	
+	
+	/**
 	 * 댓글 저장
 	 * @param request
 	 * @param model
@@ -220,7 +254,6 @@ public class boardController {
 	 */
 	@RequestMapping(value="/board/insertPostReple")
 	public String insertPostReple(HttpServletRequest request, Model model) throws Exception {
-		
 		List<Map<String, Object>> postRepleList = boardService.insertPostRepleInfo(request);
 		
 		model.addAttribute("postRepleList", postRepleList);

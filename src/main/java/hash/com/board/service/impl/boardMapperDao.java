@@ -161,5 +161,26 @@ public class boardMapperDao extends EgovAbstractMapper{
 		update("boardMapperDao.deletePostRepleInfo", map);
 	}
 
+
+	/**
+	 * 첨부파일 정보 조회
+	 * @param fileMap
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, Object> selectPostAttach(Map<String, Object> fileMap) throws Exception {
+		return selectOne("boardMapperDao.selectPostAttach", fileMap);
+	}
+
+
+	/**
+	 * 첨부파일 데이터 삭제
+	 * @param fileMap
+	 * @throws Exception
+	 */
+	public void deleteAttachInfo(Map<String, Object> fileMap) throws Exception {
+		delete("boardMapperDao.deleteAttachInfo", fileMap);
+	}
+
 	
 }

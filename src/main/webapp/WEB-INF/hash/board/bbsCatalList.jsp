@@ -52,6 +52,14 @@
 		float: right;
 	}
 	
+	
+	.postTitleInfo{
+		
+	}
+	.postDateInfo{
+		float: inline-end;
+	}
+	
 </style>
 <script type="text/javascript">
 	$(document).ready(function (){
@@ -120,8 +128,11 @@
 											<c:if test="${bbsCatalInfo.bbsCatalId eq postInfo.bbsCatalId}">
 												<div class="postData">
 													<input type="hidden" class="bbsPostId" name="bbsPostId" value="${postInfo.bbsPostId}" />
-													<span>${postInfo.bbsPostTitle}</span>
-													<span>
+													<span class="postTitleInfo">
+														${postInfo.bbsPostTitle}
+														[${postInfo.postRepleCnt}]
+													</span>
+													<span class="postDateInfo">
 														<c:choose>
 															<c:when test="${today eq fmtInfoChk}">
 																<fmt:formatDate value="${fmtInfo}" pattern="kk:mm"/>
@@ -151,8 +162,11 @@
 											<c:if test="${bbsCatalInfo.bbsCatalId eq postInfo.bbsCatalId}">
 												<div class="postData">
 													<input type="hidden" class="bbsPostId" name="bbsPostId" value="${postInfo.bbsPostId}" />
-													<span>${postInfo.bbsPostTitle}</span>
-													<span>
+													<span class="postTitleInfo">
+														${postInfo.bbsPostTitle}
+														[${postInfo.postRepleCnt}]
+													</span>
+													<span class="postDateInfo">
 														<c:choose>
 															<c:when test="${today eq fmtInfoChk}">
 																<fmt:formatDate value="${fmtInfo}" pattern="kk:mm"/>

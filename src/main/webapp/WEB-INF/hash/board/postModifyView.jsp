@@ -60,6 +60,9 @@
 	}
 	body.no-scroll{
 		position: fixed;
+		margin: 0 auto;
+		left: 0;
+		right: 0;
 	}
 	
 	
@@ -68,21 +71,36 @@
 	*/
 	#postModifyBtn{
 		width: 60px;
-		height: 30px;
+		height: 35px;
 		border: none;
 		border-radius: 10px;
+		color: white;
+		font-size: 15px;
+		font-weight: bold;
+		background-color: #9147ff;
 	}
 	#postModifyBtn:hover{
-		background-color: gray;
+		background-color: #772ce8;
 	}
+	#postModifyBtn:active{
+		background-color: #5c16c5;
+	}
+	
 	#postEditCancleBtn{
 		width: 60px;
-		height: 30px;
+		height: 35px;
 		border: none;
 		border-radius: 10px;
+		color: white;
+		font-size: 15px;
+		font-weight: bold;
+		background-color: #FF4848;
 	}
 	#postEditCancleBtn:hover{
-		background-color: gray;
+		background-color: #C90000;
+	}
+	#postEditCancleBtn:active{
+		background-color: darkred;
 	}
 	
 	
@@ -96,6 +114,29 @@
 	}
 	#bbsPostAttchInfo{
 		display: none;
+	}
+	.removeAttach{
+		width: 30px;
+		height: 30px;
+		border: none;
+		border-radius: 10px;
+		background-color: #FF4848;
+		text-align: center;
+		margin-left: 5px;
+		vertical-align: middle;
+	}
+	.removeAttach:hover{
+		background-color: #C90000;
+	}
+	.removeAttach:active{
+		background-color: darkred;
+	}
+	.removeAttach span{
+		vertical-align: -webkit-baseline-middle;
+		color: white;
+	}
+	.fileDivs div{
+		display: inline-block;
 	}
 	
 	
@@ -154,7 +195,7 @@
 <script type="text/javascript">
 
 	var loadingDiv = $('<div id="loading" class="loading"></div><img id="loading_img" alt="loading" src="${path}/resources/images/loading/loading.gif" />').appendTo(document.body).hide();
-	
+	var rmBbsAttIdArr = [];
 	$(document).ready(function (){				
 		// summernote setting and view
 		$('#summernote').summernote({
@@ -227,6 +268,48 @@
 		$("#postEditCancleBtn").on("click", function(){
 			postInfoView();
 		});
+		
+		
+		// 첨부파일 삭제 전처리(삭제버튼 클릭 후 저장버튼 클릭진행 필요)
+		$(".removeAttach").on("click", function(){
+			removeAttachs(this);
+		});
+		
+		
+		$(".files").on("click", function(){
+			removeAttachs(this);
+		});
+		
+		// 첨부파일 삭제
+		function removeAttachs(thisInfo){
+			let bbsAttachIdVal = $(thisInfo).parent().attr("attach-id");
+			console.log("bbsAttachIdVal = "+bbsAttachIdVal);
+			for(let attCnt=0; attCnt<rmBbsAttIdArr.length; attCnt++){
+				// 같은 첨부파일정보를 클릭했을 경우 해당 첨부파일번호를 삭제 후 태그정보 재설정
+				if(rmBbsAttIdArr[attCnt] == bbsAttachIdVal){
+					let tempArr = [];
+					let cntNum = 0;
+					for(let fileCnt=0; fileCnt<rmBbsAttIdArr.length; fileCnt++){
+						if(fileCnt != attCnt){
+							tempArr[cntNum] = rmBbsAttIdArr[fileCnt];
+							cntNum++;
+						}
+					}
+					rmBbsAttIdArr = [];
+					for(let fileCnt=0; fileCnt<tempArr.length; fileCnt++){
+						rmBbsAttIdArr[fileCnt] = tempArr[fileCnt];
+					}
+					$(thisInfo).parent().children(".files").children("p").css({"text-decoration":""});
+					$("#removeFileInfo").val(rmBbsAttIdArr);
+					return;
+				}
+			}
+			rmBbsAttIdArr[rmBbsAttIdArr.length] = bbsAttachIdVal;
+			
+			$(thisInfo).parent().children(".files").children("p").css({"text-decoration":"line-through"});
+			$("#removeFileInfo").val(rmBbsAttIdArr);
+		}
+		
 		
 		// 게시글 조회
 		function postInfoView(){
@@ -390,13 +473,17 @@
 										<c:choose>
 											<c:when test="${attachList ne null and attachList.size() > 0}">
 												<c:forEach var="attachInfo" items="${attachList}">
-													<div class="files" attach-id="${attachInfo.bbsAttachId}">
-														${attachInfo.bbsAttachOriginNm}
+													<div class="fileDivs" attach-id="${attachInfo.bbsAttachId}">
+														<div class="files">
+															<p>${attachInfo.bbsAttachOriginNm}</p>
+														</div>
+														<div class="removeAttach">
+															<span>✖</span>
+														</div>
 													</div>
 												</c:forEach>
 											</c:when>
 											<c:otherwise>
-												<div>첨부파일없음</div>
 											</c:otherwise>
 										</c:choose>
 									</div>
@@ -422,6 +509,7 @@
 						</table>
 						<input type="hidden" id="bbsPostId" name="bbsPostId" value="${postInfo.bbsPostId}" />
 						<input type="hidden" id="bbsPostRegId" name="bbsPostRegId" value="${loginSession.userId}" />
+						<input type="hidden" id="removeFileInfo" name="removeFileInfo" />
 					</form>
 					<br>
 					<div class="buttonDiv">

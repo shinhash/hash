@@ -1,6 +1,7 @@
 package hash.com.board.service.impl;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,9 +10,10 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -21,7 +23,7 @@ import hash.com.board.service.boardService;
 @Service("boardService")
 public class boardServiceImpl implements boardService {
 	
-//	private static final Logger logger = LoggerFactory.getLogger(boardServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(boardServiceImpl.class);
 	final static String POST_FILE_SAVE_PATH = "E:\\my_dev\\springToolsSuite3\\attachFiles\\bbs\\normal\\";
 	
 	@Resource(name="boardMapperDao")
@@ -34,12 +36,37 @@ public class boardServiceImpl implements boardService {
 	public Map<String, Object> bbsCatalPostListInfo() throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("pageViewInfo", "1");
+		map.put("pageNumInfo", "1");
 		map.put("pageRowInfo", "5");
 		
 		Map<String, Object> bbsCatalPostListInfo = new HashMap<String, Object>();
-		bbsCatalPostListInfo.put("bbsCatalList", boardMapperDao.selectPostCatalInfo(map));
-		bbsCatalPostListInfo.put("postList", boardMapperDao.selectPostList(map));
+		
+		List<Map<String, Object>> postList = null;
+
+		// 게시판 리스트 조회
+		List<Map<String, Object>> bbsCatalList = boardMapperDao.selectPostCatalInfo(map);
+		
+		if(bbsCatalList.size() > 0) {
+			postList = new ArrayList<Map<String,Object>>();
+			
+			// 게시판 리스트 만큼 게시글 리스트 조회
+			for(Map<String, Object> catalMap : bbsCatalList) {
+				map.put("bbsCatalId", catalMap.get("bbsCatalId"));
+				
+				// 게시글 리스트 조회
+				List<Map<String, Object>> addPostList = boardMapperDao.selectPostList(map);
+				if(addPostList.size() > 0) {
+					
+					// 게시글 정보 List<Map> 에 put
+					for(Map<String, Object> postInfo : addPostList) {
+						postList.add(postInfo);
+					}
+				}
+			}
+		}
+		
+		bbsCatalPostListInfo.put("bbsCatalList", bbsCatalList);
+		bbsCatalPostListInfo.put("postList", postList);
 		return bbsCatalPostListInfo;
 	}
 	
@@ -49,10 +76,17 @@ public class boardServiceImpl implements boardService {
 	 */
 	@Override
 	public Map<String, Object> selectPostList(Map<String, Object> map) throws Exception {
-		
 		Map<String, Object> postListInfo = new HashMap<String, Object>();
 		postListInfo.put("postList", boardMapperDao.selectPostList(map));
-		postListInfo.put("bbsCatalInfo", boardMapperDao.selectPostCatalInfo(map).get(0));
+		
+		Map<String, Object> bbsCatalInfo = new HashMap<String, Object>();
+		bbsCatalInfo.put("bbsCatalId", "ALL");
+		bbsCatalInfo.put("bbsCatalNm", "전체보기");
+		if(!map.get("bbsCatalId").equals("ALL")) {
+			bbsCatalInfo = boardMapperDao.selectPostCatalInfo(map).get(0);
+		}
+		postListInfo.put("bbsCatalInfo", bbsCatalInfo);
+		
 		postListInfo.put("pageTotalCnt", boardMapperDao.selectPageTotalCnt(map));
 		return postListInfo;
 	}
@@ -167,9 +201,32 @@ public class boardServiceImpl implements boardService {
 	 * @throws Exception
 	 */
 	public void saveBbsPostAttach(MultipartHttpServletRequest multiPartrequest, Map<String, Object> map) throws Exception {
+		
+		// 첨부파일 삭제
+		String mfRemoveAttachStr = multiPartrequest.getParameter("removeFileInfo");
+		if(mfRemoveAttachStr != null && !mfRemoveAttachStr.equals("")) {
+			String[] mfRemoveAttachArr = mfRemoveAttachStr.split(",");
+			logger.debug("mfRemoveAttachStr = "+mfRemoveAttachStr);
+			if(mfRemoveAttachArr != null && mfRemoveAttachArr.length > 0 && !mfRemoveAttachStr.equals("")) {
+				for(String mfRemoveAttachId : mfRemoveAttachArr) {
+					Map<String, Object> fileMap = new HashMap<String, Object>();
+					fileMap.put("bbsPostId", map.get("bbsPostId"));
+					fileMap.put("bbsAttachId", mfRemoveAttachId);
+					String removeAttachLoc = (String) (boardMapperDao.selectAttachListList(fileMap)).get(0).get("bbsAttachLoc");
+					
+					File rmFile = new File(removeAttachLoc);
+					if(rmFile.exists()) {
+						rmFile.delete();
+					}
+					boardMapperDao.deleteAttachInfo(fileMap);
+				}
+			}
+		}
+		
+		
+		// 첨부파일 저장
 		List<MultipartFile> mfList = multiPartrequest.getFiles("bbsPostAttchInfo");
 		Map<String, Object> attchInfo = null;
-		
 		if(mfList.get(0).getSize() != 0 && !mfList.get(0).getOriginalFilename().equals("")){
 			for(MultipartFile mfile : mfList) {
 				String fileOriginalName = mfile.getOriginalFilename();
@@ -179,11 +236,11 @@ public class boardServiceImpl implements boardService {
 				String saveFileName = contentId + "." + fileExt;
 				String saveFilePath = POST_FILE_SAVE_PATH + saveFileName;
 				try {
-					mfile.transferTo(new File(saveFilePath));
+					File file = new File(saveFilePath);
+					mfile.transferTo(file);
 				}catch(Exception e) {
 					e.printStackTrace();
 				}
-				
 				// 첨부파일 정보 DB저장
 				attchInfo = new HashMap<String, Object>();
 				attchInfo.put("bbsCatalId", map.get("bbsCatalId"));
@@ -195,6 +252,20 @@ public class boardServiceImpl implements boardService {
 				boardMapperDao.insertPostAttach(attchInfo);
 			}
 		}
+		
+	}
+	
+	
+	/**
+	 * 첨부파일 다운로드
+	 */
+	@Override
+	public Map<String, Object> postAttachDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("bbsPostId", request.getParameter("bbsPostId"));
+		map.put("bbsAttachId", request.getParameter("bbsAttachId"));
+		
+		return boardMapperDao.selectPostAttach(map);
 	}
 
 	
@@ -247,6 +318,5 @@ public class boardServiceImpl implements boardService {
 		
 		return delteRepleInfoAndSelectRepleInfo;
 	}
-
 
 }

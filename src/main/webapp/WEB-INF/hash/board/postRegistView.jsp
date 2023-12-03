@@ -47,21 +47,36 @@
 	*/
 	#postRegistBtn{
 		width: 60px;
-		height: 30px;
+		height: 35px;
 		border: none;
 		border-radius: 10px;
+		color: white;
+		font-size: 15px;
+		font-weight: bold;
+		background-color: #9147ff;
 	}
 	#postRegistBtn:hover{
-		background-color: gray;
+		background-color: #772ce8;
 	}
+	#postRegistBtn:active{
+		background-color: #5c16c5;
+	}
+	
 	#postListBtn{
 		width: 60px;
-		height: 30px;
+		height: 35px;
 		border: none;
 		border-radius: 10px;
+		color: white;
+		font-size: 15px;
+		font-weight: bold;
+		background-color: #FF4848;
 	}
 	#postListBtn:hover{
-		background-color: gray;
+		background-color: #C90000;
+	}
+	#postListBtn:active{
+		background-color: darkred;
 	}
 	
 	
@@ -234,6 +249,12 @@
 			});
 		});
 		
+		// 게시글 작성 취소 -> 목록이동
+		$("#postListBtn").on("click", function(){
+			let pageNumInfo = "1";
+			searchPostListForm(pageNumInfo);
+		});
+		
 		// 게시글 조회
 		function postInfoView(bbsPostIdVal){
 			if(bbsPostIdVal != null && bbsPostIdVal != ""){
@@ -382,6 +403,7 @@
 			<div class="inner">
 				<div class="contents">
 					<br><br>
+					<div id="bbsCatalId" bbs-catal-id="${bbsCatalId}"></div>
 					<form id="postRegistForm">
 						<table id="postRegistTable">
 							<tr>
@@ -418,7 +440,7 @@
 					<br>
 					<div class="buttonDiv">
 						<input class="postInfoBtn" type="button" id="postRegistBtn" value="저장" />
-						<input class="postInfoBtn" type="button" id="postListBtn" value="목록" onclick="goPostList('${bbsCatalId}');" />
+						<input class="postInfoBtn" type="button" id="postListBtn" value="취소" />
 					</div>
 				</div>
 				<br><br>

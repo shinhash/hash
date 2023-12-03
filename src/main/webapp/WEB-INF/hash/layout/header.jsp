@@ -22,18 +22,36 @@
 		list-style: none;
 	}
 	.sign-menu-ul-tab {
-		width:130px;
+		width: auto;
+		min-width: 130px;
+		height: auto;
 		position: absolute;
-		font-size:14px;
+		font-size: 14px;
 		background: white;
 		text-decoration: none;
-		color:#333;
+		color: #333;
 		display: none;
+		border: 1px solid rgb(110, 109, 122);
+		border-radius: 10px;
 	}
 	.sign-menu-ul-tab a {
 		text-decoration: none;
 		color: black;
 	}
+	
+	#userImg{
+		height: 40px;
+		width: 40px;
+		border-radius: 23px;
+		background-color: rgb(245, 246, 247);
+	}
+	#userImg:hover{
+		background-color: lightgray;
+	}
+	#userImg:active{
+		background-color: rgb(110, 109, 122);
+	}
+	
 	/**
 	css sibling element
 	 - ~ : 자식을 제외한 태그 선택
@@ -45,11 +63,29 @@
 	#signUserMenuChk:checked ~ * .sign-menu-ul-tab{
 		display: block;
 	}
+	.sign-menu-info{
+		height: 40px;
+	}
+	.sign-menu-info a{
+		vertical-align: -webkit-baseline-middle;
+	}
 	.sign-menu-info:hover{
+		background-color: lightgray;
+		border-radius: 10px;
+	}
+	.sign-menu-info:active{
 		background-color: rgb(110, 109, 122);
+		border-radius: 10px;
 	}
 	.sign-menu-info:hover a{
 		color: black;
+	}
+	
+	#sign-userNm{
+		font-size: 12px;
+		color: white;
+		background-color: rgb(44, 44, 44);
+		border-radius: 10px 10px 0px 0px;
 	}
 </style>
 <script type="text/javascript">
@@ -72,16 +108,50 @@
 		$("#logout-a").on("click", function(){
 			logout();
 		});
+		
+		// 메뉴 버튼에 따른 게시판 이동
+		$(".topMenuBtn").on("click", function(){
+			let catalType = $(this).attr("catal-type");
+			
+			switch(catalType){
+				case "allPost"			: 
+					goPostList("ALL");
+					break;
+				case "notePost"			: 
+					goPostList("BC001");
+					break;
+				case "catalList"		: 
+					goBbsCatalList();
+					break;
+				case "suggestMusicPost"	: 
+					goPostList("BC003");
+					break;
+				case "sheetMusicPost"	: 
+					goPostList("BC004");
+					break;
+				default					: 
+					alert("메뉴정보없음");
+					break;
+			} 
+		});
+		
+		
+		$("#selAllKey").on("keydown", function(e){
+			if(e.keyCode == "13"){
+				searchAllPost();
+			}
+		});
+		
 	});
-
-	// 검색버튼 클릭
-	function headSearchClick(){
-		fn_headSearch();
-	}
 	
-	// 검색 프로세스
-	function fn_headSearch(){
-		alert("search!!!");
+	// 검색기능
+	function searchAllPost(){
+		if(isNull($("#selAllKey").val())){
+			alert("검색어를 입력해주세요.");
+			return;
+		}
+		let pageNumInfo = "1";
+		searchPostListForm(pageNumInfo);
 	}
 </script>
 <header id="page-head">
@@ -94,8 +164,7 @@
 					</a>
 					<div id="header-search-div" class="header-search flex">
 						<label id="srbLabel" class="header-search label">
-							<input class="header-search input" placeholder="검색어를 입력해주세요"/>
-							<i id="search-icon" class="fa-solid fa-magnifying-glass fa-lg flex" onclick="fn_headSearch()"></i>
+							<input id="selAllKey" name="selAllKey" class="header-search input" placeholder="검색어를 입력해주세요." value="${selAllKey}"/>
 						</label>
 					</div>
 				</div>
@@ -109,11 +178,11 @@
 							<li class="toolbar-util-li">
 								<label for="signUserMenuChk">
 									<a id="signUserMenu">
-										<img id="userImg" alt="userImg" style="height: 50px; width: 50px;" 
-											 src="${path}/resources/images/logo/irondrum-logo_icon_mini.jpg">
+										<img id="userImg" alt="userImg" src="${path}/resources/images/icons/user-info.png">
 									</a>
 								</label>
 								<div class="sign-menu-ul-tab">
+									<div id="sign-userNm">${loginSession.userNm}님 안녕하세요.</div>
 									<div class="sign-menu-ul-tab-group">
 										<div class="sign-menu-info">
 											<a href="#">북마크</a>
@@ -142,17 +211,17 @@
 				</c:otherwise>
 				</c:choose>
 			</div>
-			<div class="toolbar-mlist" >
-				<ul class="toolbar-mlist-ul flex">
-					<li class="toolbar-mlist-li flex" ><a href="#">전체보기</a></li>
-					<li class="toolbar-mlist-li flex" ><a href="#">공지사항</a></li>
-					<li class="toolbar-mlist-li flex" ><a onclick="goPostList('BC002')">게시판</a></li>
-					<li class="toolbar-mlist-li flex" ><a onclick="goBbsCatalList()">게시판확인테스트</a></li>
-					<li class="toolbar-mlist-li flex" ><a href="#">추천음악</a></li>
-					<li class="toolbar-mlist-li flex" ><a href="#">악보봐</a></li>
-				</ul>
-			</div>
 		</div>
 	</div>
-	<div class="topLineDiv lineTopBottomDiv"></div>
+	<div class="areaLine"></div>
+	<div class="toolbar-mlist" >
+		<ul class="toolbar-mlist-ul flex">
+			<li class="toolbar-mlist-li flex" ><a class="topMenuBtn" catal-type="allPost">전체보기</a></li>
+			<li class="toolbar-mlist-li flex" ><a class="topMenuBtn" catal-type="notePost">공지사항</a></li>
+			<li class="toolbar-mlist-li flex" ><a class="topMenuBtn" catal-type="catalList">게시판</a></li>
+			<li class="toolbar-mlist-li flex" ><a class="topMenuBtn" catal-type="suggestMusicPost">추천음악</a></li>
+			<li class="toolbar-mlist-li flex" ><a class="topMenuBtn" catal-type="sheetMusicPost">악보봐</a></li>
+		</ul>
+	</div>
+	<div class="areaLine"></div>
 </header>

@@ -14,7 +14,7 @@
 	#signUpBoxDiv{
 		background-color: lightgray;
    		width: 320px;
-   		height: 650px;
+   		height: 290px;
    		margin: 0 auto;
    		border-radius: 5px;
    		padding-top: 10px;
@@ -56,33 +56,12 @@
 <script type="text/javascript">
 	$(document).ready(function (){
 		
+		$("#inputUserId").focus();
 		var idCheckRst = false;
 		
 		$("#signUpIdChkBtn").on("click", function(){
 			signUpIdChk();
 		});
-		
-		$("#signUpBtn").on("click", function(){
-			signUpConfirm();
-		});
-		
-		function signUpConfirm(){
-			if(!idCheckRst){
-				alert("ID 확인을 진행해주세요.");
-				return;
-			}
-			// id, pw 입력이 완료되었는지 확인
-			let tagCnt = $("#signUpUserInfoForm").find(".signUpInput").length;
-	 		for(let i=0; i<tagCnt; i++){
-				let getElement = $("#signUpUserInfoForm").find(".signUpInput")[i].id;
-				if(isNull($("#"+getElement).val())){
-					alert("미작성된 부분을 입력해주세요.");
-					return;
-				}
-	 		}
-	 		// 회원가입 진행
-	 		signUpProcess();
-		}
 		
 		// ajax를 통해 입력된 ID가 이미 등록된 정보인지 확인
 		// 1차 확인 후 서버 insert시 2차 확인
@@ -111,6 +90,43 @@
 				}
 			})
 		}
+		
+		$("#signUpBtn").on("click", function(){
+			signUpConfirm();
+		});
+		
+		// 회원가입 전 체크
+		function signUpConfirm(){
+			if(!idCheckRst){
+				idCheckRst = false;
+				alert("ID 확인을 진행해주세요.");
+				return;
+			}
+			// id, pw 입력이 완료되었는지 확인
+			let tagCnt = $("#signUpUserInfoForm").find(".signUpInput").length;
+	 		for(let i=0; i<tagCnt; i++){
+				let getElement = $("#signUpUserInfoForm").find(".signUpInput")[i].id;
+				if(isNull($("#"+getElement).val())){
+					alert("미작성된 부분을 입력해주세요.");
+					return;
+				}
+	 		}
+	 		if($("#inputUserPw").val() != $("#inputUserPwRe").val){
+	 			alert("비밀번호를 재확인 해주세요.");
+				return;
+	 		}
+	 		// 회원가입 진행
+	 		signUpProcess();
+		}
+		
+		// 회원가입
+		function signUpProcess(){
+			let formInfo = document.getElementById("signUpUserInfoForm");
+			formInfo.setAttribute("method", "post");
+			formInfo.setAttribute("action", "/sign/signUpProcess");
+			formInfo.submit();
+		}
+		
 	});
 </script>
 </head>
@@ -144,36 +160,36 @@
 					<br>
 					<input id="inputUserNm" class="signUpInput" name="inputUserNm" type="text"/>
 				</div>
-				<div>
-					<label for="inputUserBirth" class="inputLabel">Birth</label>
-					<br>
-					<input id="inputUserBirth" class="signUpInput" name="inputUserBirth" type="text"/>
-				</div>
-				<div>
-					<label for="inputUserMail" class="inputLabel">Mail</label>
-					<br>
-					<input id="inputUserMail" class="signUpInput" name="inputUserMail" type="text"/>
-				</div>
-				<div>
-					<label for="inputUserPhone" class="inputLabel">Phone</label>
-					<br>
-					<input id="inputUserPhone" class="signUpInput" name="inputUserPhone" type="text"/>
-				</div>
-				<div>
-					<label for="inputUserZipcode" class="inputLabel">Zipcode</label>
-					<br>
-					<input id="inputUserZipcode" class="signUpInput" name="inputUserZipcode" type="text"/>
-				</div>
-				<div>
-					<label for="inputUserAddr1" class="inputLabel">Address</label>
-					<br>
-					<input id="inputUserAddr1" class="signUpInput" name="inputUserAddr1" type="text"/>
-				</div>
-				<div>
-					<label for="inputUserAddr2" class="inputLabel">Address Detail</label>
-					<br>
-					<input id="inputUserAddr2" class="signUpInput" name="inputUserAddr2" type="text"/>
-				</div>
+<!-- 				<div> -->
+<!-- 					<label for="inputUserBirth" class="inputLabel">Birth</label> -->
+<!-- 					<br> -->
+<!-- 					<input id="inputUserBirth" class="signUpInput" name="inputUserBirth" type="text"/> -->
+<!-- 				</div> -->
+<!-- 				<div> -->
+<!-- 					<label for="inputUserMail" class="inputLabel">Mail</label> -->
+<!-- 					<br> -->
+<!-- 					<input id="inputUserMail" class="signUpInput" name="inputUserMail" type="text"/> -->
+<!-- 				</div> -->
+<!-- 				<div> -->
+<!-- 					<label for="inputUserPhone" class="inputLabel">Phone</label> -->
+<!-- 					<br> -->
+<!-- 					<input id="inputUserPhone" class="signUpInput" name="inputUserPhone" type="text"/> -->
+<!-- 				</div> -->
+<!-- 				<div> -->
+<!-- 					<label for="inputUserZipcode" class="inputLabel">Zipcode</label> -->
+<!-- 					<br> -->
+<!-- 					<input id="inputUserZipcode" class="signUpInput" name="inputUserZipcode" type="text"/> -->
+<!-- 				</div> -->
+<!-- 				<div> -->
+<!-- 					<label for="inputUserAddr1" class="inputLabel">Address</label> -->
+<!-- 					<br> -->
+<!-- 					<input id="inputUserAddr1" class="signUpInput" name="inputUserAddr1" type="text"/> -->
+<!-- 				</div> -->
+<!-- 				<div> -->
+<!-- 					<label for="inputUserAddr2" class="inputLabel">Address Detail</label> -->
+<!-- 					<br> -->
+<!-- 					<input id="inputUserAddr2" class="signUpInput" name="inputUserAddr2" type="text"/> -->
+<!-- 				</div> -->
 			</form>
 			<div id="signUpBtnDiv">
 				<input type="button" id="signUpBtn" value="Sign up" />

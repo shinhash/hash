@@ -10,9 +10,10 @@
 	#boardPostTable{		
 		margin: auto;
 		width: 90%;
-		border-top: 2px solid rgb(44, 44, 44);
-		border-bottom: 2px solid rgb(44, 44, 44);
+		border-top: 1px solid rgb(44, 44, 44);
+		border-bottom: 1px solid rgb(44, 44, 44);
 		padding: 10px;
+		border-radius: 10px;
 	}
 	#bbsPostTitle{
 		width: 99%;
@@ -30,7 +31,8 @@
 		float: right;
 	}
 	#buttonDivLine{
-		height: 30px;
+		height: 35px;
+		margin-bottom: 5px;
 	}
 	#buttonDiv{
 		float: right;
@@ -76,34 +78,54 @@
 	
 	
 	/**
-	게시글 수정/목록 버튼부분 style
+	게시글 삭제/수정/목록 버튼부분 style
 	*/
 	#postDeleteBtn{
 		width: 60px;
-		height: 30px;
+		height: 35px;
 		border: none;
 		border-radius: 10px;
+		color: white;
+		font-weight: bold;
+		background-color: #FF4848;
 	}
 	#postDeleteBtn:hover{
-		background-color: gray;
+		background-color: #C90000;
 	}
+	#postDeleteBtn:active{
+		background-color: darkred;
+	}
+	
 	#postModifyBtn{
 		width: 60px;
-		height: 30px;
+		height: 35px;
 		border: none;
 		border-radius: 10px;
+		color: white;
+		font-weight: bold;
+		background-color: #00c274;
 	}
 	#postModifyBtn:hover{
-		background-color: gray;
+		background-color: #00a3a3;
 	}
+	#postModifyBtn:active{
+		background-color: darkgreen;
+	}
+	
 	#postListBtn{
 		width: 60px;
-		height: 30px;
+		height: 35px;
 		border: none;
 		border-radius: 10px;
+		color: white;
+		font-weight: bold;
+		background-color: #00c274;
 	}
 	#postListBtn:hover{
-		background-color: gray;
+		background-color: #00a3a3;
+	}
+	#postListBtn:active{
+		background-color: darkgreen;
 	}
 	
 	
@@ -116,6 +138,28 @@
 		padding-bottom: 5px;
 		padding-left: 5px;
 	}
+	.files{
+		margin-top: 10px;
+		margin-left: 5px;
+		height: 30px;
+		border: none;
+		border-radius: 10px;
+		background-color: rgb(240, 240, 240);
+	}
+	.files:hover{
+		background-color: lightgray;
+	}
+	.files:active{
+		background-color: rgb(110, 109, 122);
+	}
+	
+	#filesDiv{
+		 border: none;
+		 background-color: rgb(250, 250, 250);
+		 margin-top: 10px;
+		 padding: 10px;
+		 border-radius: 10px;
+	}
 	
 	
 	/**
@@ -125,13 +169,17 @@
 		width: 90%;
 		margin: auto;
 	}
-	#repleAreaHead{
+	.areaHead{
 		height: 30px;
 		padding-top: 10px;
 	}
-	#repleAreaHead span{
+	.areaHead span{
 		font-size: 20px;
 		padding-left: 30px;
+	}
+	.areaHead.attach span{
+		font-size: 15px;
+		padding-left: 10px;
 	}
 	.repleWriter,.repleContent{
 		padding: 5px;
@@ -147,9 +195,6 @@
 		min-height: 30px;
 		font-size: 12px;
 	}
-	.repleLine{
-		border: 2px solid rgb(44, 44, 44);
-	}
 	.repleInfoBody{
 		margin: auto;
 		width: 95%;
@@ -164,14 +209,21 @@
 	.repleDelSpan{
 		float: right;
 	}
+	
 	.repleDelBtn{
-		width: 65px;
+		width: 70px;
 		height: 30px;
 		border: none;
 		border-radius: 10px;
+		color: white;
+		font-weight: bold;
+		background-color: #FF4848;
 	}
 	.repleDelBtn:hover{
-		background-color: gray;
+		background-color: #C90000;
+	}
+	.repleDelBtn:active{
+		background-color: darkred;
 	}
 
 
@@ -216,9 +268,15 @@
 		border: none;
 		margin-right: 10px;
 		border-radius: 10px;
+		color: white;
+		font-weight: bold;
+		background-color: #9147ff;
 	}
 	#repleBtn:hover {
-		background-color: gray;
+		background-color: #772ce8;
+	}
+	#repleBtn:active {
+		background-color: #5c16c5;
 	}
 	
 </style>
@@ -239,28 +297,15 @@
 		// 서머노트 쓰기 비활성화
 		$("#summernote").summernote('disable');
 		
-		
 		// 게시글 삭제
 		$("#postDeleteBtn").on("click", function(){
 			
 			if(!confirm("해당 게시글을 삭제하시겠습니까?")) return;
 			
-			let form = document.createElement("form");
+			let formInfo = new FormData();
+			formInfo.append("bbsCatalId", $("#bbsCatalId").attr("bbs-catal-id"));
+			formInfo.append("bbsPostId", $("#boardPostTable").attr("bbs-post-id"));
 			
-			let bbsCatalId = document.createElement("input");
-			bbsCatalId.setAttribute("name", "bbsCatalId");
-			bbsCatalId.setAttribute("type", "hidden");
-			bbsCatalId.setAttribute("value", $("#boardPostTable").attr("bbs-catal-id"));
-			
-			let bbsPostId = document.createElement("input");
-			bbsPostId.setAttribute("name", "bbsPostId");
-			bbsPostId.setAttribute("type", "hidden");
-			bbsPostId.setAttribute("value", $("#boardPostTable").attr("bbs-post-id"));
-			
-			form.appendChild(bbsCatalId);
-			form.appendChild(bbsPostId);
-			
-			let formInfo = new FormData(form);
 			$.ajax({
 				type		: "POST",
 				url			: "/board/deletePostInfo",
@@ -293,22 +338,59 @@
 			let formInfo = document.createElement("form");
 			
 			let bbsCatalId = document.createElement("input");
-			bbsCatalId.setAttribute("name", "bbsCatalId");
-			bbsCatalId.setAttribute("type", "hidden");
-			bbsCatalId.setAttribute("value", $("#boardPostTable").attr("bbs-catal-id"));
+			bbsCatalId.name = "bbsCatalId";
+			bbsCatalId.type = "hidden";
+			bbsCatalId.value = $("#bbsCatalId").attr("bbs-catal-id");
 			
 			let bbsPostId = document.createElement("input");
-			bbsPostId.setAttribute("name", "bbsPostId");
-			bbsPostId.setAttribute("type", "hidden");
-			bbsPostId.setAttribute("value", $("#boardPostTable").attr("bbs-post-id"));
+			bbsPostId.name = "bbsPostId";
+			bbsPostId.type = "hidden";
+			bbsPostId.value = $("#boardPostTable").attr("bbs-post-id");
 			
 			formInfo.appendChild(bbsCatalId);
 			formInfo.appendChild(bbsPostId);
 							
-			formInfo.setAttribute("method","post");
-			formInfo.setAttribute("action","/board/postModifyView");
+			formInfo.method = "post";
+			formInfo.action = "/board/postModifyView";
 			document.body.appendChild(formInfo);
 			formInfo.submit();
+		});
+		
+		
+		// 첨부파일 다운로드
+		$(".files").on("click", function(){
+			let formInfo = document.createElement("form");
+			
+			let bbsCatalId = document.createElement("input");
+			bbsCatalId.name = "bbsCatalId";
+			bbsCatalId.type = "hidden";
+			bbsCatalId.value = $("#bbsCatalId").attr("bbs-catal-id");
+			
+			let bbsPostId = document.createElement("input");
+			bbsPostId.name = "bbsPostId";
+			bbsPostId.type = "hidden";
+			bbsPostId.value = $("#boardPostTable").attr("bbs-post-id");
+			
+			let bbsAttachId = document.createElement("input");
+			bbsAttachId.name = "bbsAttachId";
+			bbsAttachId.type = "hidden";
+			bbsAttachId.value = $(this).attr("bbs-attach-id");
+			
+			formInfo.appendChild(bbsCatalId);
+			formInfo.appendChild(bbsPostId);
+			formInfo.appendChild(bbsAttachId);
+							
+			formInfo.method = "post";
+			formInfo.action = "/board/postAttachDownload";
+			document.body.appendChild(formInfo);
+			formInfo.submit();
+		});
+		
+		
+		// 목록이동
+		$("#postListBtn").on("click", function(){
+			let pageNumInfo = "1";
+			searchPostListForm(pageNumInfo);
 		});
 		
 		
@@ -350,25 +432,11 @@
 			
 			if(!confirm("해당 댓글을 삭제하시겠습니까?")) return;
 			
-			let form = document.createElement("form");
+			let formInfo = new FormData();
 			
-			let bbsPostId = document.createElement("input");
-			bbsPostId.setAttribute("name", "bbsPostId");
-			bbsPostId.setAttribute("type", "hidden");
-			bbsPostId.setAttribute("value", $("#boardPostTable").attr("bbs-post-id"));
+			formInfo.append("bbsPostId", $("#boardPostTable").attr("bbs-post-id"));
+			formInfo.append("bbsRepleId", $(this).parent().parent().parent().attr("bbs-reple-id"));
 			
-			let bbsRepleId = document.createElement("input");
-			bbsRepleId.setAttribute("name", "bbsRepleId");
-			bbsRepleId.setAttribute("type", "hidden");
-			bbsRepleId.setAttribute("value", $(this).parent().parent().parent().attr("bbs-reple-id"));
-			
-			form.appendChild(bbsPostId);
-			form.appendChild(bbsRepleId);
-			
-// 			console.log("bbsPostId : "+bbsPostId.value);
-// 			console.log("bbsRepleId : "+bbsRepleId.value);
-			
-			let formInfo = new FormData(form);
 			$.ajax({
 				type		: "POST",
 				url			: "/board/deletePostReple",
@@ -415,7 +483,7 @@
 				// repleRegId
 				let repleRegId = document.createElement("span");
 				repleRegId.setAttribute("class", "repleRegId");
-				repleRegId.innerText = bbsRepleInfo.bbsRepleRegId;
+				repleRegId.innerText = bbsRepleInfo.bbsRepleRegNm;
 				
 				// repleDelSpan
 				let repleDelSpan = document.createElement("span");
@@ -470,7 +538,8 @@
 			<div class="inner">
 				<div class="contents">
 					<br><br>
-					<table id="boardPostTable" bbs-catal-id="${postInfo.bbsCatalId}" bbs-post-id="${postInfo.bbsPostId}">
+					<div id="bbsCatalId" bbs-catal-id="${postInfo.bbsCatalId}"></div>
+					<table id="boardPostTable"  bbs-post-id="${postInfo.bbsPostId}">
 						<tr>
 							<td>
 								<div id="bbsPostTitle">${postInfo.bbsPostTitle}</div> 
@@ -479,13 +548,13 @@
 						<tr>
 							<td>
 								<div>
-									<div id="bbsPostRegId">${postInfo.bbsPostRegId}</div>
+									<div id="bbsPostRegId">${postInfo.bbsPostRegNm}</div>
 									<div id="bbsPostInfo">
 										<span>조회수</span>
 										<span>${postViewCnt}</span>
 										<span>|</span>
 										<span>댓글</span>
-										<span class="repleCnt">${repleList.size()}</span>
+										<span class="repleCnt">${postInfo.postRepleCnt}</span>
 										<span>|</span>
 										<span>작성일</span>
 										<span>
@@ -504,16 +573,18 @@
 						<tr>
 							<td>
 								<div id="filesDiv">
+									<div class="areaHead attach">
+										<span>첨부파일</span>
+									</div>
+<!-- 									<div class="postAreaLine"></div> -->
 									<c:choose>
 										<c:when test="${attachList ne null and attachList.size() > 0}">
 											<c:forEach var="attachInfo" items="${attachList}">
-												<div class="files" attach-id="${attachInfo.bbsAttachId}">
-													${attachInfo.bbsAttachOriginNm}
-												</div>
+												<input class="files" type="button" bbs-attach-id="${attachInfo.bbsAttachId}" value="${attachInfo.bbsAttachOriginNm}"/>
+<!-- 												<br> -->
 											</c:forEach>
 										</c:when>
 										<c:otherwise>
-											<div>첨부파일없음</div>
 										</c:otherwise>
 									</c:choose>
 								</div>
@@ -527,15 +598,15 @@
 								<input class="postInfoBtn" type="button" id="postDeleteBtn" value="삭제" />
 								<input class="postInfoBtn" type="button" id="postModifyBtn" value="수정" />
 							</c:if>
-							<input class="postInfoBtn" type="button" id="postListBtn" value="목록" onclick="goPostList('${postInfo.bbsCatalId}')" />
+							<input class="postInfoBtn" type="button" id="postListBtn" value="목록" />
 						</div>
 					</div>
 					<!-- reple area -->
 					<div id="repleArea">
-						<div id="repleAreaHead">
+						<div class="areaHead">
 							<span>댓글</span>
 						</div>
-						<div class="repleLine"></div>
+						<div class="postAreaLine"></div>
 						<!-- 댓글 리스트 -->
 						<div id="repleAreaBody">
 							<c:choose>
@@ -544,7 +615,7 @@
 										<div class="repleInfoBody">
 											<div class="repleInfo" bbs-reple-id="${repleInfo.bbsRepleId}">
 												<div class="repleWriter">
-													<span class="repleRegId">${repleInfo.bbsRepleRegId}</span>
+													<span class="repleRegId">${repleInfo.bbsRepleRegNm}</span>
 													<c:if test="${loginSession.userId eq repleInfo.bbsRepleRegId}">
 														<span class="repleDelSpan"><input type="button" class="repleDelBtn" value="댓글삭제" /></span>
 													</c:if>

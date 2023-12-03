@@ -43,6 +43,9 @@
    		font-size: 15px;
    		font-weight: bold;
    	}
+   	#signInBtn:hover{
+   		background-color: darkgreen;
+   	}
    	#resetPwLink{
    		float: right;
    		font-size: 12px;
@@ -61,9 +64,16 @@
 		if('${errorRst}' != ''){
 			alert('${errorRst}');
 		}
+		$("#inputUserId").focus();
 		
 		$("#signInBtn").on("click", function(){
 			signInProcess();
+		});
+		// Enter key 입력시 로그인
+		$("input").on("keyup", function(key){
+			if(key.keyCode == 13){
+				signInProcess();
+			}
 		});
 		
 		function signInProcess(){
@@ -85,6 +95,7 @@
 			formInfo.setAttribute("action", "/sign/signInCheck");
 			formInfo.submit();
 		}
+		
 	});
 </script>
 </head>
@@ -97,15 +108,15 @@
 		<form id="signInForm">
 			<div id="signBoxDiv">
 				<div>
-					<label for="inputUserId" class="inputLabel">Username or email address</label>
+					<label for="inputUserId" class="inputLabel">Email or ID</label>
 					<br>
-					<input id="inputUserId" name="inputUserId" type="text" class="signInInput"/>
+					<input id="inputUserId" name="inputUserId" type="text" class="signInInput" required/>
 				</div>
 				<div>
 					<label for="inputUserPw" class="inputLabel">Password</label>
 					<a id="resetPwLink" onclick="resetPwLink()" >Forget password?</a>
 					<br>
-					<input id="inputUserPw" name="inputUserPw" type="password" class="signInInput"/>
+					<input id="inputUserPw" name="inputUserPw" type="password" class="signInInput" required/>
 				</div>
 				<input id="signInBtn" type="button" value="Sign in" />
 			</div>

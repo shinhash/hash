@@ -22,7 +22,10 @@
 				, MODI_DATE
 				, MODI_ID
 		  FROM IRON_USER
-		 WHERE USER_ID = #{userId}
+		 WHERE 1 = 1
+	 	<if test="userId != null and userId != ''">
+			AND USER_ID = #{userId}
+	 	</if>
 	</select>
 	
 	<select id="signUpIdChk" parameterType="HashMap" resultType="int">
@@ -31,7 +34,10 @@
 		*/
 		SELECT COUNT(USER_ID)
 		  FROM IRON_USER
-		 WHERE USER_ID = #{userId}
+		 WHERE 1 = 1
+		 <if test="userId != null and userId != ''">
+			AND USER_ID = #{userId}
+	 	</if>
 	</select>
 	
 	<insert id="signUpProcess" parameterType="HashMap">
@@ -42,14 +48,7 @@
 				  USER_ID
 			    , USER_PW
 			    , USER_NM
-			    , GENDER
-				, BIRTH
-				, MAIL
-				, PHONE
 				, RESIGN_YN
-				, ADDR
-				, ADDR_DETAIL
-				, ZIP_CODE
 				, REG_DATE
 				, REG_ID
 				, MODI_DATE
@@ -59,14 +58,7 @@
 				  #{userId}
 			    , #{userPw}
 			    , #{userNm}
-			    , '1'
-				, #{userBirth}
-				, #{userMail}
-				, #{userPhone}
 				, 'N'
-				, #{userAddr}
-				, #{userAddrDetail}
-				, #{zipCode}
 				, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
 				, #{userId}
 				, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')

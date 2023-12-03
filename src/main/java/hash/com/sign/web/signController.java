@@ -162,23 +162,17 @@ public class signController {
 		String userId = request.getParameter("inputUserId");
 		String userPw = request.getParameter("inputUserPw");
 		String userNm = request.getParameter("inputUserNm");
-		String userBirth = request.getParameter("inputUserBirth");
-		String userMail = request.getParameter("inputUserMail");
-		String userPhone = request.getParameter("inputUserPhone");
-		String userAddr = request.getParameter("inputUserAddr1");
-		String userAddrDetail = request.getParameter("inputUserAddr2");
-		String zipCode = request.getParameter("inputUserZipcode");
+//		String userBirth = request.getParameter("inputUserBirth");
+//		String userMail = request.getParameter("inputUserMail");
+//		String userPhone = request.getParameter("inputUserPhone");
+//		String userAddr = request.getParameter("inputUserAddr1");
+//		String userAddrDetail = request.getParameter("inputUserAddr2");
+//		String zipCode = request.getParameter("inputUserZipcode");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("userPw", userPw);
 		map.put("userNm", userNm);
-		map.put("userBirth", userBirth);
-		map.put("userMail", userMail);
-		map.put("userPhone", userPhone);
-		map.put("userAddr", userAddr);
-		map.put("userAddrDetail", userAddrDetail);
-		map.put("zipCode", zipCode);
 		
 		signService.signUpProcess(map);
 		

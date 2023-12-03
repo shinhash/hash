@@ -1,11 +1,11 @@
 @charset "UTF-8";
 
-body {
+#page-top {
 	margin: 0px;
 	min-width: 1200px;
 	display: block;
-	font: 12px/18px "Noto Sans KR", NanumGothic, "나눔고딕", "Nanum Gothic",
-		"맑은 고딕", "Malgun Gothic", Dotum;
+	font: 12px/18px "Noto Sans KR", NanumGothic, "나눔고딕", "Nanum Gothic", "맑은 고딕", "Malgun Gothic", Dotum;
+	margin-top: 20px;
 }
 
 .header-search label {
@@ -20,7 +20,7 @@ body {
 }
 
 .header-search input {
-	width: 90%;
+	width: 98%;
 	height: 30px;
 	border: none;
 	background-color: rgb(245, 246, 247);
@@ -29,23 +29,25 @@ body {
 
 .topLineDiv {
 	background-color: rgb(44, 44, 44);
-	height: 50px;
 }
 
-.lineTopBottomDiv{
-	min-width: 1200px;
-	margin: 0 auto;
-	padding: 0 80px;
-	padding-left: 80px;
-	padding-right: 80px;
+.areaLine{
+	border: 2px solid rgb(44, 44, 44);
+	margin-left: -100px;
 }
+
+.postAreaLine{
+	border: 2px solid rgb(44, 44, 44);
+}
+
+.toolbar-area-top{
+	margin-bottom: 10px;
+}
+
 
 .inner {
 	width: 1200px;
 	margin: 0 auto;
-	padding: 0 80px;
-	padding-left: 80px;
-	padding-right: 80px;
 }
 
 .focus {
@@ -73,6 +75,8 @@ body {
 
 .toolbar-mlist {
 	height: 55px;
+	width: 1200px;
+	margin: 0 auto;
 }
 
 .toolbar-mlist-ul {
@@ -85,7 +89,18 @@ body {
 }
 
 .toolbar-mlist-li {
-	margin-right: 50px;
+	margin-right: 30px;
+	height: 45px;
+	width: 80px;
+}
+.toolbar-mlist-li a{
+	width: 80px;
+	padding-top: 15px;
+	text-align: center;
+	border-radius: 23px;
+}
+.toolbar-mlist-li a:hover{
+	background-color: rgb(245, 246, 247);	
 }
 
 .toolbar-mlist-li a {
