@@ -20,6 +20,7 @@
 		border-top: 1px solid rgb(44, 44, 44);
 		border-bottom: 1px solid rgb(44, 44, 44);
 		padding: 10px;
+		border-radius: 10px;
 	}
 	.buttonDiv{
 		float: right;

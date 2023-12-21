@@ -10,7 +10,7 @@ import egovframework.rte.psl.dataaccess.EgovAbstractMapper;
 @Repository("signMapperDao")
 public class signMapperDao extends EgovAbstractMapper{
 
-	public List<?> loginCheck(Map<String, Object> map) {
+	public List<Map<String, Object>> loginCheck(Map<String, Object> map) {
 		return selectList("signMapperDao.loginCheck", map);
 	}
 

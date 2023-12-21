@@ -98,4 +98,14 @@ public interface boardService {
 	 */
 	Map<String, Object> postAttachDownload(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
+
+	
+	/**
+	 * 추천 기능
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	void insertPostSuggest(Map<String, Object> map) throws Exception;
+
 }

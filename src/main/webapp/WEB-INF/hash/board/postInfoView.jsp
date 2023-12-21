@@ -128,6 +128,34 @@
 		background-color: darkgreen;
 	}
 	
+	#suggestImg{
+		width: 55px;
+		height: 55px;
+		z-index: 2;
+		position: absolute;
+		border-radius: 50%;
+		background-color: white;
+	}
+	#suggestImg:hover{
+		background-color: #FFF612;
+	}
+	#suggestImg:active{
+		background-color: #FFE400;
+	}
+	#suggestDivTop{
+		width: 100%;
+		height: 55px;
+		text-align: center;
+		padding-top: 10px;
+	}
+	#suggestDivBottom{
+		text-align: center;
+		padding-left: 55px;
+	}
+	#suggestSpan{
+		font-size: 15px;
+	}
+		
 	
 	/**
 	게시글 정보 첨부파일부분 style
@@ -225,6 +253,11 @@
 	.repleDelBtn:active{
 		background-color: darkred;
 	}
+	#repleImg{
+		width: 20px;
+		height: 20px;
+		margin-right: 5px;
+	}
 
 
 	/**
@@ -297,6 +330,11 @@
 		// 서머노트 쓰기 비활성화
 		$("#summernote").summernote('disable');
 		
+		// 추천버튼을 이미 클릭했으면 클릭된것으로 간주
+		if(isSuggestRst() && !isNull($("#bbsRepleRegId").val())){
+			$("#suggestImg").css("backgroundColor", "#FFE400");
+		}
+		
 		// 게시글 삭제
 		$("#postDeleteBtn").on("click", function(){
 			
@@ -347,8 +385,14 @@
 			bbsPostId.type = "hidden";
 			bbsPostId.value = $("#boardPostTable").attr("bbs-post-id");
 			
+			let pageNumInfo = document.createElement("input");
+			pageNumInfo.name = "pageNumInfo";
+			pageNumInfo.type = "hidden";
+			pageNumInfo.value = $("#boardPostTable").attr("page-act");
+			
 			formInfo.appendChild(bbsCatalId);
 			formInfo.appendChild(bbsPostId);
+			formInfo.appendChild(pageNumInfo);
 							
 			formInfo.method = "post";
 			formInfo.action = "/board/postModifyView";
@@ -389,7 +433,8 @@
 		
 		// 목록이동
 		$("#postListBtn").on("click", function(){
-			let pageNumInfo = "1";
+			let pageAct = $("#boardPostTable").attr("page-act");
+			let pageNumInfo = pageAct == "" ? "1" : pageAct;
 			searchPostListForm(pageNumInfo);
 		});
 		
@@ -455,6 +500,51 @@
 			});
 		});
 		
+		
+		// 추천버튼 클릭
+		$("#suggestImg").on("click", function(){
+			
+			if(isNull($("#bbsRepleRegId").val())){
+				alert("추천은 로그인 후 가능합니다.");
+				return;
+			}
+			if(isSuggestRst()){
+				alert("이미 추천을 해주셨습니다.");
+				return;
+			}
+			
+			let formInfo = new FormData();
+			formInfo.append("bbsPostId", $("#boardPostTable").attr("bbs-post-id"));
+			formInfo.append("postRegId", $("#bbsRepleRegId").val());
+			
+			$.ajax({
+				type		: "POST",
+				url			: "/board/insertPostSuggest",
+				data		: formInfo,
+				async		: false,
+				contentType	: false,
+				processData	: false,
+				success : function(result){
+					$("#suggestImg").css("backgroundColor", "#FFE400");
+				},
+				error : function(request, status, error){
+					console.log(error);
+					alert("추천 중 오류가 발생했습니다.");
+				}
+			});
+		});
+		
+		
+		// 추천클릭 했는지 확인
+		function isSuggestRst(){
+			let isSuggest = $("#suggestImg").attr("post-suggest");
+			let isSuggestInfo = false;
+			
+			if(isSuggest == "1"){
+				isSuggestInfo = true;
+			}
+			return isSuggestInfo;
+		}
 		
 		
 		// 댓글리스트 재조회
@@ -538,8 +628,8 @@
 			<div class="inner">
 				<div class="contents">
 					<br><br>
-					<div id="bbsCatalId" bbs-catal-id="${postInfo.bbsCatalId}"></div>
-					<table id="boardPostTable"  bbs-post-id="${postInfo.bbsPostId}">
+					<div id="bbsCatalId" bbs-catal-id="${bbsCatalId}"></div>
+					<table id="boardPostTable"  bbs-post-id="${postInfo.bbsPostId}" page-act="${pageNumInfo}">
 						<tr>
 							<td>
 								<div id="bbsPostTitle">${postInfo.bbsPostTitle}</div> 
@@ -568,6 +658,12 @@
 						<tr>
 							<td>
 								<textarea id="summernote" name="bbsPostContent" >${postInfo.bbsPostContent}</textarea>
+								<div id="suggestDivTop">
+									<img id="suggestImg" alt="추천" src="${path}/resources/images/icons/suggest-star.png" post-suggest="${postSuggest}">
+								</div>
+								<div id="suggestDivBottom">
+									<span id="suggestSpan">추천</span>
+								</div>
 							</td>
 						</tr>
 						<tr>
@@ -576,12 +672,10 @@
 									<div class="areaHead attach">
 										<span>첨부파일</span>
 									</div>
-<!-- 									<div class="postAreaLine"></div> -->
 									<c:choose>
 										<c:when test="${attachList ne null and attachList.size() > 0}">
 											<c:forEach var="attachInfo" items="${attachList}">
 												<input class="files" type="button" bbs-attach-id="${attachInfo.bbsAttachId}" value="${attachInfo.bbsAttachOriginNm}"/>
-<!-- 												<br> -->
 											</c:forEach>
 										</c:when>
 										<c:otherwise>
@@ -598,13 +692,14 @@
 								<input class="postInfoBtn" type="button" id="postDeleteBtn" value="삭제" />
 								<input class="postInfoBtn" type="button" id="postModifyBtn" value="수정" />
 							</c:if>
+							<c:if test="${bbsCatalInfo.bbsCatalId }"></c:if>
 							<input class="postInfoBtn" type="button" id="postListBtn" value="목록" />
 						</div>
 					</div>
 					<!-- reple area -->
 					<div id="repleArea">
 						<div class="areaHead">
-							<span>댓글</span>
+							<span><img id="repleImg" alt="댓글" src="${path}/resources/images/icons/chat.png">댓글</span>
 						</div>
 						<div class="postAreaLine"></div>
 						<!-- 댓글 리스트 -->

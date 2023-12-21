@@ -8,13 +8,14 @@
 	게시판 목록 스타일
 	*/
 	#bbsCatalogListDiv{
-		margin: auto;
-		width: 1000px;
+		margin: 0 auto;
+		width: 1050px;
 		overflow: hidden;
 		height: auto;
 	}
 	.catal-float{
 		min-height: 100px;
+		margin-bottom: 10px;
 	}
 	.catal-float.left{
 		width: 500px;
@@ -22,7 +23,7 @@
 	}
 	.catal-float.right{
 		width: 500px;
-		margin-left: 500px;
+		margin-left: 520px;
 	}
 	.bbsCatallogLine{
 		width: 480px;

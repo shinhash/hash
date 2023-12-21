@@ -89,6 +89,17 @@ public class boardMapperDao extends EgovAbstractMapper{
 	
 	
 	/**
+	 * 게시글 추천 정보 조회
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public int selectPostSuggest(Map<String, Object> map) throws Exception {
+		return selectOne("boardMapperDao.selectPostSuggest", map);
+	}
+	
+	
+	/**
 	 * 게시글 조회수 정보 저장
 	 * @param map
 	 * @throws Exception
@@ -180,6 +191,17 @@ public class boardMapperDao extends EgovAbstractMapper{
 	 */
 	public void deleteAttachInfo(Map<String, Object> fileMap) throws Exception {
 		delete("boardMapperDao.deleteAttachInfo", fileMap);
+	}
+
+
+	/**
+	 * 추천 클릭
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public int insertPostSuggest(Map<String, Object> map) throws Exception {
+		return insert("boardMapperDao.insertPostSuggest", map);
 	}
 
 	

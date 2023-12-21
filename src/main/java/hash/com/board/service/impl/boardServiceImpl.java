@@ -118,6 +118,7 @@ public class boardServiceImpl implements boardService {
 		selectPostRepleAttInfo.put("repleList", boardMapperDao.selectRepleList(map));
 		selectPostRepleAttInfo.put("attachList", boardMapperDao.selectAttachListList(map));
 		selectPostRepleAttInfo.put("postViewCnt", boardMapperDao.selectPostViewCnt(map));
+		selectPostRepleAttInfo.put("postSuggest", boardMapperDao.selectPostSuggest(map));
 		
 		return selectPostRepleAttInfo;
 	}
@@ -317,6 +318,22 @@ public class boardServiceImpl implements boardService {
 		}
 		
 		return delteRepleInfoAndSelectRepleInfo;
+	}
+
+
+	/**
+	 * 추천 기능
+	 */
+	@Override
+	public void insertPostSuggest(Map<String, Object> map) throws Exception {
+		
+		try {
+			// 추천 기능
+			boardMapperDao.insertPostSuggest(map);
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw new Exception();
+		}
 	}
 
 }

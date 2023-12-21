@@ -4,14 +4,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -27,7 +36,7 @@ import hash.com.sign.service.signService;
 @SuppressWarnings({"unchecked","rawtypes"})
 public class signController {
 	
-//	private static final Logger logger = LoggerFactory.getLogger(signController.class);
+	private static final Logger logger = LoggerFactory.getLogger(signController.class);
 	
 	@Resource(name="signService")
 	private signService signService;
@@ -77,7 +86,7 @@ public class signController {
 		ServletContext application = request.getServletContext();
 		List<Map> userList = (List<Map>) application.getAttribute("userList");
 		
-		List<Map> signInfoList = (List<Map>) signService.loginCheck(map);
+		List<Map<String, Object>> signInfoList = signService.loginCheck(map);
 		if(signInfoList != null && signInfoList.size() > 0) {
 			for(Map<String, Object> userInfo : signInfoList) {
 //				logger.debug(userInfo.toString());
@@ -186,7 +195,49 @@ public class signController {
 	 */
 	@RequestMapping(value="/sign/resetPwLink")
 	public String resetPwLink() throws Exception{
-		return "tiles/sign/resetPwLink";
+		return "/sign/resetPwLink";
+	}
+	
+	
+	/**
+	 * 비밀번호 초기화
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/sign/resetPwProcess")
+	public String resetPw(HttpServletRequest request, Model model) throws Exception{
+		
+		String inputUserId = request.getParameter("inputUserId");
+		String inputUserEmail = request.getParameter("inputUserEmail");
+		
+		String errorMsg = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", inputUserId);
+		map.put("userEmail", inputUserEmail);
+		
+		List<Map<String, Object>> signInfoList = (List<Map<String, Object>>) signService.loginCheck(map);
+		if(signInfoList != null && signInfoList.size() > 0) {
+			
+			for(Map<String, Object> userInfo : signInfoList) {
+				if(inputUserEmail.equals(userInfo.get("mail"))) {
+					// 해당 이메일 주소로 임시비밀번호 보내기
+					signService.updatePasswordAndSendMail(inputUserEmail);
+					
+				}else if(userInfo.get("mail") == null || userInfo.get("mail").equals("")){
+					// errorRst 정보를 저장
+					errorMsg = "입력하신 ID의 이메일정보가 없습니다.";
+				}else if(!inputUserEmail.equals(userInfo.get("mail"))) {
+					errorMsg = "입력하신 ID의 이메일정보와 일치하지 않습니다.";
+				}
+			}
+		}else {
+			// errorRst 정보를 저장
+			errorMsg = "입력하신 ID는 없는 정보입니다.";
+		}
+		
+		model.addAttribute("errorMsg", errorMsg);
+		return "ajaxJasonView";
 	}
 	
 	

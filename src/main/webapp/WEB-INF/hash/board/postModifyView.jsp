@@ -12,6 +12,7 @@
 		border-top: 1px solid rgb(44, 44, 44);
 		border-bottom: 1px solid rgb(44, 44, 44);
 		padding: 10px;
+		border-radius: 10px;
 	}
 	#bbsPostTitle{
 		width: 99%;
@@ -316,20 +317,27 @@
 			let formPostInfo = document.createElement("form");
 			
 			let bbsCatalId = document.createElement("input");
-			bbsCatalId.setAttribute("name", "bbsCatalId");
-			bbsCatalId.setAttribute("type", "hidden");
-			bbsCatalId.setAttribute("value", $("#postModifyTable").attr("bbs-catal-id"));
+			bbsCatalId.name = "bbsCatalId";
+			bbsCatalId.type = "hidden";
+			bbsCatalId.value = $("#postModifyTable").attr("bbs-catal-id");
 			
 			let bbsPostId = document.createElement("input");
-			bbsPostId.setAttribute("name", "bbsPostId");
-			bbsPostId.setAttribute("type", "hidden");
-			bbsPostId.setAttribute("value", $("#bbsPostId").val());
+			bbsPostId.name = "bbsPostId";
+			bbsPostId.type = "hidden";
+			bbsPostId.value = $("#bbsPostId").val();
+			
+			let pageNumInfo = document.createElement("input");
+			pageNumInfo.name = "pageNumInfo";
+			pageNumInfo.type = "hidden";
+			pageNumInfo.value = $("#postModifyTable").attr("page-act");
 			
 			formPostInfo.appendChild(bbsCatalId);
 			formPostInfo.appendChild(bbsPostId);
+			formPostInfo.appendChild(pageNumInfo);
 			
-			formPostInfo.setAttribute("method","post");
-			formPostInfo.setAttribute("action","/board/postInfoView");
+			formPostInfo.method = "post";
+			formPostInfo.action = "/board/postInfoView";
+			
 			document.body.appendChild(formPostInfo);
 			formPostInfo.submit();
 		}
@@ -454,7 +462,7 @@
 				<div class="contents">
 					<br><br>
 					<form id="postModifyForm" enctype="multipart/form-data">
-						<table id="postModifyTable" bbs-catal-id="${bbsCatalId}">
+						<table id="postModifyTable" bbs-catal-id="${bbsCatalId}" page-act="${pageNumInfo}">
 							<tr>
 								<td>
 									<input id="bbsPostTitle" name="bbsPostTitle" type="text" value="${postInfo.bbsPostTitle}"/>

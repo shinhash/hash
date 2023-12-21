@@ -182,32 +182,39 @@
 			let formInfo = document.createElement("form");
 			
 			let bbsCatalId = document.createElement("input");
-			bbsCatalId.setAttribute("name", "bbsCatalId");
-			bbsCatalId.setAttribute("type", "hidden");
-			bbsCatalId.setAttribute("value", $("#bbsCatalId").attr("bbs-catal-id"));
+			bbsCatalId.name = "bbsCatalId";
+			bbsCatalId.type = "hidden";
+			bbsCatalId.value = $("#bbsCatalId").attr("bbs-catal-id");
 			
 			let bbsPostId = document.createElement("input");
-			bbsPostId.setAttribute("name", "bbsPostId");
-			bbsPostId.setAttribute("type", "hidden");
-			bbsPostId.setAttribute("value", $(this).attr("bbs-post-id"));
+			bbsPostId.name = "bbsPostId";
+			bbsPostId.type = "hidden";
+			bbsPostId.value = $(this).attr("bbs-post-id");
 			
 			let selSrcKey = document.createElement("input");
-			selSrcKey.setAttribute("name", "selSrcKey");
-			selSrcKey.setAttribute("type", "hidden");
-			selSrcKey.setAttribute("value", $("#selSrcKey").val());
+			selSrcKey.name = "selSrcKey";
+			selSrcKey.type = "hidden";
+			selSrcKey.value = $("#selSrcKey").val();
 			
 			let srcTypeInfo = document.createElement("input");
-			srcTypeInfo.setAttribute("name", "srcTypeInfo");
-			srcTypeInfo.setAttribute("type", "hidden");
-			srcTypeInfo.setAttribute("value", $("#selSrcType").prop("selected", true).val());
+			srcTypeInfo.name = "srcTypeInfo";
+			srcTypeInfo.type = "hidden";
+			srcTypeInfo.value = $("#selSrcType").prop("selected", true).val();
+			
+			let pageNumInfo = document.createElement("input");
+			pageNumInfo.name = "pageNumInfo";
+			pageNumInfo.type = "hidden";
+			pageNumInfo.value = $(".page-act").attr("post-page");
 			
 			formInfo.appendChild(bbsCatalId);
 			formInfo.appendChild(bbsPostId);
 			formInfo.appendChild(selSrcKey);
 			formInfo.appendChild(srcTypeInfo);
+			formInfo.appendChild(pageNumInfo);
 			
-			formInfo.setAttribute("method","post");
-			formInfo.setAttribute("action","/board/postInfoView");
+			formInfo.method = "post";
+			formInfo.action = "/board/postInfoView";
+			
 			document.body.appendChild(formInfo);
 			formInfo.submit();
 		});
@@ -216,15 +223,16 @@
 		$("#postWriteBtn").on("click", function(){
 			
 			let formInfo = document.createElement("form");
-			formInfo.setAttribute("method","post");
-			formInfo.setAttribute("action","/board/postRegistView");
 			
 			let bbsCatalId = document.createElement("input");
-			bbsCatalId.setAttribute("name", "bbsCatalId");
-			bbsCatalId.setAttribute("type", "hidden");
-			bbsCatalId.setAttribute("value", $("#bbsCatalId").attr("bbs-catal-id"));
+			bbsCatalId.name = "bbsCatalId";
+			bbsCatalId.type = "hidden";
+			bbsCatalId.value = $("#bbsCatalId").attr("bbs-catal-id");
 			
 			formInfo.appendChild(bbsCatalId);
+			
+			formInfo.method = "post";
+			formInfo.action = "/board/postRegistView";
 			
 			document.body.appendChild(formInfo);
 			formInfo.submit();
@@ -236,14 +244,15 @@
     		
     		// 게시판 정보
     		let bbsCatalId = document.createElement("input");
-    		bbsCatalId.setAttribute("name", "bbsCatalId");
-    		bbsCatalId.setAttribute("type", "hidden");
-    		bbsCatalId.setAttribute("value", $("#bbsCatalId").attr("bbs-catal-id"));
+    		bbsCatalId.name = "bbsCatalId";
+    		bbsCatalId.type = "hidden";
+    		bbsCatalId.value = $("#bbsCatalId").attr("bbs-catal-id");
+    		
     		formInfo.appendChild(bbsCatalId);
     		
-    		formInfo.setAttribute("id", "pageControllDiv");
-    		formInfo.setAttribute("method", "post");
-    		formInfo.setAttribute("action", "/board/postListView");
+    		formInfo.method = "post";
+			formInfo.action = "/board/postListView";
+    		
     		document.body.appendChild(formInfo);
     		formInfo.submit();
     	});
@@ -322,8 +331,8 @@
 													</c:otherwise>
 												</c:choose>
 											</td>
-											<td class="tdFloatCenter">${postInfo.bbsViewCnt }</td>
-											<td class="tdFloatCenter">0</td>
+											<td class="tdFloatCenter">${postInfo.postViewCnt}</td>
+											<td class="tdFloatCenter">${postInfo.postSuggestCnt}</td>
 										</tr>
 									</c:forEach>
 								</c:when>

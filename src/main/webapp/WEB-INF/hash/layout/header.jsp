@@ -158,7 +158,7 @@
 	<div class="toolbar inner">
 		<div class="toolbar-area">
 			<div class="toolbar-area-top flex" >
-				<div class="toolbar-area-top-left flex" style=" width: 70%">
+				<div class="toolbar-area-top-left flex">
 					<a class="home-logo" onclick="goHome()">
 						<img id="home-icon" alt="홈페이지 아이콘" src="${path}/resources/images/logo/irondrum-logo_icon_mini.jpg">
 					</a>

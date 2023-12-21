@@ -9,10 +9,12 @@ import org.springframework.stereotype.Component;
 public interface signService {
 	
 	
-	List<?> loginCheck(Map<String, Object> map) throws Exception;
+	List<Map<String, Object>> loginCheck(Map<String, Object> map) throws Exception;
 
 	int signUpIdChk(Map<String, Object> map) throws Exception;
 
 	void signUpProcess(Map<String, Object> map) throws Exception;
+
+	void updatePasswordAndSendMail(String inputUserEmail) throws Exception;
 
 }

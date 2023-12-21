@@ -73,8 +73,6 @@ public class boardController {
 		model.addAttribute("postList", postListInfo.get("postList"));
 		model.addAttribute("bbsCatalInfo", postListInfo.get("bbsCatalInfo"));
 		model.addAttribute("pageTotalCnt", postListInfo.get("pageTotalCnt"));
-		model.addAttribute("pageNumInfo", pageNumInfo);
-		model.addAttribute("pageRowInfo", pageRowInfo);
 		
 		if(request.getParameter("selAllKey") != null && !request.getParameter("selAllKey").equals("")) {
 			model.addAttribute("selAllKey", request.getParameter("selAllKey"));
@@ -83,6 +81,9 @@ public class boardController {
 			model.addAttribute("srcTypeInfo", request.getParameter("srcTypeInfo"));
 			model.addAttribute("selSrcKey", request.getParameter("selSrcKey"));
 		}
+		
+		model.addAttribute("pageNumInfo", pageNumInfo);
+		model.addAttribute("pageRowInfo", pageRowInfo);
 		return "tiles/board/postList";
 	}
 	
@@ -110,6 +111,10 @@ public class boardController {
 	@RequestMapping(value="/board/postInfoView")
 	public String postInfoView(Model model, HttpServletRequest request, HttpSession session) throws Exception {
 		
+		// pagenation and pageRowCnt info
+		int pageNumInfo = request.getParameter("pageNumInfo") == null ? 1 : Integer.parseInt(request.getParameter("pageNumInfo"));
+		int pageRowInfo = request.getParameter("pageRowInfo") == null ? 10 :  Integer.parseInt(request.getParameter("pageRowInfo"));
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("bbsCatalId", request.getParameter("bbsCatalId"));
 		map.put("bbsPostId", request.getParameter("bbsPostId"));
@@ -118,6 +123,7 @@ public class boardController {
 		Map<String, Object> userInfo = (Map<String, Object>) session.getAttribute("loginSession");
 		if(userInfo != null) {
 			boardService.updateUserPostViewCnt(map, userInfo);
+			map.put("userId", userInfo.get("userId"));
 		}
 		
 		// 게시글, 댓글, 첨부파일정보 조회
@@ -127,14 +133,20 @@ public class boardController {
 		List<Map<String, Object>> repleList = (List<Map<String, Object>>) postRepleAttInfo.get("repleList");
 		List<Map<String, Object>> attachList = (List<Map<String, Object>>) postRepleAttInfo.get("attachList");
 		int postViewCnt = (int) postRepleAttInfo.get("postViewCnt");
+		int postSuggest = (int) postRepleAttInfo.get("postSuggest");
 		
 		// 게시글 리스트 추출
+		model.addAttribute("bbsCatalId", request.getParameter("bbsCatalId"));
 		model.addAttribute("postInfo", postInfo);
 		model.addAttribute("repleList", repleList);
 		model.addAttribute("attachList", attachList);
 		model.addAttribute("postViewCnt", postViewCnt);
+		model.addAttribute("postSuggest", postSuggest);
 		model.addAttribute("srcTypeInfo", request.getParameter("srcTypeInfo"));
 		model.addAttribute("selSrcKey", request.getParameter("selSrcKey"));
+		
+		model.addAttribute("pageNumInfo", pageNumInfo);
+		model.addAttribute("pageRowInfo", pageRowInfo);
 		return "tiles/board/postInfoView";
 	}
 	
@@ -149,6 +161,10 @@ public class boardController {
 	@RequestMapping(value="/board/postModifyView")
 	public String postModifyView(Model model, HttpServletRequest request) throws Exception {
 		
+		// pagenation and pageRowCnt info
+		int pageNumInfo = request.getParameter("pageNumInfo") == null ? 1 : Integer.parseInt(request.getParameter("pageNumInfo"));
+		int pageRowInfo = request.getParameter("pageRowInfo") == null ? 10 :  Integer.parseInt(request.getParameter("pageRowInfo"));
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("bbsPostId", request.getParameter("bbsPostId"));
 		map.put("bbsCatalId", request.getParameter("bbsCatalId"));
@@ -161,6 +177,8 @@ public class boardController {
 		// 게시글 리스트 추출
 		model.addAttribute("bbsCatalId", map.get("bbsCatalId"));
 		model.addAttribute("postInfo", postInfo);
+		model.addAttribute("pageNumInfo", pageNumInfo);
+		model.addAttribute("pageRowInfo", pageRowInfo);
 		model.addAttribute("attachList", attachList);
 		return "tiles/board/postModifyView";
 	}
@@ -279,6 +297,28 @@ public class boardController {
 		List<Map<String, Object>> postRepleList = boardService.deletePostRepleInfo(map);
 		
 		model.addAttribute("postRepleList", postRepleList);
+		return "ajaxJasonView";
+	}
+	
+	
+	/**
+	 * 추천 기능
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/board/insertPostSuggest")
+	public String insertPostSuggest(HttpServletRequest request, Model model, HttpSession session) throws Exception {
+		
+		Map<String, Object> userInfo = (Map<String, Object>) session.getAttribute("loginSession");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("bbsPostId", request.getParameter("bbsPostId"));
+		map.put("userId", userInfo.get("userId"));
+		
+		boardService.insertPostSuggest(map);
+		
 		return "ajaxJasonView";
 	}
 	

@@ -22,7 +22,10 @@
 								    AND BBS_REPLE.BBS_REPLE_DEL_STAT = 'N') AS POST_REPLE_CNT, 
 								(SELECT COUNT(1) 
 								   FROM BBS_VIEWS 
-								  WHERE BBS_POST.BBS_POST_ID = BBS_POST_ID) AS BBS_VIEW_CNT, 
+								  WHERE BBS_VIEWS.BBS_POST_ID = BBS_POST.BBS_POST_ID) AS POST_VIEW_CNT, 
+								(SELECT COUNT(1)
+                                   FROM BBS_SUGGEST
+                                  WHERE BBS_SUGGEST.BBS_POST_ID = BBS_POST.BBS_POST_ID) AS POST_SUGGEST_CNT, 
 								BBS_POST.BBS_POST_REG_DATE, 
 								(SELECT IRON_USER.USER_NM 
 								   FROM IRON_USER 
@@ -165,24 +168,29 @@
 		*/
 		<![CDATA[
 		SELECT 	ROWNUM AS RN,
-				BBS_CATAL_ID,
-				BBS_POST_ID,
-				BBS_POST_TITLE, 
-				BBS_POST_CONTENT, 
+				BBS_POST.BBS_CATAL_ID,
+				BBS_CATALOG.BBS_CATAL_NM, 
+				BBS_POST.BBS_POST_ID,
+				BBS_POST.BBS_POST_TITLE, 
+				BBS_POST.BBS_POST_CONTENT, 
 				(SELECT COUNT(1) 
 				   FROM BBS_REPLE 
 				  WHERE BBS_REPLE.BBS_POST_ID = BBS_POST.BBS_POST_ID
 				    AND BBS_REPLE.BBS_REPLE_DEL_STAT = 'N') AS POST_REPLE_CNT, 
-				BBS_POST_REG_DATE, 
-				BBS_POST_REG_ID, 
-				(SELECT USER_NM FROM IRON_USER WHERE USER_ID = BBS_POST_REG_ID) AS BBS_POST_REG_NM, 
-				BBS_POST_MOD_DATE, 
-				BBS_POST_MOD_ID, 
-				BBS_POST_STATUS
-		  FROM 	BBS_POST
-		 WHERE  BBS_POST_STATUS = 'N'
-		   AND  BBS_POST_ID = #{bbsPostId}
+				BBS_POST.BBS_POST_REG_DATE, 
+				BBS_POST.BBS_POST_REG_ID, 
+				(SELECT USER_NM FROM IRON_USER WHERE USER_ID = BBS_POST.BBS_POST_REG_ID) AS BBS_POST_REG_NM, 
+				BBS_POST.BBS_POST_MOD_DATE, 
+				BBS_POST.BBS_POST_MOD_ID, 
+				BBS_POST.BBS_POST_STATUS
+		  FROM 	BBS_POST, BBS_CATALOG
+		 WHERE  1 = 1
+		   AND  BBS_POST.BBS_CATAL_ID = BBS_CATALOG.BBS_CATAL_ID 
+		   AND  BBS_POST.BBS_POST_STATUS = 'N'
 		]]>
+		<if test="bbsPostId != null and bbsPostId != ''">
+		   AND  BBS_POST.BBS_POST_ID = #{bbsPostId}
+		</if>
 	</select>
 	
 	
@@ -203,10 +211,12 @@
 				BBS_REPLE_DEL_STAT
 		  FROM 	BBS_REPLE
 		 WHERE  1 = 1 
-		   AND  BBS_POST_ID = #{bbsPostId}
 		   AND  BBS_REPLE_DEL_STAT = 'N'
-		   ORDER BY BBS_REPLE_REG_DATE
 		]]>
+		<if test="bbsPostId != null and bbsPostId != ''">
+		   AND  BBS_POST_ID = #{bbsPostId}
+		</if>		 
+		   ORDER BY BBS_REPLE_REG_DATE
 	</select>
 	
 	
@@ -374,8 +384,11 @@
 		<![CDATA[
 		UPDATE 	BBS_POST 
 		   SET 	BBS_POST_STATUS = 'Y'
-		 WHERE	BBS_POST_ID = #{bbsPostId}
+		 WHERE	1 = 1
 		]]>
+		<if test="bbsPostId != null and bbsPostId != ''">
+		   AND  BBS_POST_ID = #{bbsPostId}
+		</if>		 
 	</update>
 	
 	
@@ -386,9 +399,14 @@
 		<![CDATA[
 		UPDATE 	BBS_REPLE 
 		   SET 	BBS_REPLE_DEL_STAT = 'Y'
-		 WHERE	BBS_POST_ID = #{bbsPostId}
-		   AND  BBS_REPLE_ID = #{bbsRepleId}
+		 WHERE	1 = 1
 		]]>
+		<if test="bbsPostId != null and bbsPostId != ''">
+		   AND  BBS_POST_ID = #{bbsPostId}
+		</if>
+		<if test="bbsRepleId != null and bbsRepleId != ''">
+		   AND  BBS_REPLE_ID = #{bbsRepleId}
+		</if>
 	</update>
 	
 	
@@ -399,10 +417,10 @@
 		<![CDATA[
 		SELECT COUNT(BBS_VIEW_ID)
 		  FROM BBS_VIEWS
-		 WHERE BBS_POST_ID = #{bbsPostId}
+		 WHERE 1 = 1
 		]]>
-		<if test="userId != null and userId != ''">
-		   AND BBS_POST_VIEW_USER_ID = #{userId}
+		<if test="bbsPostId != null and bbsPostId != ''">
+		   AND BBS_POST_ID = #{bbsPostId}
 		</if>
 		  
 	</select>
@@ -450,9 +468,14 @@
 		       , BBS_ATTACH_REG_ID
 		       , BBS_ATTACH_REG_DT
 		  FROM BBS_ATTACH
-		 WHERE BBS_POST_ID = #{bbsPostId}
-		   AND BBS_ATTACH_ID = #{bbsAttachId}
+		 WHERE 1 = 1
 		]]>
+		<if test="bbsPostId != null and bbsPostId != ''">
+		   AND BBS_POST_ID = #{bbsPostId}
+		</if>
+		<if test="bbsAttachId != null and bbsAttachId != ''">
+		   AND BBS_ATTACH_ID = #{bbsAttachId}
+		</if>
 	</select>
 	
 	
@@ -466,5 +489,50 @@
 		   AND BBS_ATTACH_ID = #{bbsAttachId}
 		]]>
 	</delete>
+	
+	
+	<select id="selectPostSuggest" parameterType="HashMap" resultType="int">
+		/*
+			queryId = selectPostSuggest
+		*/
+		<![CDATA[
+		SELECT COUNT(1)
+		  FROM BBS_SUGGEST
+		 WHERE 1 = 1
+		]]>
+		<if test="bbsPostId != null and bbsPostId != ''">
+		   AND BBS_POST_ID = #{bbsPostId}
+		</if>
+		<if test="userId != null and userId != ''">
+		   AND BBS_POST_SUGGEST_USER_ID = #{userId}
+		</if>
+	</select>
+	
+	
+	<insert id="insertPostSuggest" parameterType="HashMap">
+		/*
+			queryId = insertPostSuggest
+		*/
+		<![CDATA[
+		INSERT INTO 
+			BBS_SUGGEST(
+				BBS_SUGGEST_ID, 
+				BBS_POST_ID, 
+				BBS_POST_SUGGEST_USER_ID, 
+				BBS_POST_SUGGEST_DATE 
+			)
+			SELECT   'SUG' || TO_CHAR(SYSDATE, 'YYYYMMDD') || 
+				     CASE WHEN SUBSTR(MAX(BBS_SUGGEST_ID),12,16) IS NULL
+				          THEN '000001'
+				          ELSE LPAD(TO_CHAR(TO_NUMBER(SUBSTR(MAX(BBS_SUGGEST_ID),12,16))+1), 6, '0')
+				     END AS BBS_SUGGEST_ID 
+				   , #{bbsPostId} AS BBS_POST_ID 
+				   , #{userId} AS BBS_POST_SUGGEST_USER_ID 
+				   , TO_CHAR(SYSDATE, 'YYYYMMDD') AS BBS_POST_SUGGEST_DATE 
+			  FROM  BBS_SUGGEST 
+			 WHERE  1 = 1 
+			   AND  SUBSTR(BBS_SUGGEST_ID, 4, 8) = TO_CHAR(SYSDATE, 'YYYYMMDD')
+		]]>
+	</insert>
 	
 </mapper>

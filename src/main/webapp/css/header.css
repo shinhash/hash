@@ -19,6 +19,11 @@
 	margin-top: 5px;
 }
 
+.toolbar-area-top-left{
+	width: 65%;
+	padding-left: 60px;
+}
+
 .header-search input {
 	width: 98%;
 	height: 30px;
@@ -77,6 +82,7 @@
 	height: 55px;
 	width: 1200px;
 	margin: 0 auto;
+	padding-left: 35px;
 }
 
 .toolbar-mlist-ul {
