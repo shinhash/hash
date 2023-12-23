@@ -73,11 +73,13 @@ public class signServiceImpl implements signService{
 		
 		// smtp 설정
 		Properties props = System.getProperties();
+		props.put("mail.transport.protocol", "smtp"); 
 		props.put("mail.smtp.host", smtpHost); 
-        props.put("mail.smtp.port", smtpPort); 
-        props.put("mail.smtp.auth", "true"); 
-        props.put("mail.smtp.ssl.enable", "true"); 
+		props.put("mail.smtp.port", smtpPort); 
+		props.put("mail.smtp.auth", true);
+		props.put("mail.smtp.ssl.enable", true);
         props.put("mail.smtp.ssl.trust", smtpHost);
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
         
         // mail session 설정
         Session mailSession = Session.getInstance(props, 
