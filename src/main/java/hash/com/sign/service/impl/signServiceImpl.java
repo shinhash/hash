@@ -14,12 +14,16 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import hash.com.sign.service.signService;
 
 @Service("signService")
 public class signServiceImpl implements signService{
+	
+	private static final Logger logger = LoggerFactory.getLogger(signServiceImpl.class);
 	
 	@Resource(name="signMapperDao")
 	private signMapperDao signMapperDao;
@@ -79,6 +83,12 @@ public class signServiceImpl implements signService{
 		props.put("mail.smtp.auth", true);
 		props.put("mail.smtp.ssl.enable", true);
         props.put("mail.smtp.ssl.trust", smtpHost);
+        
+        /*
+         * logger.debug("before props : "+props);
+         * TLS version 미설정시 tomcat의 기본 TLS 설정값으로 혹은 미설정된 상태로 전송요청되기 때문에 명시할 필요가 있음
+         * logger.debug("after props : "+props);
+         */
         props.put("mail.smtp.ssl.protocols", "TLSv1.2");
         
         // mail session 설정

@@ -537,13 +537,33 @@
 		
 		// 추천클릭 했는지 확인
 		function isSuggestRst(){
-			let isSuggest = $("#suggestImg").attr("post-suggest");
-			let isSuggestInfo = false;
+			let suggestCnt = "";
+			let isSuggest = false;
 			
-			if(isSuggest == "1"){
-				isSuggestInfo = true;
+			let formInfo = new FormData();
+			formInfo.append("bbsPostId", $("#boardPostTable").attr("bbs-post-id"));
+			formInfo.append("postRegId", $("#bbsRepleRegId").val());
+			
+			$.ajax({
+				type		: "POST",
+				url			: "/board/selectPostSuggest",
+				data		: formInfo,
+				async		: false,
+				contentType	: false,
+				processData	: false,
+				success		: function(result){
+					console.log(result);
+					suggestCnt = result.postSuggest;
+				},
+				error		: function(error){
+					console.log(error);
+				}
+			});
+			
+			if(suggestCnt == 1){
+				isSuggest = true;
 			}
-			return isSuggestInfo;
+			return isSuggest;
 		}
 		
 		

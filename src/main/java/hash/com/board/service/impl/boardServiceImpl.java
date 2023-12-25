@@ -241,6 +241,7 @@ public class boardServiceImpl implements boardService {
 					mfile.transferTo(file);
 				}catch(Exception e) {
 					e.printStackTrace();
+					throw new Exception();
 				}
 				// 첨부파일 정보 DB저장
 				attchInfo = new HashMap<String, Object>();

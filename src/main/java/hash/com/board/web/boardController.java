@@ -323,4 +323,28 @@ public class boardController {
 	}
 	
 	
+	/**
+	 * 추천 체크
+	 * @param request
+	 * @param model
+	 * @param session
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/board/selectPostSuggest")
+	public String selectPostSuggest(HttpServletRequest request, Model model, HttpSession session) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("bbsPostId", request.getParameter("bbsPostId"));
+		map.put("userId", request.getParameter("postRegId"));
+		
+		Map<String, Object> postRepleAttInfo = boardService.selectPostRepleAttInfo(map);
+		int postSuggest = (int) postRepleAttInfo.get("postSuggest");
+		
+		model.addAttribute("postSuggest", postSuggest);
+		
+		return "ajaxJasonView";
+	}
+	
+	
 }
